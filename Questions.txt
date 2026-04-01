@@ -1,0 +1,51 @@
+Section	Q.No	Question	Type	Options	Risk Weight	Risk Description
+Before Marriage	1	What are your top 3 life priorities?	One-line		Low	Mismatch has minor or manageable impact
+Before Marriage	2	How do you react when someone disagrees with you?	MCQ	Calm discussion;Avoid;Argue;Get defensive	Low	Mismatch has minor or manageable impact
+Before Marriage	3	Which financial habit best describes you?	MCQ	Saver;Balanced;Spender;No planning	Medium	Mismatch may create recurring friction
+Before Marriage	4	Select what matters most in a partner	MSQ	Respect;Loyalty;Attraction;Status;Money	Low	Mismatch has minor or manageable impact
+Before Marriage	5	How do you handle stress?	MCQ	Talk;Withdraw;Work harder;Get irritated	High	Critical mismatch can cause long-term conflict or breakup
+Before Marriage	6	What are your non-negotiables in a relationship?	One-line		Medium	Mismatch may create recurring friction
+Before Marriage	7	Do you prefer joint or nuclear family?	MCQ	Joint;Nuclear;Flexible;Undecided	Low	Mismatch has minor or manageable impact
+Before Marriage	8	How important is religion in daily life?	MCQ	Very;Moderate;Low;None	Low	Mismatch has minor or manageable impact
+Before Marriage	9	How do you show love?	MSQ	Words;Time;Gifts;Support;Physical	Medium	Mismatch may create recurring friction
+Before Marriage	10	How do you handle failure?	MCQ	Reflect;Blame;Ignore;Overthink	High	Critical mismatch can cause long-term conflict or breakup
+Before Marriage	11	What does respect mean to you?	One-line		Low	Mismatch has minor or manageable impact
+Before Marriage	12	How often do you expect communication?	MCQ	Constant;Daily;Occasional;Minimal	Medium	Mismatch may create recurring friction
+Before Marriage	13	Do you discuss money openly?	MCQ	Yes;Sometimes;Rarely;No	Low	Mismatch has minor or manageable impact
+Before Marriage	14	What are your career goals?	One-line		Low	Mismatch has minor or manageable impact
+Before Marriage	15	How do you react to criticism?	MCQ	Accept;Defend;Ignore;Attack	High	Critical mismatch can cause long-term conflict or breakup
+Before Marriage	16	Select your conflict style	MSQ	Avoid;Discuss;Fight;Delay	Low	Mismatch has minor or manageable impact
+Before Marriage	17	How important is personal space?	MCQ	High;Medium;Low;None	Low	Mismatch has minor or manageable impact
+Before Marriage	18	What habits might annoy a partner?	One-line		Medium	Mismatch may create recurring friction
+Before Marriage	19	How do you define loyalty?	One-line		Low	Mismatch has minor or manageable impact
+Before Marriage	20	Do you expect partner to change after marriage?	MCQ	Yes;No;Maybe;Depends	High	Critical mismatch can cause long-term conflict or breakup
+Before Marriage	21	How do you handle anger?	MCQ	Control;Express;Suppress;Explode	Medium	Mismatch may create recurring friction
+Before Marriage	22	What role should parents play?	MCQ	High;Medium;Low;None	Low	Mismatch has minor or manageable impact
+Before Marriage	23	Select deal breakers	MSQ	Dishonesty;Addiction;Disrespect;Control	Low	Mismatch has minor or manageable impact
+Before Marriage	24	How do you spend free time?	One-line		Medium	Mismatch may create recurring friction
+Before Marriage	25	Do you prioritize career or family?	MCQ	Career;Family;Balance;Unsure	High	Critical mismatch can cause long-term conflict or breakup
+Before Marriage	26	How do you make decisions?	MCQ	Logical;Emotional;Mixed;Impulsive	Low	Mismatch has minor or manageable impact
+Before Marriage	27	How important is social life?	MCQ	High;Medium;Low;None	Medium	Mismatch may create recurring friction
+Before Marriage	28	Do you believe in gender roles?	MCQ	Strongly;Moderate;Low;None	Low	Mismatch has minor or manageable impact
+Before Marriage	29	How do you express frustration?	MCQ	Talk;Silent;Anger;Ignore	Low	Mismatch has minor or manageable impact
+Before Marriage	30	What is your biggest fear in marriage?	One-line		High	Critical mismatch can cause long-term conflict or breakup
+Before Marriage	31	Do you forgive easily?	MCQ	Yes;Sometimes;Rarely;No	Low	Mismatch has minor or manageable impact
+Before Marriage	32	How do you handle jealousy?	MCQ	Communicate;Ignore;React;Control	Low	Mismatch has minor or manageable impact
+Before Marriage	33	Select important life goals	MSQ	Wealth;Family;Travel;Growth	Medium	Mismatch may create recurring friction
+Before Marriage	34	Do you value independence?	MCQ	High;Medium;Low;None	Low	Mismatch has minor or manageable impact
+Before Marriage	35	How do you respond to pressure?	MCQ	Calm;Stress;Avoid;Aggressive	High	Critical mismatch can cause long-term conflict or breakup
+Before Marriage	36	What does commitment mean?	One-line		Medium	Mismatch may create recurring friction
+Before Marriage	37	Do you plan finances?	MCQ	Yes;Sometimes;Rarely;No	Low	Mismatch has minor or manageable impact
+Before Marriage	38	How do you manage time?	MCQ	Structured;Flexible;Chaotic;Random	Low	Mismatch has minor or manageable impact
+Before Marriage	39	Select stress triggers	MSQ	Money;Work;Family;Expectations	Medium	Mismatch may create recurring friction
+Before Marriage	40	How do you support partner?	One-line		High	Critical mismatch can cause long-term conflict or breakup
+Before Marriage	41	Do you believe love is enough?	MCQ	Yes;No;Maybe;Depends	Low	Mismatch has minor or manageable impact
+Before Marriage	42	How do you react to partner’s success?	MCQ	Happy;Neutral;Jealous;Competitive	Medium	Mismatch may create recurring friction
+Before Marriage	43	What does trust mean to you?	One-line		Low	Mismatch has minor or manageable impact
+Before Marriage	44	Do you handle conflicts immediately?	MCQ	Yes;Later;Avoid;Depends	Low	Mismatch has minor or manageable impact
+Before Marriage	45	How important is honesty?	MCQ	Very;Medium;Low;None	High	Critical mismatch can cause long-term conflict or breakup
+Before Marriage	46	What expectations do you have?	One-line		Low	Mismatch has minor or manageable impact
+Before Marriage	47	Do you adapt easily?	MCQ	Yes;Sometimes;Rarely;No	Low	Mismatch has minor or manageable impact
+Before Marriage	48	How do you deal with change?	MCQ	Accept;Resist;Fear;Ignore	Medium	Mismatch may create recurring friction
+Before Marriage	49	Select emotional needs	MSQ	Support;Validation;Space;Attention	Low	Mismatch has minor or manageable impact
+Before Marriage	50	What is your vision of marriage?	One-line		High	Critical mismatch can cause long-term conflict or breakup
