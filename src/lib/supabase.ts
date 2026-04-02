@@ -89,6 +89,7 @@ export type CoupleAssessmentSession = {
   status: 'pending_partner' | 'completed';
   initiated_at: string;
   completed_at?: string | null;
+  question_set?: string[];
   report: Record<string, unknown>;
 };
 

@@ -9,31 +9,25 @@ import { CompatibilityQuiz } from './pages/CompatibilityQuiz';
 import { RedFlagChecker } from './pages/RedFlagChecker';
 import { HealthTracker } from './pages/HealthTracker';
 
-type Page = 'home' | 'services' | 'dashboard' | 'quiz' | 'red-flags' | 'health-tracker'; 
+type Page = 'home' | 'services' | 'dashboard' | 'quiz' | 'red-flags' | 'health-tracker';
+type AppPage = Page | 'auth-before' | 'auth-after';
 
 function AppContent() {
-  const [currentPage, setCurrentPage] = useState<Page>('home');
-  const [showAuth, setShowAuth] = useState(false);
+  const [currentPage, setCurrentPage] = useState<AppPage>('home');
   const { loading, user } = useAuth();
 
   const handleNavigate = (page: string) => {
     if (page === 'quiz' || page === 'red-flags' || page === 'health-tracker' || page === 'dashboard') {
       if (!user) {
-        setShowAuth(true);
+        setCurrentPage(page === 'health-tracker' ? 'auth-after' : 'auth-before');
         return;
       }
     }
-    setCurrentPage(page as Page);
+    setCurrentPage(page as AppPage);
     window.scrollTo(0, 0);
   };
 
-  const handleAuthClick = () => {
-    setShowAuth(true);
-  };
-
-  const handleAuthClose = () => {
-    setShowAuth(false);
-  };
+  const handleAuthClick = () => setCurrentPage('auth-before');
 
   if (loading) {
     return (
@@ -54,10 +48,24 @@ function AppContent() {
         currentPage={currentPage}
       />
 
-      {showAuth && <Auth onClose={handleAuthClose} />}
-
       {currentPage === 'home' && (
-        <Landing onNavigate={handleNavigate} onAuthClick={handleAuthClick} />
+        <Landing onNavigate={handleNavigate} />
+      )}
+
+      {currentPage === 'auth-before' && (
+        <Auth
+          mode="before"
+          onBack={() => handleNavigate('home')}
+          onSuccess={() => handleNavigate('dashboard')}
+        />
+      )}
+
+      {currentPage === 'auth-after' && (
+        <Auth
+          mode="after"
+          onBack={() => handleNavigate('home')}
+          onSuccess={() => handleNavigate('dashboard')}
+        />
       )}
 
       {currentPage === 'services' && (

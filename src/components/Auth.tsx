@@ -1,16 +1,19 @@
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { X } from 'lucide-react';
+import { ArrowLeft, HeartHandshake, Link2, Users } from 'lucide-react';
 
 type AuthProps = {
-  onClose: () => void;
+  mode: 'before' | 'after';
+  onBack: () => void;
+  onSuccess: () => void;
 };
 
-export function Auth({ onClose }: AuthProps) {
+export function Auth({ mode, onBack, onSuccess }: AuthProps) {
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
+  const [partnerEmail, setPartnerEmail] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { signIn, signUp } = useAuth();
@@ -22,13 +25,14 @@ export function Auth({ onClose }: AuthProps) {
 
     try {
       if (isSignUp) {
-        const { error } = await signUp(email, password, fullName);
+        const relationshipStatus = mode === 'after' ? 'married' : 'single';
+        const { error } = await signUp(email, password, fullName, relationshipStatus, partnerEmail);
         if (error) throw error;
       } else {
         const { error } = await signIn(email, password);
         if (error) throw error;
       }
-      onClose();
+      onSuccess();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -36,90 +40,152 @@ export function Auth({ onClose }: AuthProps) {
     }
   };
 
+  const isAfterMarriage = mode === 'after';
+
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 relative">
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition"
-        >
-          <X size={24} />
-        </button>
+    <div className="min-h-[calc(100vh-64px)] bg-[radial-gradient(circle_at_top,#ecfeff_0%,#ffffff_40%,#f8fafc_100%)] px-4 py-10 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-5xl overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl">
+        <div className="grid lg:grid-cols-2">
+          <aside className={`p-8 sm:p-10 ${isAfterMarriage ? 'bg-gradient-to-br from-emerald-700 to-teal-600 text-white' : 'bg-gradient-to-br from-amber-600 to-rose-500 text-white'}`}>
+            <button
+              onClick={onBack}
+              className="inline-flex items-center gap-2 rounded-lg border border-white/30 px-3 py-2 text-sm font-semibold hover:bg-white/10"
+            >
+              <ArrowLeft size={16} /> Back to Home
+            </button>
 
-        <h2 className="text-3xl font-bold text-gray-800 mb-2">
-          {isSignUp ? 'Create Account' : 'Welcome Back'}
-        </h2>
-        <p className="text-gray-600 mb-6">
-          {isSignUp ? 'Start your journey to a better relationship' : 'Sign in to continue'}
-        </p>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {isSignUp && (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Full Name
-              </label>
-              <input
-                type="text"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                required
-              />
+            <div className="mt-8 inline-flex h-12 w-12 items-center justify-center rounded-full bg-white/20">
+              {isAfterMarriage ? <Users size={24} /> : <HeartHandshake size={24} />}
             </div>
-          )}
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Email
-            </label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-              required
-            />
-          </div>
+            <h2 className="mt-5 text-3xl font-extrabold">
+              {isAfterMarriage ? 'After Marriage Access' : 'Before Marriage Access'}
+            </h2>
+            <p className="mt-3 text-white/90">
+              {isAfterMarriage
+                ? 'Create or use your couple account to improve communication, resolve conflict, and rebuild connection with a structured plan.'
+                : 'Create or use your individual account to check compatibility, detect red flags, and decide with clarity before commitment.'}
+            </p>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Password
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-              required
-              minLength={6}
-            />
-          </div>
+            <ul className="mt-8 space-y-3 text-sm">
+              {isAfterMarriage ? (
+                <>
+                  <li className="rounded-lg bg-white/10 px-3 py-2">Joint relationship dashboard</li>
+                  <li className="rounded-lg bg-white/10 px-3 py-2">Partner invitation and sync</li>
+                  <li className="rounded-lg bg-white/10 px-3 py-2">Conflict and health action plans</li>
+                </>
+              ) : (
+                <>
+                  <li className="rounded-lg bg-white/10 px-3 py-2">Compatibility scoring</li>
+                  <li className="rounded-lg bg-white/10 px-3 py-2">Risk and red-flag detection</li>
+                  <li className="rounded-lg bg-white/10 px-3 py-2">Decision confidence framework</li>
+                </>
+              )}
+            </ul>
+          </aside>
 
-          {error && (
-            <div className="bg-red-50 text-red-600 px-4 py-3 rounded-lg text-sm">
-              {error}
+          <div className="p-8 sm:p-10">
+            <div className="mb-6">
+              <p className="text-xs font-bold uppercase tracking-wide text-slate-500">
+                {isAfterMarriage ? 'Couple / Joint Account' : 'Individual Account'}
+              </p>
+              <h3 className="mt-2 text-3xl font-extrabold text-slate-900">
+                {isSignUp ? 'Create Your Account' : 'Welcome Back'}
+              </h3>
+              <p className="mt-2 text-slate-600">
+                {isSignUp
+                  ? 'Secure your account to unlock guided relationship decisions.'
+                  : 'Sign in to continue your relationship clarity journey.'}
+              </p>
             </div>
-          )}
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {loading ? 'Processing...' : isSignUp ? 'Sign Up' : 'Sign In'}
-          </button>
-        </form>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {isSignUp && (
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-slate-700">
+                    Full Name
+                  </label>
+                  <input
+                    type="text"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
+                    required
+                  />
+                </div>
+              )}
 
-        <p className="mt-6 text-center text-sm text-gray-600">
-          {isSignUp ? 'Already have an account?' : "Don't have an account?"}{' '}
-          <button
-            onClick={() => setIsSignUp(!isSignUp)}
-            className="text-blue-600 font-semibold hover:text-blue-700 transition"
-          >
-            {isSignUp ? 'Sign In' : 'Sign Up'}
-          </button>
-        </p>
+              <div>
+                <label className="mb-1 block text-sm font-medium text-slate-700">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm font-medium text-slate-700">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
+                  required
+                  minLength={6}
+                />
+              </div>
+
+              {isSignUp && isAfterMarriage && (
+                <div>
+                  <label className="mb-1 flex items-center gap-1 text-sm font-medium text-slate-700">
+                    <Link2 size={14} /> Partner Email (optional)
+                  </label>
+                  <input
+                    type="email"
+                    value={partnerEmail}
+                    onChange={(e) => setPartnerEmail(e.target.value)}
+                    className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
+                    placeholder="partner@email.com"
+                  />
+                  <p className="mt-1 text-xs text-slate-500">
+                    We will send a partner invite so both of you can use the couple tools together.
+                  </p>
+                </div>
+              )}
+
+              {error && (
+                <div className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
+                  {error}
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={loading}
+                className={`w-full rounded-lg py-3 font-bold text-white transition disabled:cursor-not-allowed disabled:opacity-60 ${isAfterMarriage ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-amber-600 hover:bg-amber-700'}`}
+              >
+                {loading ? 'Processing...' : isSignUp ? 'Sign Up' : 'Sign In'}
+              </button>
+            </form>
+
+            <p className="mt-6 text-center text-sm text-slate-600">
+              {isSignUp ? 'Already have an account?' : "Don't have an account?"}{' '}
+              <button
+                onClick={() => setIsSignUp(!isSignUp)}
+                className="font-bold text-slate-900 hover:underline"
+              >
+                {isSignUp ? 'Sign In' : 'Sign Up'}
+              </button>
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

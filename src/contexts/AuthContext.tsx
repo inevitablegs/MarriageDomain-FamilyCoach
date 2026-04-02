@@ -7,7 +7,13 @@ type AuthContextType = {
   session: Session | null;
   profile: Profile | null;
   loading: boolean;
-  signUp: (email: string, password: string, fullName: string) => Promise<{ error: Error | null }>;
+  signUp: (
+    email: string,
+    password: string,
+    fullName: string,
+    relationshipStatus?: 'single' | 'engaged' | 'married',
+    partnerEmail?: string
+  ) => Promise<{ error: Error | null }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
 };
@@ -96,7 +102,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const signUp = async (email: string, password: string, fullName: string) => {
+  const signUp = async (
+    email: string,
+    password: string,
+    fullName: string,
+    relationshipStatus: 'single' | 'engaged' | 'married' = 'single',
+    partnerEmail?: string
+  ) => {
     try {
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -112,10 +124,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             id: data.user.id,
             email,
             full_name: fullName,
-            relationship_status: 'single'
+            relationship_status: relationshipStatus,
           });
 
         if (profileError) throw profileError;
+
+        const normalizedPartnerEmail = (partnerEmail || '').trim().toLowerCase();
+        const normalizedUserEmail = email.trim().toLowerCase();
+
+        if (
+          relationshipStatus === 'married' &&
+          normalizedPartnerEmail.length > 0 &&
+          normalizedPartnerEmail !== normalizedUserEmail
+        ) {
+          const { error: invitationError } = await supabase.from('partner_invitations').insert({
+            inviter_id: data.user.id,
+            invitee_email: normalizedPartnerEmail,
+            status: 'pending',
+          });
+
+          // Keep sign up successful even if invitation insert fails.
+          if (invitationError) {
+            console.warn('Unable to create partner invitation during sign up:', invitationError.message);
+          }
+        }
       }
 
       return { error: null };
