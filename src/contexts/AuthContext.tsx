@@ -110,14 +110,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     partnerEmail?: string
   ) => {
     try {
+      if (relationshipStatus === 'married' && (!partnerEmail || partnerEmail.trim().length === 0)) {
+        return { error: new Error('Partner email is required for couple joint account sign up.') };
+      }
+
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          data: {
+            full_name: fullName,
+          },
+        },
       });
 
-      if (error) throw error;
+      if (error) {
+        const message = (error.message || '').toLowerCase();
+        if (message.includes('429') || message.includes('rate limit') || message.includes('over_email_send_rate_limit')) {
+          return { error: new Error('Too many signup attempts. Please wait 30-60 seconds and try again.') };
+        }
+        throw error;
+      }
 
-      if (data.user) {
+      // Only write profile/invitations when session exists (authenticated).
+      // If email confirmation is enabled, session is null and profile writes will fail with 401.
+      if (data.user && data.session) {
         const { error: profileError } = await supabase
           .from('profiles')
           .insert({
@@ -132,11 +149,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const normalizedPartnerEmail = (partnerEmail || '').trim().toLowerCase();
         const normalizedUserEmail = email.trim().toLowerCase();
 
-        if (
-          relationshipStatus === 'married' &&
-          normalizedPartnerEmail.length > 0 &&
-          normalizedPartnerEmail !== normalizedUserEmail
-        ) {
+        if (relationshipStatus === 'married' && normalizedPartnerEmail === normalizedUserEmail) {
+          return { error: new Error('Partner email must be different from your own email.') };
+        }
+
+        if (relationshipStatus === 'married' && normalizedPartnerEmail.length > 0) {
           const { error: invitationError } = await supabase.from('partner_invitations').insert({
             inviter_id: data.user.id,
             invitee_email: normalizedPartnerEmail,
@@ -147,6 +164,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           if (invitationError) {
             console.warn('Unable to create partner invitation during sign up:', invitationError.message);
           }
+        }
+      }
+
+      // If the project has email confirmation disabled, this creates a session immediately.
+      // If not, try to sign in directly so the app can continue without manual confirmation when allowed.
+      if (!data.session) {
+        const { error: autoSignInError } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+
+        if (autoSignInError) {
+          const message = autoSignInError.message?.toLowerCase() || '';
+          if (message.includes('429') || message.includes('rate limit')) {
+            return { error: new Error('Too many auth requests right now. Please wait a minute and try again.') };
+          }
+          if (message.includes('email not confirmed') || message.includes('not confirmed')) {
+            return {
+              error: new Error(
+                'Email confirmation is enabled in Supabase. Disable "Confirm email" in Supabase Auth settings to skip Gmail confirmation for now.'
+              ),
+            };
+          }
+
+          return { error: autoSignInError as Error };
         }
       }
 

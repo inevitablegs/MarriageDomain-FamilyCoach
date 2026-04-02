@@ -1,25 +1,170 @@
-import { useState, useEffect } from 'react';
+import { ReactNode, useEffect, useMemo, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { supabase, CompatibilityAssessment, RedFlag, RelationshipHealth } from '../lib/supabase';
+import { CompatibilityAssessment, RedFlag, RelationshipHealth, supabase } from '../lib/supabase';
 import {
-  Heart,
   AlertTriangle,
-  TrendingUp,
+  ArrowRight,
+  CheckCircle2,
   ClipboardList,
-  Calendar,
-  Award,
-  Activity,
+  Handshake,
+  Heart,
+  Link2,
+  MessageCircleHeart,
   ShieldAlert,
   Sparkles,
+  TrendingUp,
+  Users,
 } from 'lucide-react';
-import { AIRecommendations } from '../components/AIRecommendations';
-import { AssessmentData, RedFlagData, HealthData } from '../lib/ai';
 
 type DashboardProps = {
   onNavigate: (page: string) => void;
+  mode?: 'before' | 'after';
 };
 
-export function Dashboard({ onNavigate }: DashboardProps) {
+type ServiceItem = {
+  name: string;
+  priceLabel: string;
+  description: string;
+  bullets: string[];
+  cta: string;
+  targetPage: 'quiz' | 'red-flags' | 'health-tracker';
+};
+
+const beforeMarriageServices: ServiceItem[] = [
+  {
+    name: 'Basic Compatibility Quiz',
+    priceLabel: 'FREE',
+    description: 'Get a quick assessment of your relationship compatibility.',
+    bullets: ['Values alignment check', 'Lifestyle compatibility', 'Basic communication assessment'],
+    cta: 'Start Free Quiz',
+    targetPage: 'quiz',
+  },
+  {
+    name: 'Advanced Compatibility Report',
+    priceLabel: 'INR 499',
+    description: 'Deep analysis with risk scoring and recommendations.',
+    bullets: ['Detailed scoring', 'Risk factor identification', 'Personalized recommendations'],
+    cta: 'Generate Advanced Report',
+    targetPage: 'quiz',
+  },
+  {
+    name: 'Red Flag Deep Analysis',
+    priceLabel: 'INR 799',
+    description: 'Identify potential warning signs before commitment.',
+    bullets: ['Behavior pattern analysis', 'Warning indicators', 'Guided interpretation'],
+    cta: 'Run Deep Red Flag Analysis',
+    targetPage: 'red-flags',
+  },
+  {
+    name: '1:1 Decision Clarity Session',
+    priceLabel: 'INR 1,999',
+    description: 'Personal coaching to help you decide with confidence.',
+    bullets: ['Private clarity framework', 'Decision structure', 'Follow-up guidance'],
+    cta: 'Prepare Decision Session',
+    targetPage: 'quiz',
+  },
+  {
+    name: 'Pre-Marriage Readiness Program',
+    priceLabel: 'INR 4,999',
+    description: 'Structured preparation for a stronger marriage foundation.',
+    bullets: ['Communication preparation', 'Financial alignment prep', 'Conflict framework'],
+    cta: 'Start Readiness Program',
+    targetPage: 'quiz',
+  },
+  {
+    name: 'Decision Confidence Score',
+    priceLabel: 'INR 299',
+    description: 'Final confidence indicator based on your complete assessment data.',
+    bullets: ['Risk vs confidence output', 'Clarity score', 'Action recommendation'],
+    cta: 'Get Confidence Score',
+    targetPage: 'quiz',
+  },
+  {
+    name: 'Compatibility Deep Scan',
+    priceLabel: 'Included',
+    description: 'Assess long-term alignment before commitment.',
+    bullets: ['Values fit score', 'Lifestyle alignment', 'Communication gaps'],
+    cta: 'Start Compatibility',
+    targetPage: 'quiz',
+  },
+  {
+    name: 'Red Flag Intelligence',
+    priceLabel: 'Included',
+    description: 'Identify high-risk issues early, not after damage.',
+    bullets: ['Behavior risk map', 'Severity insights', 'Action steps'],
+    cta: 'Run Red Flag Check',
+    targetPage: 'red-flags',
+  },
+];
+
+const afterMarriageServices: ServiceItem[] = [
+  {
+    name: 'Relationship Health Dashboard',
+    priceLabel: 'FREE',
+    description: 'Track relationship metrics and progress over time.',
+    bullets: ['Weekly health check-ins', 'Trend visualization', 'Improvement signals'],
+    cta: 'Open Health Dashboard',
+    targetPage: 'health-tracker',
+  },
+  {
+    name: 'Conflict Resolution Program',
+    priceLabel: 'INR 2,999',
+    description: 'Build practical conflict resolution habits as a couple.',
+    bullets: ['De-escalation patterns', 'Repair communication', 'Guided action steps'],
+    cta: 'Start Conflict Program',
+    targetPage: 'red-flags',
+  },
+  {
+    name: 'Emotional Intimacy Rebuild',
+    priceLabel: 'INR 3,999',
+    description: 'Rebuild trust, emotional closeness, and consistent communication.',
+    bullets: ['Connection exercises', 'Trust rebuilding', 'Intimacy improvement plan'],
+    cta: 'Begin Rebuild Journey',
+    targetPage: 'health-tracker',
+  },
+  {
+    name: 'Crisis Recovery Plan',
+    priceLabel: 'INR 7,999',
+    description: 'Intensive support for high-conflict or unstable phases.',
+    bullets: ['Urgent issue stabilization', 'Recovery roadmap', 'Priority intervention flow'],
+    cta: 'Activate Recovery Plan',
+    targetPage: 'red-flags',
+  },
+  {
+    name: 'Premium Couple Coaching',
+    priceLabel: 'INR 9,999',
+    description: 'High-touch ongoing support for long-term relationship growth.',
+    bullets: ['Couple growth strategy', 'Ongoing check-ins', 'Priority support model'],
+    cta: 'Start Premium Coaching',
+    targetPage: 'quiz',
+  },
+  {
+    name: 'Couple Assessment Sessions',
+    priceLabel: 'Included',
+    description: 'Joint scoring and clarity framework for both partners.',
+    bullets: ['Private partner submissions', 'Shared report output', 'Risk-weighted analysis'],
+    cta: 'Open Couple Assessment',
+    targetPage: 'quiz',
+  },
+  {
+    name: 'Relationship Health Tracking',
+    priceLabel: 'Included',
+    description: 'Monitor communication and emotional recovery over time.',
+    bullets: ['Health snapshots', 'Trend visibility', 'Improvement tracking'],
+    cta: 'Track Relationship Health',
+    targetPage: 'health-tracker',
+  },
+  {
+    name: 'Conflict Risk Monitor',
+    priceLabel: 'Included',
+    description: 'Catch repeat patterns causing fights and emotional distance.',
+    bullets: ['Trigger identification', 'Risk severity', 'Stability guidance'],
+    cta: 'Check Conflict Risks',
+    targetPage: 'red-flags',
+  },
+];
+
+export function Dashboard({ mode, onNavigate }: DashboardProps) {
   const { profile, loading: authLoading } = useAuth();
   const [assessments, setAssessments] = useState<CompatibilityAssessment[]>([]);
   const [redFlags, setRedFlags] = useState<RedFlag[]>([]);
@@ -27,410 +172,271 @@ export function Dashboard({ onNavigate }: DashboardProps) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    void loadDashboardData();
-  }, [profile?.id]);
-
-  const loadDashboardData = async () => {
     if (!profile) return;
 
-    try {
-      const [assessmentsData, redFlagsData, healthData] = await Promise.all([
-        supabase
-          .from('compatibility_assessments')
-          .select('*')
-          .eq('user_id', profile.id)
-          .order('completed_at', { ascending: false }),
-        supabase
-          .from('red_flags')
-          .select('*')
-          .eq('user_id', profile.id)
-          .order('detected_at', { ascending: false }),
-        supabase
-          .from('relationship_health')
-          .select('*')
-          .eq('user_id', profile.id)
-          .order('recorded_at', { ascending: false })
-          .limit(5),
-      ]);
+    const loadData = async () => {
+      try {
+        const [assessmentsData, redFlagsData, healthData] = await Promise.all([
+          supabase
+            .from('compatibility_assessments')
+            .select('*')
+            .eq('user_id', profile.id)
+            .order('completed_at', { ascending: false })
+            .limit(6),
+          supabase
+            .from('red_flags')
+            .select('*')
+            .eq('user_id', profile.id)
+            .order('detected_at', { ascending: false })
+            .limit(10),
+          supabase
+            .from('relationship_health')
+            .select('*')
+            .eq('user_id', profile.id)
+            .order('recorded_at', { ascending: false })
+            .limit(6),
+        ]);
 
-      if (assessmentsData.data) setAssessments(assessmentsData.data);
-      if (redFlagsData.data) setRedFlags(redFlagsData.data);
-      if (healthData.data) setHealthRecords(healthData.data);
-    } catch (error) {
-      console.error('Error loading dashboard data:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (authLoading || !profile) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading dashboard...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading your dashboard...</p>
-        </div>
-      </div>
-    );
-  }
-
-  const latestAssessment = assessments[0];
-  const highSeverityFlags = redFlags.filter(f => f.severity === 'high').length;
-  const latestHealth = healthRecords[0];
-  const mediumSeverityFlags = redFlags.filter(f => f.severity === 'medium').length;
-  const lowSeverityFlags = redFlags.filter(f => f.severity === 'low').length;
-
-  const assessmentData: AssessmentData | undefined = latestAssessment
-    ? {
-        values_score: latestAssessment.values_score,
-        lifestyle_score: latestAssessment.lifestyle_score,
-        communication_score: latestAssessment.communication_score,
-        total_score: latestAssessment.total_score,
-        relationship_status: profile?.relationship_status || 'single',
+        if (assessmentsData.data) setAssessments(assessmentsData.data);
+        if (redFlagsData.data) setRedFlags(redFlagsData.data);
+        if (healthData.data) setHealthRecords(healthData.data);
+      } catch (error) {
+        console.error('Error loading dashboard data:', error);
+      } finally {
+        setLoading(false);
       }
-    : undefined;
-
-  const redFlagData: RedFlagData | undefined = redFlags.length > 0
-    ? {
-        high_severity: redFlags.filter(f => f.severity === 'high').length,
-        medium_severity: redFlags.filter(f => f.severity === 'medium').length,
-        low_severity: redFlags.filter(f => f.severity === 'low').length,
-        categories: [...new Set(redFlags.map(f => f.category))],
-      }
-    : undefined;
-
-  const healthData: HealthData | undefined = latestHealth
-    ? {
-        emotional_score: latestHealth.emotional_score,
-        communication_score: latestHealth.communication_score,
-        intimacy_score: latestHealth.intimacy_score,
-        conflict_score: latestHealth.conflict_score,
-        overall_score: latestHealth.overall_score,
-      }
-    : undefined;
-
-  const relationshipHealthLabel = latestHealth
-    ? latestHealth.overall_score >= 80
-      ? 'Strong'
-      : latestHealth.overall_score >= 60
-        ? 'Stable'
-        : 'Needs Attention'
-    : 'Not Tracked';
-
-  const latestActivityDate = [
-    assessments[0]?.completed_at,
-    redFlags[0]?.detected_at,
-    healthRecords[0]?.recorded_at,
-  ]
-    .filter(Boolean)
-    .map((value) => new Date(String(value)).getTime())
-    .sort((a, b) => b - a)[0];
-
-  const assessmentHistory = assessments.map((assessment) => {
-    const responses = assessment.responses as Record<string, unknown> | undefined;
-    const reportSummary = (responses?.report_summary as Record<string, unknown> | undefined) || undefined;
-    const categoryScores = (reportSummary?.category_scores as Record<string, number> | undefined) || undefined;
-
-    return {
-      ...assessment,
-      weightedRisk: typeof reportSummary?.weighted_risk_percent === 'number' ? reportSummary.weighted_risk_percent : null,
-      categoryScores,
     };
-  });
+
+    void loadData();
+  }, [profile]);
+
+  if (authLoading || loading || !profile) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-slate-600">Loading dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  const isCoupleDashboard = mode ? mode === 'after' : profile.relationship_status === 'married';
+
+  return isCoupleDashboard ? (
+    <AfterMarriageDashboard
+      onNavigate={onNavigate}
+      profileName={profile.full_name}
+      hasPartnerConnected={Boolean(profile.partner_id)}
+      assessments={assessments}
+      redFlags={redFlags}
+      healthRecords={healthRecords}
+    />
+  ) : (
+    <BeforeMarriageDashboard
+      onNavigate={onNavigate}
+      profileName={profile.full_name}
+      assessments={assessments}
+      redFlags={redFlags}
+    />
+  );
+}
+
+type CommonDataProps = {
+  onNavigate: (page: string) => void;
+  profileName: string;
+  assessments: CompatibilityAssessment[];
+  redFlags: RedFlag[];
+};
+
+type CoupleDataProps = CommonDataProps & {
+  hasPartnerConnected: boolean;
+  healthRecords: RelationshipHealth[];
+};
+
+function BeforeMarriageDashboard({ onNavigate, profileName, assessments, redFlags }: CommonDataProps) {
+  const latestAssessment = assessments[0];
+  const highRisk = redFlags.filter((entry) => entry.severity === 'high').length;
 
   return (
     <div className="min-h-screen bg-slate-50 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-8 rounded-3xl bg-gradient-to-r from-slate-900 via-blue-900 to-cyan-800 px-6 py-8 text-white shadow-xl">
-          <div className="flex flex-wrap items-start justify-between gap-4">
-            <div>
-              <p className="text-cyan-200 text-sm font-semibold tracking-wide uppercase">Relationship Command Center</p>
-              <h1 className="text-3xl sm:text-4xl font-bold mt-2">Welcome back, {profile?.full_name}</h1>
-              <p className="text-cyan-100 mt-2">
-                Status: <span className="font-semibold capitalize">{profile?.relationship_status}</span>
-              </p>
-            </div>
-            <div className="rounded-2xl bg-white/10 backdrop-blur px-4 py-3 min-w-52">
-              <p className="text-xs text-cyan-100 uppercase tracking-wide">Latest Activity</p>
-              <p className="text-lg font-semibold mt-1">
-                {latestActivityDate ? new Date(latestActivityDate).toLocaleString() : 'No activity yet'}
-              </p>
-            </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-7">
+        <section className="rounded-3xl bg-gradient-to-r from-amber-700 to-rose-600 text-white px-6 py-8 shadow-xl">
+          <p className="text-amber-100 text-sm uppercase tracking-wide font-semibold">Before Marriage Dashboard</p>
+          <h1 className="text-3xl sm:text-4xl font-bold mt-2">Welcome, {profileName}</h1>
+          <p className="mt-2 text-amber-50">Make a confident decision with data-backed compatibility and red-flag insights.</p>
+        </section>
+
+        <section className="grid md:grid-cols-3 gap-5">
+          <MetricCard icon={<ClipboardList className="text-blue-600" size={24} />} label="Assessments" value={String(assessments.length)} helper="Completed reports" />
+          <MetricCard icon={<TrendingUp className="text-emerald-600" size={24} />} label="Latest Compatibility" value={latestAssessment ? `${latestAssessment.total_score}%` : 'N/A'} helper="Most recent score" />
+          <MetricCard icon={<ShieldAlert className="text-red-600" size={24} />} label="High Risk Flags" value={String(highRisk)} helper="Needs careful review" />
+        </section>
+
+        <section className="bg-white rounded-2xl border border-slate-200 p-6">
+          <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2"><Sparkles size={18} /> Services For You</h2>
+          <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
+            {beforeMarriageServices.map((service) => (
+              <ServiceCard key={service.name} service={service} onNavigate={onNavigate} />
+            ))}
           </div>
-        </div>
+        </section>
 
-        {(assessmentData || redFlagData || healthData) && (
-          <div className="mb-8">
-            <AIRecommendations
-              assessmentData={assessmentData}
-              redFlagData={redFlagData}
-              healthData={healthData}
-            />
+        <section className="bg-white rounded-2xl border border-slate-200 p-6">
+          <h2 className="text-xl font-bold text-slate-900 mb-4">Quick Actions</h2>
+          <div className="flex flex-wrap gap-3">
+            <ActionButton onClick={() => onNavigate('quiz')} label="Start Compatibility Assessment" />
+            <ActionButton onClick={() => onNavigate('red-flags')} label="Run Red Flag Checker" variant="secondary" />
           </div>
-        )}
-
-        <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-5 mb-8">
-          <div className="bg-white rounded-2xl shadow-md border border-slate-100 p-6">
-            <div className="flex items-center justify-between mb-4">
-              <div className="bg-blue-100 p-3 rounded-xl">
-                <ClipboardList className="text-blue-600" size={24} />
-              </div>
-              <span className="text-3xl font-bold text-gray-900">{assessments.length}</span>
-            </div>
-            <h3 className="text-gray-600 font-medium">Assessments Completed</h3>
-            <p className="text-xs text-gray-500 mt-1">Track progress across repeated couple assessments.</p>
-          </div>
-
-          <div className="bg-white rounded-2xl shadow-md border border-slate-100 p-6">
-            <div className="flex items-center justify-between mb-4">
-              <div className="bg-red-100 p-3 rounded-xl">
-                <AlertTriangle className="text-red-600" size={24} />
-              </div>
-              <span className="text-3xl font-bold text-gray-900">{highSeverityFlags}</span>
-            </div>
-            <h3 className="text-gray-600 font-medium">High Priority Alerts</h3>
-            <p className="text-xs text-gray-500 mt-1">Immediate areas needing focused intervention.</p>
-          </div>
-
-          <div className="bg-white rounded-2xl shadow-md border border-slate-100 p-6">
-            <div className="flex items-center justify-between mb-4">
-              <div className="bg-green-100 p-3 rounded-xl">
-                <TrendingUp className="text-green-600" size={24} />
-              </div>
-              <span className="text-3xl font-bold text-gray-900">
-                {latestAssessment ? `${latestAssessment.total_score}%` : 'N/A'}
-              </span>
-            </div>
-            <h3 className="text-gray-600 font-medium">Latest Compatibility</h3>
-            <p className="text-xs text-gray-500 mt-1">Weighted match from the most recent report.</p>
-          </div>
-
-          <div className="bg-white rounded-2xl shadow-md border border-slate-100 p-6">
-            <div className="flex items-center justify-between mb-4">
-              <div className="bg-violet-100 p-3 rounded-xl">
-                <Activity className="text-violet-600" size={24} />
-              </div>
-              <span className="text-2xl font-bold text-gray-900">{relationshipHealthLabel}</span>
-            </div>
-            <h3 className="text-gray-600 font-medium">Relationship Health</h3>
-            <p className="text-xs text-gray-500 mt-1">
-              {latestHealth ? `Overall ${latestHealth.overall_score}% from last health check.` : 'Start health tracking to monitor consistency.'}
-            </p>
-          </div>
-        </div>
-
-        <div className="grid lg:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white rounded-2xl shadow-md border border-slate-100 p-6 lg:col-span-1">
-            <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center space-x-2">
-              <Heart className="text-rose-500" />
-              <span>Quick Actions</span>
-            </h2>
-            <div className="space-y-3">
-              <button
-                onClick={() => onNavigate('quiz')}
-                className="w-full bg-blue-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-blue-700 transition text-left flex items-center justify-between"
-              >
-                <span>Start Couple Assessment</span>
-                <Award size={20} />
-              </button>
-              <button
-                onClick={() => onNavigate('red-flags')}
-                className="w-full bg-orange-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-orange-700 transition text-left flex items-center justify-between"
-              >
-                <span>Check for Red Flags</span>
-                <AlertTriangle size={20} />
-              </button>
-              {profile?.relationship_status === 'married' && (
-                <button
-                  onClick={() => onNavigate('health-tracker')}
-                  className="w-full bg-green-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-green-700 transition text-left flex items-center justify-between"
-                >
-                  <span>Track Relationship Health</span>
-                  <TrendingUp size={20} />
-                </button>
-              )}
-              <button
-                onClick={() => onNavigate('services')}
-                className="w-full border-2 border-blue-600 text-blue-600 py-3 px-4 rounded-xl font-semibold hover:bg-blue-50 transition text-left flex items-center justify-between"
-              >
-                <span>Browse All Services</span>
-                <Calendar size={20} />
-              </button>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-2xl shadow-md border border-slate-100 p-6 lg:col-span-2">
-            <h2 className="text-xl font-bold text-gray-800 mb-4">Recent Activity</h2>
-            {assessments.length === 0 && redFlags.length === 0 && healthRecords.length === 0 ? (
-              <div className="text-center py-8 text-gray-500">
-                <p>No activity yet. Start by taking a compatibility quiz!</p>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {assessments.slice(0, 3).map((assessment) => (
-                  <div key={assessment.id} className="rounded-xl border border-blue-100 bg-blue-50/40 px-4 py-3">
-                    <p className="font-semibold text-gray-800">Compatibility Assessment</p>
-                    <p className="text-sm text-gray-600">Score: {assessment.total_score}%</p>
-                    <p className="text-xs text-gray-500">
-                      {new Date(assessment.completed_at).toLocaleDateString()}
-                    </p>
-                  </div>
-                ))}
-                {redFlags.slice(0, 2).map((flag) => (
-                  <div key={flag.id} className="rounded-xl border border-red-100 bg-red-50/40 px-4 py-3">
-                    <p className="font-semibold text-gray-800">Red Flag Detected</p>
-                    <p className="text-sm text-gray-600">{flag.category}</p>
-                    <p className="text-xs text-gray-500">
-                      Severity: <span className="capitalize">{flag.severity}</span>
-                    </p>
-                  </div>
-                ))}
-                {healthRecords.slice(0, 2).map((health) => (
-                  <div key={health.id} className="rounded-xl border border-emerald-100 bg-emerald-50/40 px-4 py-3">
-                    <p className="font-semibold text-gray-800">Health Check-in</p>
-                    <p className="text-sm text-gray-600">Overall: {health.overall_score}%</p>
-                    <p className="text-xs text-gray-500">{new Date(health.recorded_at).toLocaleDateString()}</p>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-
-        <div className="bg-white rounded-2xl shadow-md border border-slate-100 p-6 mb-8">
-          <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
-            <h2 className="text-xl font-bold text-gray-800">Assessment Report History</h2>
-            <button
-              onClick={() => onNavigate('quiz')}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition"
-            >
-              Take New Assessment
-            </button>
-          </div>
-
-          {assessmentHistory.length === 0 ? (
-            <div className="rounded-xl border border-dashed border-slate-300 p-6 text-center">
-              <p className="text-gray-600 font-medium">No assessment reports yet.</p>
-              <p className="text-sm text-gray-500 mt-1">Start your first couple assessment to build your report history.</p>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {assessmentHistory.map((item, index) => (
-                <div key={item.id} className="rounded-xl border border-slate-200 p-4">
-                  <div className="flex flex-wrap items-start justify-between gap-3">
-                    <div>
-                      <p className="text-xs uppercase tracking-wide text-slate-500">Report #{assessmentHistory.length - index}</p>
-                      <p className="text-lg font-semibold text-slate-900">Compatibility: {item.total_score}%</p>
-                      <p className="text-sm text-slate-600">{new Date(item.completed_at).toLocaleString()}</p>
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      <span className="px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold capitalize">
-                        {item.assessment_type}
-                      </span>
-                      {item.weightedRisk !== null && (
-                        <span className="px-3 py-1 rounded-full bg-red-50 text-red-700 text-xs font-semibold">
-                          Weighted Risk {item.weightedRisk}%
-                        </span>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="grid sm:grid-cols-3 gap-3 mt-4">
-                    <div className="rounded-lg bg-slate-50 p-3">
-                      <p className="text-xs text-slate-500">Values</p>
-                      <p className="text-lg font-bold text-slate-900">{item.values_score}%</p>
-                    </div>
-                    <div className="rounded-lg bg-slate-50 p-3">
-                      <p className="text-xs text-slate-500">Lifestyle</p>
-                      <p className="text-lg font-bold text-slate-900">{item.lifestyle_score}%</p>
-                    </div>
-                    <div className="rounded-lg bg-slate-50 p-3">
-                      <p className="text-xs text-slate-500">Communication</p>
-                      <p className="text-lg font-bold text-slate-900">{item.communication_score}%</p>
-                    </div>
-                  </div>
-
-                  {item.categoryScores && (
-                    <div className="mt-4">
-                      <p className="text-xs uppercase tracking-wide text-slate-500 mb-2">Category Breakdown</p>
-                      <div className="flex flex-wrap gap-2">
-                        {Object.entries(item.categoryScores).map(([name, score]) => (
-                          <span key={name} className="px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-700 text-xs font-semibold">
-                            {name}: {score}%
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        <div className="grid lg:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white rounded-2xl shadow-md border border-slate-100 p-6">
-            <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <ShieldAlert size={18} className="text-red-600" /> Alert Distribution
-            </h3>
-            <div className="space-y-3 text-sm">
-              <div className="flex justify-between"><span className="text-gray-600">High</span><span className="font-semibold text-red-700">{highSeverityFlags}</span></div>
-              <div className="flex justify-between"><span className="text-gray-600">Medium</span><span className="font-semibold text-amber-700">{mediumSeverityFlags}</span></div>
-              <div className="flex justify-between"><span className="text-gray-600">Low</span><span className="font-semibold text-emerald-700">{lowSeverityFlags}</span></div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-2xl shadow-md border border-slate-100 p-6 lg:col-span-2">
-            <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <Sparkles size={18} className="text-cyan-600" /> Performance Snapshot
-            </h3>
-            <div className="grid sm:grid-cols-3 gap-3">
-              <div className="rounded-xl bg-slate-100 p-4">
-                <p className="text-xs text-gray-500 uppercase tracking-wide">Values</p>
-                <p className="text-2xl font-bold text-gray-900">{latestAssessment ? `${latestAssessment.values_score}%` : 'N/A'}</p>
-              </div>
-              <div className="rounded-xl bg-slate-100 p-4">
-                <p className="text-xs text-gray-500 uppercase tracking-wide">Lifestyle</p>
-                <p className="text-2xl font-bold text-gray-900">{latestAssessment ? `${latestAssessment.lifestyle_score}%` : 'N/A'}</p>
-              </div>
-              <div className="rounded-xl bg-slate-100 p-4">
-                <p className="text-xs text-gray-500 uppercase tracking-wide">Communication</p>
-                <p className="text-2xl font-bold text-gray-900">{latestAssessment ? `${latestAssessment.communication_score}%` : 'N/A'}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {redFlags.filter(f => f.severity === 'high').length > 0 && (
-          <div className="bg-red-50 border-l-4 border-red-500 rounded-2xl p-6">
-            <h3 className="text-lg font-bold text-red-800 mb-2 flex items-center space-x-2">
-              <AlertTriangle size={20} />
-              <span>High Priority Warnings</span>
-            </h3>
-            <p className="text-red-700 mb-4">
-              We've detected {highSeverityFlags} high-severity red flag(s) in your relationship.
-              Consider booking a 1:1 session for personalized guidance.
-            </p>
-            <button
-              onClick={() => onNavigate('services')}
-              className="bg-red-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-red-700 transition"
-            >
-              Get Expert Help
-            </button>
-          </div>
-        )}
+        </section>
       </div>
     </div>
+  );
+}
+
+function AfterMarriageDashboard({
+  onNavigate,
+  profileName,
+  assessments,
+  redFlags,
+  healthRecords,
+  hasPartnerConnected,
+}: CoupleDataProps) {
+  const latestAssessment = assessments[0];
+  const latestHealth = healthRecords[0];
+  const highRisk = redFlags.filter((entry) => entry.severity === 'high').length;
+
+  const healthLabel = useMemo(() => {
+    if (!latestHealth) return 'Not Tracked';
+    if (latestHealth.overall_score >= 80) return 'Strong';
+    if (latestHealth.overall_score >= 60) return 'Stable';
+    return 'Needs Attention';
+  }, [latestHealth]);
+
+  return (
+    <div className="min-h-screen bg-slate-50 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-7">
+        <section className="rounded-3xl bg-gradient-to-r from-emerald-700 to-teal-600 text-white px-6 py-8 shadow-xl">
+          <p className="text-emerald-100 text-sm uppercase tracking-wide font-semibold">After Marriage Dashboard</p>
+          <h1 className="text-3xl sm:text-4xl font-bold mt-2">Welcome, {profileName}</h1>
+          <p className="mt-2 text-emerald-50">Joint-account workflow for couples to repair communication, reduce conflict, and rebuild connection.</p>
+        </section>
+
+        {!hasPartnerConnected && (
+          <section className="rounded-2xl border-l-4 border-amber-500 bg-amber-50 p-5">
+            <h2 className="font-bold text-amber-900 flex items-center gap-2"><Link2 size={18} /> Joint Account Required</h2>
+            <p className="text-amber-800 mt-2">
+              Couples dashboard features require an active partner connection. Open Couple Assessment and send/accept partner invitation to continue.
+            </p>
+            <button
+              onClick={() => onNavigate('quiz')}
+              className="mt-4 inline-flex items-center gap-2 rounded-lg bg-amber-600 px-4 py-2 font-semibold text-white hover:bg-amber-700 transition"
+            >
+              Connect Partner Now <ArrowRight size={16} />
+            </button>
+          </section>
+        )}
+
+        <section className="grid md:grid-cols-4 gap-5">
+          <MetricCard icon={<Users className="text-teal-600" size={24} />} label="Joint Status" value={hasPartnerConnected ? 'Connected' : 'Pending'} helper="Partner account linkage" />
+          <MetricCard icon={<Heart className="text-rose-600" size={24} />} label="Latest Compatibility" value={latestAssessment ? `${latestAssessment.total_score}%` : 'N/A'} helper="Most recent couple score" />
+          <MetricCard icon={<AlertTriangle className="text-red-600" size={24} />} label="High Risk Flags" value={String(highRisk)} helper="Conflict severity alerts" />
+          <MetricCard icon={<MessageCircleHeart className="text-indigo-600" size={24} />} label="Relationship Health" value={healthLabel} helper={latestHealth ? `Overall ${latestHealth.overall_score}%` : 'Start tracking now'} />
+        </section>
+
+        <section className="bg-white rounded-2xl border border-slate-200 p-6">
+          <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2"><Handshake size={18} /> Couple Services</h2>
+          <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
+            {afterMarriageServices.map((service) => (
+              <ServiceCard key={service.name} service={service} onNavigate={onNavigate} disabled={!hasPartnerConnected && service.targetPage !== 'quiz'} />
+            ))}
+          </div>
+        </section>
+
+        <section className="bg-white rounded-2xl border border-slate-200 p-6">
+          <h2 className="text-xl font-bold text-slate-900 mb-4">Quick Actions</h2>
+          <div className="flex flex-wrap gap-3">
+            <ActionButton onClick={() => onNavigate('quiz')} label="Open Couple Assessment" />
+            <ActionButton onClick={() => onNavigate('health-tracker')} label="Track Relationship Health" variant="secondary" disabled={!hasPartnerConnected} />
+            <ActionButton onClick={() => onNavigate('red-flags')} label="Check Conflict Risks" variant="secondary" disabled={!hasPartnerConnected} />
+          </div>
+        </section>
+      </div>
+    </div>
+  );
+}
+
+type ServiceCardProps = {
+  service: ServiceItem;
+  onNavigate: (page: 'quiz' | 'red-flags' | 'health-tracker') => void;
+  disabled?: boolean;
+};
+
+function ServiceCard({ service, onNavigate, disabled = false }: ServiceCardProps) {
+  return (
+    <article className={`rounded-xl border p-4 ${disabled ? 'border-slate-200 bg-slate-100' : 'border-slate-200 bg-slate-50'}`}>
+      <p className="text-xs font-bold uppercase tracking-wide text-slate-500">{service.priceLabel}</p>
+      <h3 className="text-lg font-bold text-slate-900">{service.name}</h3>
+      <p className="text-sm text-slate-600 mt-1">{service.description}</p>
+      <ul className="mt-3 space-y-1.5">
+        {service.bullets.map((bullet) => (
+          <li key={bullet} className="text-sm text-slate-700 flex items-center gap-2">
+            <CheckCircle2 size={14} className="text-emerald-600" />
+            {bullet}
+          </li>
+        ))}
+      </ul>
+      <button
+        onClick={() => onNavigate(service.targetPage)}
+        disabled={disabled}
+        className="mt-4 inline-flex items-center gap-2 rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800 transition disabled:opacity-45 disabled:cursor-not-allowed"
+      >
+        {service.cta} <ArrowRight size={14} />
+      </button>
+    </article>
+  );
+}
+
+type ActionButtonProps = {
+  onClick: () => void;
+  label: string;
+  variant?: 'primary' | 'secondary';
+  disabled?: boolean;
+};
+
+function ActionButton({ onClick, label, variant = 'primary', disabled = false }: ActionButtonProps) {
+  const className =
+    variant === 'primary'
+      ? 'bg-blue-600 text-white hover:bg-blue-700'
+      : 'bg-white text-slate-800 border border-slate-300 hover:bg-slate-100';
+
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      className={`rounded-lg px-4 py-2 font-semibold transition ${className} disabled:opacity-45 disabled:cursor-not-allowed`}
+    >
+      {label}
+    </button>
+  );
+}
+
+type MetricCardProps = {
+  icon: ReactNode;
+  label: string;
+  value: string;
+  helper: string;
+};
+
+function MetricCard({ icon, label, value, helper }: MetricCardProps) {
+  return (
+    <article className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+      <div className="flex items-center justify-between mb-3">
+        <div className="rounded-lg bg-slate-100 p-2">{icon}</div>
+        <p className="text-2xl font-bold text-slate-900">{value}</p>
+      </div>
+      <p className="text-sm font-semibold text-slate-700">{label}</p>
+      <p className="text-xs text-slate-500 mt-1">{helper}</p>
+    </article>
   );
 }

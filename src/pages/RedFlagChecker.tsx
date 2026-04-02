@@ -295,10 +295,10 @@ export function RedFlagChecker({ onNavigate }: RedFlagCheckerProps) {
               </button>
               {detectedFlags.length > 0 && (
                 <button
-                  onClick={() => onNavigate('services')}
+                  onClick={() => onNavigate('dashboard')}
                   className="flex-1 bg-orange-600 text-white py-3 rounded-lg font-semibold hover:bg-orange-700 transition"
                 >
-                  Get Professional Help
+                  View Help In Dashboard
                 </button>
               )}
             </div>

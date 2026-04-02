@@ -31,14 +31,6 @@ export function Header({ onAuthClick, onNavigate, currentPage }: HeaderProps) {
             >
               Home
             </button>
-            <button
-              onClick={() => onNavigate('services')}
-              className={`text-sm font-medium transition ${
-                currentPage === 'services' ? 'text-blue-600' : 'text-gray-600 hover:text-gray-900'
-              }`}
-            >
-              Services
-            </button>
             {user && (
               <button
                 onClick={() => onNavigate('dashboard')}

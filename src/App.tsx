@@ -1,22 +1,36 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { Header } from './components/Header';
 import { Auth } from './components/Auth';
 import { Landing } from './pages/Landing';
-import { Services } from './pages/Services';
 import { Dashboard } from './pages/Dashboard';
 import { CompatibilityQuiz } from './pages/CompatibilityQuiz';
 import { RedFlagChecker } from './pages/RedFlagChecker';
 import { HealthTracker } from './pages/HealthTracker';
 
-type Page = 'home' | 'services' | 'dashboard' | 'quiz' | 'red-flags' | 'health-tracker';
-type AppPage = Page | 'auth-before' | 'auth-after';
+type Page = 'home' | 'dashboard' | 'quiz' | 'red-flags' | 'health-tracker';
+type AppPage = Page | 'auth-before' | 'auth-after' | 'dashboard-before' | 'dashboard-after';
 
 function AppContent() {
   const [currentPage, setCurrentPage] = useState<AppPage>('home');
-  const { loading, user } = useAuth();
+  const { loading, profile, user } = useAuth();
+
+  const getDashboardPage = (): AppPage =>
+    profile?.relationship_status === 'married' ? 'dashboard-after' : 'dashboard-before';
 
   const handleNavigate = (page: string) => {
+    if (page === 'home' && user) {
+      setCurrentPage(getDashboardPage());
+      window.scrollTo(0, 0);
+      return;
+    }
+
+    if (page === 'dashboard' && user) {
+      setCurrentPage(getDashboardPage());
+      window.scrollTo(0, 0);
+      return;
+    }
+
     if (page === 'quiz' || page === 'red-flags' || page === 'health-tracker' || page === 'dashboard') {
       if (!user) {
         setCurrentPage(page === 'health-tracker' ? 'auth-after' : 'auth-before');
@@ -26,6 +40,34 @@ function AppContent() {
     setCurrentPage(page as AppPage);
     window.scrollTo(0, 0);
   };
+
+  useEffect(() => {
+    const isProtectedPage =
+      currentPage === 'dashboard' ||
+      currentPage === 'dashboard-before' ||
+      currentPage === 'dashboard-after' ||
+      currentPage === 'quiz' ||
+      currentPage === 'red-flags' ||
+      currentPage === 'health-tracker';
+
+    if (!user && isProtectedPage) {
+      setCurrentPage('home');
+      window.scrollTo(0, 0);
+    }
+  }, [currentPage, user]);
+
+  if (user && currentPage === 'home') {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header
+          onAuthClick={() => setCurrentPage('auth-before')}
+          onNavigate={handleNavigate}
+          currentPage={currentPage}
+        />
+        <Dashboard onNavigate={handleNavigate} mode={profile?.relationship_status === 'married' ? 'after' : 'before'} />
+      </div>
+    );
+  }
 
   const handleAuthClick = () => setCurrentPage('auth-before');
 
@@ -56,7 +98,7 @@ function AppContent() {
         <Auth
           mode="before"
           onBack={() => handleNavigate('home')}
-          onSuccess={() => handleNavigate('dashboard')}
+          onSuccess={() => setCurrentPage('dashboard-before')}
         />
       )}
 
@@ -64,16 +106,20 @@ function AppContent() {
         <Auth
           mode="after"
           onBack={() => handleNavigate('home')}
-          onSuccess={() => handleNavigate('dashboard')}
+          onSuccess={() => setCurrentPage('dashboard-after')}
         />
       )}
 
-      {currentPage === 'services' && (
-        <Services onAuthClick={handleAuthClick} onNavigate={handleNavigate} />
+      {currentPage === 'dashboard' && user && (
+        <Dashboard onNavigate={handleNavigate} mode={profile?.relationship_status === 'married' ? 'after' : 'before'} />
       )}
 
-      {currentPage === 'dashboard' && user && (
-        <Dashboard onNavigate={handleNavigate} />
+      {currentPage === 'dashboard-before' && user && (
+        <Dashboard onNavigate={handleNavigate} mode="before" />
+      )}
+
+      {currentPage === 'dashboard-after' && user && (
+        <Dashboard onNavigate={handleNavigate} mode="after" />
       )}
 
       {currentPage === 'quiz' && user && (

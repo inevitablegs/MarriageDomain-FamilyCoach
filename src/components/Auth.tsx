@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { ArrowLeft, HeartHandshake, Link2, Users } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
 type AuthProps = {
   mode: 'before' | 'after';
@@ -16,7 +17,7 @@ export function Auth({ mode, onBack, onSuccess }: AuthProps) {
   const [partnerEmail, setPartnerEmail] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { signIn, signUp } = useAuth();
+  const { signIn, signOut, signUp } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,6 +32,33 @@ export function Auth({ mode, onBack, onSuccess }: AuthProps) {
       } else {
         const { error } = await signIn(email, password);
         if (error) throw error;
+
+        const { data: userData, error: userError } = await supabase.auth.getUser();
+        if (userError) throw userError;
+
+        const authUserId = userData.user?.id;
+        if (!authUserId) throw new Error('Unable to load account profile after sign in.');
+
+        const { data: profileData, error: profileError } = await supabase
+          .from('profiles')
+          .select('relationship_status, partner_id')
+          .eq('id', authUserId)
+          .maybeSingle();
+
+        if (profileError) throw profileError;
+
+        const relationshipStatus = profileData?.relationship_status;
+        const beforeMarriageAllowed = relationshipStatus === 'single' || relationshipStatus === 'engaged';
+        const afterMarriageAllowed = relationshipStatus === 'married';
+
+        if ((mode === 'before' && !beforeMarriageAllowed) || (mode === 'after' && !afterMarriageAllowed)) {
+          await signOut();
+          throw new Error(
+            mode === 'before'
+              ? 'This account is a couple account. Please use After Marriage login.'
+              : 'This account is an individual account. Please use Before Marriage login.'
+          );
+        }
       }
       onSuccess();
     } catch (err) {
@@ -145,7 +173,7 @@ export function Auth({ mode, onBack, onSuccess }: AuthProps) {
               {isSignUp && isAfterMarriage && (
                 <div>
                   <label className="mb-1 flex items-center gap-1 text-sm font-medium text-slate-700">
-                    <Link2 size={14} /> Partner Email (optional)
+                    <Link2 size={14} /> Partner Email (required)
                   </label>
                   <input
                     type="email"
@@ -153,9 +181,10 @@ export function Auth({ mode, onBack, onSuccess }: AuthProps) {
                     onChange={(e) => setPartnerEmail(e.target.value)}
                     className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
                     placeholder="partner@email.com"
+                    required
                   />
                   <p className="mt-1 text-xs text-slate-500">
-                    We will send a partner invite so both of you can use the couple tools together.
+                    Joint account is compulsory for couples. We will send an invite to connect both accounts.
                   </p>
                 </div>
               )}

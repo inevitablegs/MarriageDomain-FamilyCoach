@@ -162,6 +162,44 @@ export function Landing({ onNavigate }: LandingProps) {
         </section>
 
         <section className="mt-16 rounded-3xl border border-slate-200 bg-white p-8 shadow-md">
+          <h2 className="text-3xl font-bold text-slate-900">Quick Services Overview</h2>
+          <p className="mt-2 text-slate-600">Services are now delivered inside your dashboard based on your journey stage.</p>
+
+          <div className="mt-6 grid gap-5 md:grid-cols-2">
+            <article className="rounded-2xl border border-rose-100 bg-rose-50/60 p-5">
+              <p className="text-xs font-bold uppercase tracking-wide text-rose-700">Before Marriage Dashboard Services</p>
+              <h3 className="mt-2 text-xl font-bold text-slate-900">Decide With Clarity</h3>
+              <ul className="mt-3 space-y-2 text-sm text-slate-700">
+                <li className="flex items-center gap-2"><CheckCircle2 size={14} className="text-rose-500" />Compatibility Deep Scan</li>
+                <li className="flex items-center gap-2"><CheckCircle2 size={14} className="text-rose-500" />Red Flag Intelligence</li>
+              </ul>
+              <button
+                onClick={() => onNavigate('auth-before')}
+                className="mt-4 rounded-lg bg-rose-600 px-4 py-2 text-sm font-bold text-white hover:bg-rose-700 transition"
+              >
+                Start Before Marriage Journey
+              </button>
+            </article>
+
+            <article className="rounded-2xl border border-emerald-100 bg-emerald-50/60 p-5">
+              <p className="text-xs font-bold uppercase tracking-wide text-emerald-700">After Marriage Dashboard Services</p>
+              <h3 className="mt-2 text-xl font-bold text-slate-900">Repair And Rebuild Together</h3>
+              <ul className="mt-3 space-y-2 text-sm text-slate-700">
+                <li className="flex items-center gap-2"><CheckCircle2 size={14} className="text-emerald-500" />Couple Assessment Sessions</li>
+                <li className="flex items-center gap-2"><CheckCircle2 size={14} className="text-emerald-500" />Relationship Health Tracking</li>
+                <li className="flex items-center gap-2"><CheckCircle2 size={14} className="text-emerald-500" />Conflict Risk Monitor</li>
+              </ul>
+              <button
+                onClick={() => onNavigate('auth-after')}
+                className="mt-4 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-bold text-white hover:bg-emerald-700 transition"
+              >
+                Start Couple Joint Journey
+              </button>
+            </article>
+          </div>
+        </section>
+
+        <section className="mt-16 rounded-3xl border border-slate-200 bg-white p-8 shadow-md">
           <h2 className="text-3xl font-bold text-slate-900">Why This Is Different</h2>
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
             <div className="rounded-xl border border-slate-100 bg-slate-50 p-4">

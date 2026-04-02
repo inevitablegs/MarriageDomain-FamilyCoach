@@ -21,3 +21,6 @@ dist-ssr
 *.sln
 *.sw?
 .env
+
+
+20260402001000_clean_app_data.sql
