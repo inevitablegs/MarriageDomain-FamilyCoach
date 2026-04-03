@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { ArrowLeft, HeartHandshake, Link2, Users } from 'lucide-react';
-import { supabase } from '../lib/supabase';
 
 type AuthProps = {
   mode: 'before' | 'after';
@@ -14,7 +13,6 @@ export function Auth({ mode, onBack, onSuccess }: AuthProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
-  const [partnerEmail, setPartnerEmail] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { signIn, signOut, signUp } = useAuth();
@@ -27,37 +25,27 @@ export function Auth({ mode, onBack, onSuccess }: AuthProps) {
     try {
       if (isSignUp) {
         const relationshipStatus = mode === 'after' ? 'married' : 'single';
-        const { error } = await signUp(email, password, fullName, relationshipStatus, partnerEmail);
+        const { error } = await signUp(email, password, fullName, relationshipStatus);
         if (error) throw error;
       } else {
-        const { error } = await signIn(email, password);
+        // signIn now returns the loaded profile directly — no redundant query needed.
+        const { error, profile: signedInProfile } = await signIn(email, password);
         if (error) throw error;
 
-        const { data: userData, error: userError } = await supabase.auth.getUser();
-        if (userError) throw userError;
-
-        const authUserId = userData.user?.id;
-        if (!authUserId) throw new Error('Unable to load account profile after sign in.');
-
-        const { data: profileData, error: profileError } = await supabase
-          .from('profiles')
-          .select('relationship_status, partner_id')
-          .eq('id', authUserId)
-          .maybeSingle();
-
-        if (profileError) throw profileError;
-
-        const relationshipStatus = profileData?.relationship_status;
+        const relationshipStatus = signedInProfile?.relationship_status;
         const beforeMarriageAllowed = relationshipStatus === 'single' || relationshipStatus === 'engaged';
         const afterMarriageAllowed = relationshipStatus === 'married';
 
         if ((mode === 'before' && !beforeMarriageAllowed) || (mode === 'after' && !afterMarriageAllowed)) {
+          // Fully sign out before showing the error so there's no stale session.
           await signOut();
-          throw new Error(
+          const msg =
             mode === 'before'
               ? 'This account is a couple account. Please use After Marriage login.'
-              : 'This account is an individual account. Please use Before Marriage login.'
-          );
+              : 'This account is an individual account. Please use Before Marriage login.';
+          setError(msg);
+          setLoading(false);
+          return;
         }
       }
       onSuccess();
@@ -169,25 +157,6 @@ export function Auth({ mode, onBack, onSuccess }: AuthProps) {
                   minLength={6}
                 />
               </div>
-
-              {isSignUp && isAfterMarriage && (
-                <div>
-                  <label className="mb-1 flex items-center gap-1 text-sm font-medium text-slate-700">
-                    <Link2 size={14} /> Partner Email (required)
-                  </label>
-                  <input
-                    type="email"
-                    value={partnerEmail}
-                    onChange={(e) => setPartnerEmail(e.target.value)}
-                    className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
-                    placeholder="partner@email.com"
-                    required
-                  />
-                  <p className="mt-1 text-xs text-slate-500">
-                    Joint account is compulsory for couples. We will send an invite to connect both accounts.
-                  </p>
-                </div>
-              )}
 
               {error && (
                 <div className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">

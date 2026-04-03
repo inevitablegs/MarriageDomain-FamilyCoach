@@ -412,11 +412,60 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
   };
 
   const acceptInvitation = async (invitationId: string) => {
+    if (!profile) return;
     setBusyAction(`accept-${invitationId}`);
     setMessage(null);
     try {
       const { error } = await supabase.rpc('accept_partner_invitation', { invitation_id: invitationId });
-      if (error) throw error;
+
+      if (error) {
+        const rpcMissing =
+          error.code === 'PGRST202' ||
+          error.message?.includes('Could not find the function public.accept_partner_invitation');
+
+        if (!rpcMissing) throw error;
+
+        // Fallback: direct table updates
+        // 1. Fetch the invitation
+        const { data: inv, error: invErr } = await supabase
+          .from('partner_invitations')
+          .select('*')
+          .eq('id', invitationId)
+          .maybeSingle();
+
+        if (invErr) throw invErr;
+        if (!inv) throw new Error('Invitation not found.');
+
+        // 2. Fetch the inviter to verify existence
+        const { data: inviterProfile, error: inviterErr } = await supabase
+          .from('profiles')
+          .select('id, partner_id')
+          .eq('id', inv.inviter_id)
+          .maybeSingle();
+
+        if (inviterErr) throw inviterErr;
+        if (!inviterProfile) throw new Error('Inviter not found.');
+
+        // 3. Connect profiles
+        const { error: updateSelfErr } = await supabase
+          .from('profiles')
+          .update({ partner_id: inviterProfile.id })
+          .eq('id', profile.id);
+        if (updateSelfErr) throw updateSelfErr;
+
+        const { error: updatePartnerErr } = await supabase
+          .from('profiles')
+          .update({ partner_id: profile.id })
+          .eq('id', inviterProfile.id);
+        if (updatePartnerErr) throw updatePartnerErr;
+
+        // 4. Mark invitation as accepted
+        const { error: statusErr } = await supabase
+          .from('partner_invitations')
+          .update({ status: 'accepted', responded_at: new Date().toISOString() })
+          .eq('id', invitationId);
+        if (statusErr) throw statusErr;
+      }
 
       setMessage('Partner connected successfully. You can now start private couple assessments.');
       await loadPartnerAndInvites();
@@ -434,7 +483,22 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
     setMessage(null);
     try {
       const { error } = await supabase.rpc('decline_partner_invitation', { invitation_id: invitationId });
-      if (error) throw error;
+
+      if (error) {
+        const rpcMissing =
+          error.code === 'PGRST202' ||
+          error.message?.includes('Could not find the function public.decline_partner_invitation');
+        if (!rpcMissing) throw error;
+
+        // Fallback: directly update standard invitations table
+        const { error: fallbackErr } = await supabase
+          .from('partner_invitations')
+          .update({ status: 'declined', responded_at: new Date().toISOString() })
+          .eq('id', invitationId)
+          .eq('status', 'pending');
+
+        if (fallbackErr) throw fallbackErr;
+      }
 
       setMessage('Invitation declined.');
       await loadPartnerAndInvites();
@@ -468,10 +532,13 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
   };
 
   const disconnectPartner = async () => {
+    if (!profile) return;
     setBusyAction('disconnect');
     setMessage(null);
 
     try {
+      const currentPartnerId = partnerProfile?.id || selfProfile?.partner_id;
+
       setPartnerProfile(null);
       setSessions([]);
       setSelectedSessionId(null);
@@ -480,7 +547,26 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
       setCurrentQuestionIndex(0);
 
       const { error } = await supabase.rpc('disconnect_partner_connection');
-      if (error) throw error;
+      if (error) {
+        const rpcMissing =
+          error.code === 'PGRST202' ||
+          error.message?.includes('Could not find the function public.disconnect_partner_connection');
+        if (!rpcMissing) throw error;
+
+        // Fallback: manually update profiles
+        const { error: selfUpdateErr } = await supabase
+          .from('profiles')
+          .update({ partner_id: null })
+          .eq('id', profile.id);
+        if (selfUpdateErr) throw selfUpdateErr;
+
+        if (currentPartnerId) {
+          await supabase
+            .from('profiles')
+            .update({ partner_id: null })
+            .eq('id', currentPartnerId);
+        }
+      }
 
       setMessage('Partner connection removed successfully.');
       await loadPartnerAndInvites();
@@ -1061,11 +1147,10 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
                     <button
                       key={session.id}
                       onClick={() => setSelectedSessionId(session.id)}
-                      className={`border rounded-xl p-4 text-left transition ${
-                        selectedSessionId === session.id
+                      className={`border rounded-xl p-4 text-left transition ${selectedSessionId === session.id
                           ? 'border-blue-500 bg-blue-50'
                           : 'border-slate-200 hover:border-blue-300 bg-white'
-                      }`}
+                        }`}
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div>
@@ -1077,9 +1162,8 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
                           </p>
                         </div>
                         <span
-                          className={`text-xs px-2 py-1 rounded-full font-semibold ${
-                            completed ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'
-                          }`}
+                          className={`text-xs px-2 py-1 rounded-full font-semibold ${completed ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'
+                            }`}
                         >
                           {completed ? 'Completed' : 'Pending'}
                         </span>
@@ -1219,11 +1303,10 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
                       <button
                         key={option}
                         onClick={() => setMCQAnswer(currentQuestion.id, option)}
-                        className={`w-full border-2 rounded-lg p-3 text-left transition ${
-                          myResponses[currentQuestion.id] === option
+                        className={`w-full border-2 rounded-lg p-3 text-left transition ${myResponses[currentQuestion.id] === option
                             ? 'border-blue-500 bg-blue-50'
                             : 'border-slate-200 hover:border-blue-300'
-                        }`}
+                          }`}
                       >
                         {option}
                       </button>
@@ -1242,11 +1325,10 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
                         <button
                           key={option}
                           onClick={() => toggleMSQAnswer(currentQuestion.id, option)}
-                          className={`w-full border-2 rounded-lg p-3 text-left transition ${
-                            selected
+                          className={`w-full border-2 rounded-lg p-3 text-left transition ${selected
                               ? 'border-blue-500 bg-blue-50'
                               : 'border-slate-200 hover:border-blue-300'
-                          }`}
+                            }`}
                         >
                           {option}
                         </button>

@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { createContext, useContext, useEffect, useRef, useState, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase, Profile } from '../lib/supabase';
 
@@ -11,10 +11,9 @@ type AuthContextType = {
     email: string,
     password: string,
     fullName: string,
-    relationshipStatus?: 'single' | 'engaged' | 'married',
-    partnerEmail?: string
+    relationshipStatus?: 'single' | 'engaged' | 'married'
   ) => Promise<{ error: Error | null }>;
-  signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
+  signIn: (email: string, password: string) => Promise<{ error: Error | null; profile: Profile | null }>;
   signOut: () => Promise<void>;
 };
 
@@ -25,6 +24,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+  const signUpInProgressRef = useRef(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -68,6 +68,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return;
       }
 
+      // If a sign-up is in progress, skip the self-heal — signUp will create
+      // the profile with the correct relationship_status.
+      if (signUpInProgressRef.current) {
+        return;
+      }
+
       // Self-heal for old users or partial signups where profile row is missing.
       const fallbackName =
         (typeof authUser.user_metadata?.full_name === 'string' && authUser.user_metadata.full_name.trim()) ||
@@ -106,14 +112,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     email: string,
     password: string,
     fullName: string,
-    relationshipStatus: 'single' | 'engaged' | 'married' = 'single',
-    partnerEmail?: string
+    relationshipStatus: 'single' | 'engaged' | 'married' = 'single'
   ) => {
+    // Prevent loadProfile self-heal from racing with our profile creation.
+    signUpInProgressRef.current = true;
     try {
-      if (relationshipStatus === 'married' && (!partnerEmail || partnerEmail.trim().length === 0)) {
-        return { error: new Error('Partner email is required for couple joint account sign up.') };
-      }
-
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -135,35 +138,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Only write profile/invitations when session exists (authenticated).
       // If email confirmation is enabled, session is null and profile writes will fail with 401.
       if (data.user && data.session) {
+        // Use upsert instead of insert: the onAuthStateChange listener may have
+        // already created a self-healed profile row with default 'single' status.
+        // The upsert ensures the correct relationship_status is set.
         const { error: profileError } = await supabase
           .from('profiles')
-          .insert({
-            id: data.user.id,
-            email,
-            full_name: fullName,
-            relationship_status: relationshipStatus,
-          });
+          .upsert(
+            {
+              id: data.user.id,
+              email,
+              full_name: fullName,
+              relationship_status: relationshipStatus,
+            },
+            { onConflict: 'id' }
+          );
 
         if (profileError) throw profileError;
 
-        const normalizedPartnerEmail = (partnerEmail || '').trim().toLowerCase();
-        const normalizedUserEmail = email.trim().toLowerCase();
+        // Re-read the profile so React state is up-to-date with the correct status.
+        const { data: freshProfile } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', data.user.id)
+          .maybeSingle();
 
-        if (relationshipStatus === 'married' && normalizedPartnerEmail === normalizedUserEmail) {
-          return { error: new Error('Partner email must be different from your own email.') };
-        }
-
-        if (relationshipStatus === 'married' && normalizedPartnerEmail.length > 0) {
-          const { error: invitationError } = await supabase.from('partner_invitations').insert({
-            inviter_id: data.user.id,
-            invitee_email: normalizedPartnerEmail,
-            status: 'pending',
-          });
-
-          // Keep sign up successful even if invitation insert fails.
-          if (invitationError) {
-            console.warn('Unable to create partner invitation during sign up:', invitationError.message);
-          }
+        if (freshProfile) {
+          setProfile(freshProfile);
         }
       }
 
@@ -195,6 +195,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return { error: null };
     } catch (error) {
       return { error: error as Error };
+    } finally {
+      signUpInProgressRef.current = false;
     }
   };
 
@@ -206,9 +208,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
 
       if (error) throw error;
-      return { error: null };
+
+      // Fetch the signed-in user and load their profile so the caller
+      // can validate mode (before/after marriage) before navigating.
+      const { data: userData } = await supabase.auth.getUser();
+      const authUser = userData?.user;
+      if (!authUser?.id) {
+        return { error: new Error('Unable to load account after sign in.'), profile: null };
+      }
+
+      const { data: profileData, error: profileError } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', authUser.id)
+        .maybeSingle();
+
+      if (profileError) throw profileError;
+
+      if (profileData) {
+        setProfile(profileData);
+      }
+
+      return { error: null, profile: profileData as Profile | null };
     } catch (error) {
-      return { error: error as Error };
+      return { error: error as Error, profile: null };
     }
   };
 
