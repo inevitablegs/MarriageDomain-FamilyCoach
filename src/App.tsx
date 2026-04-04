@@ -53,21 +53,11 @@ function AppContent() {
     if (!user && isProtectedPage) {
       setCurrentPage('home');
       window.scrollTo(0, 0);
+    } else if (user && currentPage === 'home' && profile) {
+      setCurrentPage(getDashboardPage());
+      window.scrollTo(0, 0);
     }
-  }, [currentPage, user]);
-
-  if (user && currentPage === 'home') {
-    return (
-      <div className="min-h-screen bg-gray-50">
-        <Header
-          onAuthClick={() => setCurrentPage('auth-before')}
-          onNavigate={handleNavigate}
-          currentPage={currentPage}
-        />
-        <Dashboard onNavigate={handleNavigate} mode={profile?.relationship_status === 'married' ? 'after' : 'before'} />
-      </div>
-    );
-  }
+  }, [currentPage, user, profile]);
 
   const handleAuthClick = () => setCurrentPage('auth-before');
 
@@ -83,56 +73,58 @@ function AppContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-slate-50 font-sans text-slate-800 flex flex-col">
       <Header
         onAuthClick={handleAuthClick}
         onNavigate={handleNavigate}
         currentPage={currentPage}
       />
 
-      {currentPage === 'home' && (
-        <Landing onNavigate={handleNavigate} />
-      )}
+      <main className="flex-grow animate-fade-in">
+        {currentPage === 'home' && !user && (
+          <Landing onNavigate={handleNavigate} />
+        )}
 
-      {currentPage === 'auth-before' && (
-        <Auth
-          mode="before"
-          onBack={() => handleNavigate('home')}
-          onSuccess={() => setCurrentPage('dashboard-before')}
-        />
-      )}
+        {currentPage === 'auth-before' && (
+          <Auth
+            mode="before"
+            onBack={() => handleNavigate('home')}
+            onSuccess={() => setCurrentPage('dashboard-before')}
+          />
+        )}
 
-      {currentPage === 'auth-after' && (
-        <Auth
-          mode="after"
-          onBack={() => handleNavigate('home')}
-          onSuccess={() => setCurrentPage('dashboard-after')}
-        />
-      )}
+        {currentPage === 'auth-after' && (
+          <Auth
+            mode="after"
+            onBack={() => handleNavigate('home')}
+            onSuccess={() => setCurrentPage('dashboard-after')}
+          />
+        )}
 
-      {currentPage === 'dashboard' && user && (
-        <Dashboard onNavigate={handleNavigate} mode={profile?.relationship_status === 'married' ? 'after' : 'before'} />
-      )}
+        {currentPage === 'dashboard' && user && (
+          <Dashboard onNavigate={handleNavigate} mode={profile?.relationship_status === 'married' ? 'after' : 'before'} />
+        )}
 
-      {currentPage === 'dashboard-before' && user && (
-        <Dashboard onNavigate={handleNavigate} mode="before" />
-      )}
+        {currentPage === 'dashboard-before' && user && (
+          <Dashboard onNavigate={handleNavigate} mode="before" />
+        )}
 
-      {currentPage === 'dashboard-after' && user && (
-        <Dashboard onNavigate={handleNavigate} mode="after" />
-      )}
+        {currentPage === 'dashboard-after' && user && (
+          <Dashboard onNavigate={handleNavigate} mode="after" />
+        )}
 
-      {currentPage === 'quiz' && user && (
-        <CompatibilityQuiz onNavigate={handleNavigate} />
-      )}
+        {currentPage === 'quiz' && user && (
+          <CompatibilityQuiz onNavigate={handleNavigate} />
+        )}
 
-      {currentPage === 'red-flags' && user && (
-        <RedFlagChecker onNavigate={handleNavigate} />
-      )}
+        {currentPage === 'red-flags' && user && (
+          <RedFlagChecker onNavigate={handleNavigate} />
+        )}
 
-      {currentPage === 'health-tracker' && user && (
-        <HealthTracker onNavigate={handleNavigate} />
-      )}
+        {currentPage === 'health-tracker' && user && (
+          <HealthTracker onNavigate={handleNavigate} />
+        )}
+      </main>
     </div>
   );
 }

@@ -11,32 +11,38 @@ export function Header({ onAuthClick, onNavigate, currentPage }: HeaderProps) {
   const { user, profile, signOut } = useAuth();
 
   return (
-    <header className="bg-white shadow-sm sticky top-0 z-40">
+    <header className="sticky top-0 z-50 glass-effect border-b border-slate-200/50 transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-20">
           <button
             onClick={() => onNavigate('home')}
-            className="flex items-center space-x-2 hover:opacity-80 transition"
+            className="flex items-center space-x-2.5 group transition-transform hover:scale-105"
           >
-            <Heart className="text-rose-500" size={32} fill="currentColor" />
-            <span className="text-2xl font-bold text-gray-800">MarriageWise</span>
+            <div className="bg-gradient-to-br from-rose-500 to-rose-600 p-2 rounded-xl shadow-sm group-hover:shadow-md transition-all">
+              <Heart className="text-white" size={22} fill="currentColor" />
+            </div>
+            <span className="text-2xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-700">
+              MarriageWise
+            </span>
           </button>
 
-          <nav className="hidden md:flex items-center space-x-8">
+          <nav className="hidden md:flex items-center space-x-1 border border-slate-200/60 bg-white/50 rounded-full px-2 py-1.5 shadow-sm">
             <button
               onClick={() => onNavigate('home')}
-              className={`text-sm font-medium transition ${
-                currentPage === 'home' ? 'text-blue-600' : 'text-gray-600 hover:text-gray-900'
-              }`}
+              className={`px-5 py-2 rounded-full text-sm font-semibold transition-all duration-300 ${currentPage === 'home' || currentPage === 'auth-before' || currentPage === 'auth-after'
+                  ? 'bg-slate-900 text-white shadow-md'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
+                }`}
             >
               Home
             </button>
             {user && (
               <button
                 onClick={() => onNavigate('dashboard')}
-                className={`text-sm font-medium transition ${
-                  currentPage === 'dashboard' ? 'text-blue-600' : 'text-gray-600 hover:text-gray-900'
-                }`}
+                className={`px-5 py-2 rounded-full text-sm font-semibold transition-all duration-300 ${currentPage.includes('dashboard') || currentPage === 'quiz' || currentPage === 'health-tracker' || currentPage === 'red-flags'
+                    ? 'bg-indigo-600 text-white shadow-md'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
+                  }`}
               >
                 Dashboard
               </button>
@@ -45,23 +51,26 @@ export function Header({ onAuthClick, onNavigate, currentPage }: HeaderProps) {
 
           <div className="flex items-center space-x-4">
             {user ? (
-              <div className="flex items-center space-x-3">
-                <div className="flex items-center space-x-2">
-                  <User size={20} className="text-gray-600" />
-                  <span className="text-sm font-medium text-gray-700">{profile?.full_name}</span>
+              <div className="flex items-center space-x-2 bg-white/80 border border-slate-200 rounded-full py-1.5 pl-2 pr-4 shadow-sm">
+                <div className="bg-indigo-100 text-indigo-700 p-1.5 rounded-full">
+                  <User size={18} />
+                </div>
+                <div className="flex flex-col items-start pr-3 border-r border-slate-200">
+                  <span className="text-xs font-bold text-slate-800 leading-tight block max-w-[100px] truncate">{profile?.full_name || 'User'}</span>
+                  <span className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold leading-tight">{profile?.relationship_status || 'Member'}</span>
                 </div>
                 <button
                   onClick={signOut}
-                  className="flex items-center space-x-1 text-sm text-gray-600 hover:text-gray-900 transition"
+                  className="flex items-center justify-center p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-full transition-colors ml-1"
+                  title="Sign Out"
                 >
                   <LogOut size={18} />
-                  <span>Sign Out</span>
                 </button>
               </div>
             ) : (
               <button
                 onClick={onAuthClick}
-                className="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition"
+                className="bg-gradient-to-r from-indigo-600 to-blue-600 text-white px-6 py-2.5 rounded-full font-semibold shadow-md hover:shadow-lg hover:from-indigo-700 hover:to-blue-700 transition-all duration-300 hover:-translate-y-0.5"
               >
                 Sign In
               </button>

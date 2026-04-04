@@ -35,64 +35,24 @@ const beforeMarriageServices: ServiceItem[] = [
     name: 'Basic Compatibility Quiz',
     priceLabel: 'FREE',
     description: 'Get a quick assessment of your relationship compatibility.',
-    bullets: ['Values alignment check', 'Lifestyle compatibility', 'Basic communication assessment'],
+    bullets: ['Values alignment check', 'Lifestyle compatibility', 'Basic communication'],
     cta: 'Start Free Quiz',
     targetPage: 'quiz',
   },
   {
     name: 'Advanced Compatibility Report',
-    priceLabel: 'INR 499',
+    priceLabel: 'PREMIUM',
     description: 'Deep analysis with risk scoring and recommendations.',
-    bullets: ['Detailed scoring', 'Risk factor identification', 'Personalized recommendations'],
-    cta: 'Generate Advanced Report',
+    bullets: ['Detailed scoring', 'Risk factor identification', 'Personalized advice'],
+    cta: 'Generate Report',
     targetPage: 'quiz',
   },
   {
     name: 'Red Flag Deep Analysis',
-    priceLabel: 'INR 799',
+    priceLabel: 'PREMIUM',
     description: 'Identify potential warning signs before commitment.',
     bullets: ['Behavior pattern analysis', 'Warning indicators', 'Guided interpretation'],
-    cta: 'Run Deep Red Flag Analysis',
-    targetPage: 'red-flags',
-  },
-  {
-    name: '1:1 Decision Clarity Session',
-    priceLabel: 'INR 1,999',
-    description: 'Personal coaching to help you decide with confidence.',
-    bullets: ['Private clarity framework', 'Decision structure', 'Follow-up guidance'],
-    cta: 'Prepare Decision Session',
-    targetPage: 'quiz',
-  },
-  {
-    name: 'Pre-Marriage Readiness Program',
-    priceLabel: 'INR 4,999',
-    description: 'Structured preparation for a stronger marriage foundation.',
-    bullets: ['Communication preparation', 'Financial alignment prep', 'Conflict framework'],
-    cta: 'Start Readiness Program',
-    targetPage: 'quiz',
-  },
-  {
-    name: 'Decision Confidence Score',
-    priceLabel: 'INR 299',
-    description: 'Final confidence indicator based on your complete assessment data.',
-    bullets: ['Risk vs confidence output', 'Clarity score', 'Action recommendation'],
-    cta: 'Get Confidence Score',
-    targetPage: 'quiz',
-  },
-  {
-    name: 'Compatibility Deep Scan',
-    priceLabel: 'Included',
-    description: 'Assess long-term alignment before commitment.',
-    bullets: ['Values fit score', 'Lifestyle alignment', 'Communication gaps'],
-    cta: 'Start Compatibility',
-    targetPage: 'quiz',
-  },
-  {
-    name: 'Red Flag Intelligence',
-    priceLabel: 'Included',
-    description: 'Identify high-risk issues early, not after damage.',
-    bullets: ['Behavior risk map', 'Severity insights', 'Action steps'],
-    cta: 'Run Red Flag Check',
+    cta: 'Run Deep Analysis',
     targetPage: 'red-flags',
   },
 ];
@@ -102,65 +62,25 @@ const afterMarriageServices: ServiceItem[] = [
     name: 'Relationship Health Dashboard',
     priceLabel: 'FREE',
     description: 'Track relationship metrics and progress over time.',
-    bullets: ['Weekly health check-ins', 'Trend visualization', 'Improvement signals'],
-    cta: 'Open Health Dashboard',
+    bullets: ['Weekly check-ins', 'Trend visualization', 'Improvement signals'],
+    cta: 'Open Dashboard',
     targetPage: 'health-tracker',
   },
   {
     name: 'Conflict Resolution Program',
-    priceLabel: 'INR 2,999',
+    priceLabel: 'PREMIUM',
     description: 'Build practical conflict resolution habits as a couple.',
-    bullets: ['De-escalation patterns', 'Repair communication', 'Guided action steps'],
+    bullets: ['De-escalation patterns', 'Repair communication', 'Guided steps'],
     cta: 'Start Conflict Program',
     targetPage: 'red-flags',
   },
   {
     name: 'Emotional Intimacy Rebuild',
-    priceLabel: 'INR 3,999',
-    description: 'Rebuild trust, emotional closeness, and consistent communication.',
-    bullets: ['Connection exercises', 'Trust rebuilding', 'Intimacy improvement plan'],
-    cta: 'Begin Rebuild Journey',
+    priceLabel: 'PREMIUM',
+    description: 'Rebuild trust, emotional closeness, and communication.',
+    bullets: ['Connection exercises', 'Trust rebuilding', 'Improvement plan'],
+    cta: 'Begin Journey',
     targetPage: 'health-tracker',
-  },
-  {
-    name: 'Crisis Recovery Plan',
-    priceLabel: 'INR 7,999',
-    description: 'Intensive support for high-conflict or unstable phases.',
-    bullets: ['Urgent issue stabilization', 'Recovery roadmap', 'Priority intervention flow'],
-    cta: 'Activate Recovery Plan',
-    targetPage: 'red-flags',
-  },
-  {
-    name: 'Premium Couple Coaching',
-    priceLabel: 'INR 9,999',
-    description: 'High-touch ongoing support for long-term relationship growth.',
-    bullets: ['Couple growth strategy', 'Ongoing check-ins', 'Priority support model'],
-    cta: 'Start Premium Coaching',
-    targetPage: 'quiz',
-  },
-  {
-    name: 'Couple Assessment Sessions',
-    priceLabel: 'Included',
-    description: 'Joint scoring and clarity framework for both partners.',
-    bullets: ['Private partner submissions', 'Shared report output', 'Risk-weighted analysis'],
-    cta: 'Open Couple Assessment',
-    targetPage: 'quiz',
-  },
-  {
-    name: 'Relationship Health Tracking',
-    priceLabel: 'Included',
-    description: 'Monitor communication and emotional recovery over time.',
-    bullets: ['Health snapshots', 'Trend visibility', 'Improvement tracking'],
-    cta: 'Track Relationship Health',
-    targetPage: 'health-tracker',
-  },
-  {
-    name: 'Conflict Risk Monitor',
-    priceLabel: 'Included',
-    description: 'Catch repeat patterns causing fights and emotional distance.',
-    bullets: ['Trigger identification', 'Risk severity', 'Stability guidance'],
-    cta: 'Check Conflict Risks',
-    targetPage: 'red-flags',
   },
 ];
 
@@ -212,10 +132,10 @@ export function Dashboard({ mode, onNavigate }: DashboardProps) {
 
   if (authLoading || loading || !profile) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-slate-600">Loading dashboard...</p>
+      <div className="min-h-[calc(100vh-80px)] bg-slate-50 flex items-center justify-center">
+        <div className="text-center animate-pulse">
+          <div className="rounded-full h-12 w-12 border-4 border-indigo-200 border-t-indigo-600 animate-spin mx-auto mb-4"></div>
+          <p className="text-slate-600 font-medium tracking-wide">Loading workspace...</p>
         </div>
       </div>
     );
@@ -259,36 +179,52 @@ function BeforeMarriageDashboard({ onNavigate, profileName, assessments, redFlag
   const highRisk = redFlags.filter((entry) => entry.severity === 'high').length;
 
   return (
-    <div className="min-h-screen bg-slate-50 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-7">
-        <section className="rounded-3xl bg-gradient-to-r from-amber-700 to-rose-600 text-white px-6 py-8 shadow-xl">
-          <p className="text-amber-100 text-sm uppercase tracking-wide font-semibold">Before Marriage Dashboard</p>
-          <h1 className="text-3xl sm:text-4xl font-bold mt-2">Welcome, {profileName}</h1>
-          <p className="mt-2 text-amber-50">Make a confident decision with data-backed compatibility and red-flag insights.</p>
-        </section>
-
-        <section className="grid md:grid-cols-3 gap-5">
-          <MetricCard icon={<ClipboardList className="text-blue-600" size={24} />} label="Assessments" value={String(assessments.length)} helper="Completed reports" />
-          <MetricCard icon={<TrendingUp className="text-emerald-600" size={24} />} label="Latest Compatibility" value={latestAssessment ? `${latestAssessment.total_score}%` : 'N/A'} helper="Most recent score" />
-          <MetricCard icon={<ShieldAlert className="text-red-600" size={24} />} label="High Risk Flags" value={String(highRisk)} helper="Needs careful review" />
-        </section>
-
-        <section className="bg-white rounded-2xl border border-slate-200 p-6">
-          <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2"><Sparkles size={18} /> Services For You</h2>
-          <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
-            {beforeMarriageServices.map((service) => (
-              <ServiceCard key={service.name} service={service} onNavigate={onNavigate} />
-            ))}
+    <div className="min-h-[calc(100vh-80px)] bg-slate-50 py-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+        <section className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-r from-indigo-700 to-blue-600 px-8 py-12 shadow-2xl shadow-indigo-900/20 sm:px-12">
+          <div className="absolute top-0 right-0 h-64 w-64 bg-white/10 blur-[80px] rounded-full translate-x-1/2 -translate-y-1/2"></div>
+          <div className="relative z-10">
+            <div className="inline-flex items-center rounded-full bg-white/20 backdrop-blur-md px-3 py-1 text-xs font-bold uppercase tracking-widest text-white border border-white/30 shadow-sm">
+              Before Marriage Dashboard
+            </div>
+            <h1 className="mt-6 text-4xl sm:text-5xl font-extrabold text-white tracking-tight">Welcome, {profileName}</h1>
+            <p className="mt-4 text-indigo-100 text-lg max-w-xl leading-relaxed">
+              Decide with clarity. Use the assessments below to gain data-backed insights on compatibility and potential red flags.
+            </p>
           </div>
         </section>
 
-        <section className="bg-white rounded-2xl border border-slate-200 p-6">
-          <h2 className="text-xl font-bold text-slate-900 mb-4">Quick Actions</h2>
-          <div className="flex flex-wrap gap-3">
-            <ActionButton onClick={() => onNavigate('quiz')} label="Start Compatibility Assessment" />
-            <ActionButton onClick={() => onNavigate('red-flags')} label="Run Red Flag Checker" variant="secondary" />
-          </div>
+        <section className="grid sm:grid-cols-3 gap-6">
+          <MetricCard theme="indigo" icon={<ClipboardList size={24} />} label="Assessments" value={String(assessments.length)} helper="Completed reports" />
+          <MetricCard theme="blue" icon={<TrendingUp size={24} />} label="Latest Compatibility" value={latestAssessment ? `${latestAssessment.total_score}%` : 'N/A'} helper="Most recent score" />
+          <MetricCard theme="rose" icon={<ShieldAlert size={24} />} label="High Risk Flags" value={String(highRisk)} helper="Needs careful review" />
         </section>
+
+        <div className="grid lg:grid-cols-[1fr,300px] gap-8">
+          <section className="premium-card p-8 bg-white/80 backdrop-blur-sm">
+            <h2 className="text-2xl font-extrabold text-slate-900 mb-6 flex items-center gap-3">
+              <Sparkles className="text-indigo-500" size={24} />
+              Recommended Resources
+            </h2>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-2 gap-5">
+              {beforeMarriageServices.map((service) => (
+                <ServiceCard key={service.name} service={service} onNavigate={onNavigate} color="indigo" />
+              ))}
+            </div>
+          </section>
+
+          <section className="premium-card p-8 bg-gradient-to-b from-white to-slate-50/50 flex flex-col">
+            <h2 className="text-xl font-bold text-slate-900 mb-6">Quick Actions</h2>
+            <div className="flex flex-col gap-4 flex-grow">
+              <ActionButton onClick={() => onNavigate('quiz')} label="Start Compatibility Assessment" theme="indigo" />
+              <ActionButton onClick={() => onNavigate('red-flags')} label="Run Red Flag Checker" variant="secondary" theme="indigo" />
+            </div>
+            <div className="mt-8 rounded-2xl bg-indigo-50 border border-indigo-100 p-5">
+              <p className="text-xs font-bold text-indigo-800 uppercase tracking-wide">Next Step</p>
+              <p className="text-sm text-indigo-700 font-medium mt-1">Consistency is key. Try running an assessment every week for trend tracking.</p>
+            </div>
+          </section>
+        </div>
       </div>
     </div>
   );
@@ -314,53 +250,72 @@ function AfterMarriageDashboard({
   }, [latestHealth]);
 
   return (
-    <div className="min-h-screen bg-slate-50 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-7">
-        <section className="rounded-3xl bg-gradient-to-r from-emerald-700 to-teal-600 text-white px-6 py-8 shadow-xl">
-          <p className="text-emerald-100 text-sm uppercase tracking-wide font-semibold">After Marriage Dashboard</p>
-          <h1 className="text-3xl sm:text-4xl font-bold mt-2">Welcome, {profileName}</h1>
-          <p className="mt-2 text-emerald-50">Joint-account workflow for couples to repair communication, reduce conflict, and rebuild connection.</p>
+    <div className="min-h-[calc(100vh-80px)] bg-slate-50 py-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+        <section className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-r from-emerald-700 to-teal-600 px-8 py-12 shadow-2xl shadow-emerald-900/20 sm:px-12">
+          <div className="absolute top-0 right-0 h-64 w-64 bg-white/10 blur-[80px] rounded-full translate-x-1/2 -translate-y-1/2"></div>
+          <div className="relative z-10">
+            <div className="inline-flex items-center rounded-full bg-white/20 backdrop-blur-md px-3 py-1 text-xs font-bold uppercase tracking-widest text-white border border-white/30 shadow-sm">
+              <Users size={14} className="mr-1.5 inline-block" />
+              After Marriage Dashboard
+            </div>
+            <h1 className="mt-6 text-4xl sm:text-5xl font-extrabold text-white tracking-tight">Welcome, {profileName}</h1>
+            <p className="mt-4 text-emerald-100 text-lg max-w-xl leading-relaxed">
+              Joint-account workflow for couples to repair communication, reduce conflict, and rebuild connection.
+            </p>
+          </div>
         </section>
 
         {!hasPartnerConnected && (
-          <section className="rounded-2xl border-l-4 border-amber-500 bg-amber-50 p-5">
-            <h2 className="font-bold text-amber-900 flex items-center gap-2"><Link2 size={18} /> Joint Account Required</h2>
-            <p className="text-amber-800 mt-2">
-              Couples dashboard features require an active partner connection. Open Couple Assessment and send/accept partner invitation to continue.
-            </p>
+          <section className="animate-rise-in rounded-[2rem] border-l-8 border-l-amber-500 bg-amber-50/80 p-6 sm:p-8 shadow-sm backdrop-blur border border-r-amber-100 border-y-amber-100 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+            <div>
+              <h2 className="text-xl font-extrabold text-amber-900 flex items-center gap-3"><Link2 size={22} className="text-amber-600" /> Joint Account Required</h2>
+              <p className="text-amber-800 font-medium mt-2 max-w-2xl">
+                Couples dashboard features require an active partner connection. Open Couple Assessment to invite your partner or link accounts.
+              </p>
+            </div>
             <button
               onClick={() => onNavigate('quiz')}
-              className="mt-4 inline-flex items-center gap-2 rounded-lg bg-amber-600 px-4 py-2 font-semibold text-white hover:bg-amber-700 transition"
+              className="flex-shrink-0 inline-flex items-center justify-center gap-2 rounded-xl bg-amber-500 px-6 py-3.5 font-bold text-amber-950 hover:bg-amber-400 transition-colors shadow-md"
             >
-              Connect Partner Now <ArrowRight size={16} />
+              Connect Partner <ArrowRight size={18} />
             </button>
           </section>
         )}
 
-        <section className="grid md:grid-cols-4 gap-5">
-          <MetricCard icon={<Users className="text-teal-600" size={24} />} label="Joint Status" value={hasPartnerConnected ? 'Connected' : 'Pending'} helper="Partner account linkage" />
-          <MetricCard icon={<Heart className="text-rose-600" size={24} />} label="Latest Compatibility" value={latestAssessment ? `${latestAssessment.total_score}%` : 'N/A'} helper="Most recent couple score" />
-          <MetricCard icon={<AlertTriangle className="text-red-600" size={24} />} label="High Risk Flags" value={String(highRisk)} helper="Conflict severity alerts" />
-          <MetricCard icon={<MessageCircleHeart className="text-indigo-600" size={24} />} label="Relationship Health" value={healthLabel} helper={latestHealth ? `Overall ${latestHealth.overall_score}%` : 'Start tracking now'} />
+        <section className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <MetricCard theme="teal" icon={<Users size={24} />} label="Joint Status" value={hasPartnerConnected ? 'Connected' : 'Pending'} helper="Partner linked" />
+          <MetricCard theme="rose" icon={<Heart size={24} />} label="Couples Alignment" value={latestAssessment ? `${latestAssessment.total_score}%` : 'N/A'} helper="Most recent joint score" />
+          <MetricCard theme="red" icon={<AlertTriangle size={24} />} label="High Risk Flags" value={String(highRisk)} helper="Urgent issues" />
+          <MetricCard theme="emerald" icon={<MessageCircleHeart size={24} />} label="Relationship Health" value={healthLabel} helper={latestHealth ? `Overall ${latestHealth.overall_score}%` : 'Track it now'} />
         </section>
 
-        <section className="bg-white rounded-2xl border border-slate-200 p-6">
-          <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2"><Handshake size={18} /> Couple Services</h2>
-          <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
-            {afterMarriageServices.map((service) => (
-              <ServiceCard key={service.name} service={service} onNavigate={onNavigate} disabled={!hasPartnerConnected && service.targetPage !== 'quiz'} />
-            ))}
-          </div>
-        </section>
+        <div className="grid lg:grid-cols-[1fr,300px] gap-8">
+          <section className="premium-card p-8 bg-white/80 backdrop-blur-sm">
+            <h2 className="text-2xl font-extrabold text-slate-900 mb-6 flex items-center gap-3">
+              <Handshake className="text-emerald-500" size={24} />
+              Couple Services
+            </h2>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-5">
+              {afterMarriageServices.map((service) => (
+                <ServiceCard key={service.name} service={service} onNavigate={onNavigate} disabled={!hasPartnerConnected && service.targetPage !== 'quiz'} color="emerald" />
+              ))}
+            </div>
+          </section>
 
-        <section className="bg-white rounded-2xl border border-slate-200 p-6">
-          <h2 className="text-xl font-bold text-slate-900 mb-4">Quick Actions</h2>
-          <div className="flex flex-wrap gap-3">
-            <ActionButton onClick={() => onNavigate('quiz')} label="Open Couple Assessment" />
-            <ActionButton onClick={() => onNavigate('health-tracker')} label="Track Relationship Health" variant="secondary" disabled={!hasPartnerConnected} />
-            <ActionButton onClick={() => onNavigate('red-flags')} label="Check Conflict Risks" variant="secondary" disabled={!hasPartnerConnected} />
-          </div>
-        </section>
+          <section className="premium-card p-8 bg-gradient-to-b from-white to-slate-50/50 flex flex-col">
+            <h2 className="text-xl font-bold text-slate-900 mb-6">Action Center</h2>
+            <div className="flex flex-col gap-4 flex-grow">
+              <ActionButton onClick={() => onNavigate('quiz')} label="Open Couple Assessment" theme="emerald" />
+              <ActionButton onClick={() => onNavigate('health-tracker')} label="Track Relationship Health" variant="secondary" theme="emerald" disabled={!hasPartnerConnected} />
+              <ActionButton onClick={() => onNavigate('red-flags')} label="Check Conflict Risks" variant="secondary" disabled={!hasPartnerConnected} theme="emerald" />
+            </div>
+            <div className="mt-8 rounded-2xl bg-emerald-50 border border-emerald-100 p-5">
+              <p className="text-xs font-bold text-emerald-800 uppercase tracking-wide">Tip</p>
+              <p className="text-sm text-emerald-700 font-medium mt-1">Review the Relationship Health once a week together with your partner.</p>
+            </div>
+          </section>
+        </div>
       </div>
     </div>
   );
@@ -370,29 +325,56 @@ type ServiceCardProps = {
   service: ServiceItem;
   onNavigate: (page: 'quiz' | 'red-flags' | 'health-tracker') => void;
   disabled?: boolean;
+  color: 'indigo' | 'emerald';
 };
 
-function ServiceCard({ service, onNavigate, disabled = false }: ServiceCardProps) {
+function ServiceCard({ service, onNavigate, disabled = false, color }: ServiceCardProps) {
+  const isPremium = service.priceLabel === 'PREMIUM';
+  const colorMap = {
+    indigo: {
+      tag: 'text-indigo-700 bg-indigo-50 border-indigo-200',
+      icon: 'text-indigo-500',
+      btn: 'bg-indigo-600 hover:bg-indigo-700',
+      hover: 'hover:border-indigo-200 hover:shadow-indigo-900/5',
+      premium: 'text-amber-700 bg-amber-50 border-amber-200'
+    },
+    emerald: {
+      tag: 'text-emerald-700 bg-emerald-50 border-emerald-200',
+      icon: 'text-emerald-500',
+      btn: 'bg-emerald-600 hover:bg-emerald-700',
+      hover: 'hover:border-emerald-200 hover:shadow-emerald-900/5',
+      premium: 'text-amber-700 bg-amber-50 border-amber-200'
+    }
+  };
+
+  const theme = colorMap[color];
+
   return (
-    <article className={`rounded-xl border p-4 ${disabled ? 'border-slate-200 bg-slate-100' : 'border-slate-200 bg-slate-50'}`}>
-      <p className="text-xs font-bold uppercase tracking-wide text-slate-500">{service.priceLabel}</p>
-      <h3 className="text-lg font-bold text-slate-900">{service.name}</h3>
-      <p className="text-sm text-slate-600 mt-1">{service.description}</p>
-      <ul className="mt-3 space-y-1.5">
-        {service.bullets.map((bullet) => (
-          <li key={bullet} className="text-sm text-slate-700 flex items-center gap-2">
-            <CheckCircle2 size={14} className="text-emerald-600" />
-            {bullet}
-          </li>
-        ))}
-      </ul>
-      <button
-        onClick={() => onNavigate(service.targetPage)}
-        disabled={disabled}
-        className="mt-4 inline-flex items-center gap-2 rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800 transition disabled:opacity-45 disabled:cursor-not-allowed"
-      >
-        {service.cta} <ArrowRight size={14} />
-      </button>
+    <article className={`premium-card p-6 flex flex-col transition-all duration-300 ${disabled ? 'opacity-60 bg-slate-50' : `bg-white ${theme.hover} hover:-translate-y-1`}`}>
+      <div>
+        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-bold uppercase tracking-wider border mb-4 ${isPremium ? theme.premium : theme.tag}`}>
+          {service.priceLabel}
+        </span>
+        <h3 className="text-xl font-extrabold text-slate-900 leading-tight">{service.name}</h3>
+        <p className="text-sm text-slate-600 font-medium mt-2 line-clamp-2">{service.description}</p>
+        <ul className="mt-5 space-y-2 mb-6">
+          {service.bullets.map((bullet) => (
+            <li key={bullet} className="text-sm font-medium text-slate-700 flex items-start gap-2.5">
+              <CheckCircle2 size={16} className={`${theme.icon} flex-shrink-0 mt-0.5`} />
+              <span>{bullet}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className="mt-auto pt-4 border-t border-slate-100">
+        <button
+          onClick={() => onNavigate(service.targetPage)}
+          disabled={disabled}
+          className={`w-full inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-bold text-white transition-all shadow-sm ${theme.btn} disabled:opacity-50 disabled:cursor-not-allowed`}
+        >
+          {service.cta} <ArrowRight size={16} />
+        </button>
+      </div>
     </article>
   );
 }
@@ -402,21 +384,24 @@ type ActionButtonProps = {
   label: string;
   variant?: 'primary' | 'secondary';
   disabled?: boolean;
+  theme: 'indigo' | 'emerald';
 };
 
-function ActionButton({ onClick, label, variant = 'primary', disabled = false }: ActionButtonProps) {
-  const className =
-    variant === 'primary'
-      ? 'bg-blue-600 text-white hover:bg-blue-700'
-      : 'bg-white text-slate-800 border border-slate-300 hover:bg-slate-100';
+function ActionButton({ onClick, label, variant = 'primary', disabled = false, theme }: ActionButtonProps) {
+  const isPrimary = variant === 'primary';
+  const colorMap = {
+    indigo: isPrimary ? 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-sm border-transparent' : 'bg-white text-slate-800 border-slate-200 hover:bg-slate-50 hover:border-indigo-200 shadow-sm',
+    emerald: isPrimary ? 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm border-transparent' : 'bg-white text-slate-800 border-slate-200 hover:bg-slate-50 hover:border-emerald-200 shadow-sm',
+  };
 
   return (
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`rounded-lg px-4 py-2 font-semibold transition ${className} disabled:opacity-45 disabled:cursor-not-allowed`}
+      className={`rounded-xl px-5 py-3.5 text-sm w-full font-bold transition-all border ${colorMap[theme]} disabled:opacity-50 disabled:cursor-not-allowed text-left flex items-center justify-between group`}
     >
-      {label}
+      <span>{label}</span>
+      <ArrowRight size={16} className={`transition-transform ${!disabled && 'group-hover:translate-x-1'} opacity-60`} />
     </button>
   );
 }
@@ -426,17 +411,30 @@ type MetricCardProps = {
   label: string;
   value: string;
   helper: string;
+  theme: 'indigo' | 'emerald' | 'rose' | 'blue' | 'teal' | 'red';
 };
 
-function MetricCard({ icon, label, value, helper }: MetricCardProps) {
+function MetricCard({ icon, label, value, helper, theme }: MetricCardProps) {
+  const colorMap = {
+    indigo: 'bg-indigo-50 text-indigo-600',
+    emerald: 'bg-emerald-50 text-emerald-600',
+    rose: 'bg-rose-50 text-rose-600',
+    blue: 'bg-blue-50 text-blue-600',
+    teal: 'bg-teal-50 text-teal-600',
+    red: 'bg-red-50 text-red-600',
+  };
+
   return (
-    <article className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
-      <div className="flex items-center justify-between mb-3">
-        <div className="rounded-lg bg-slate-100 p-2">{icon}</div>
-        <p className="text-2xl font-bold text-slate-900">{value}</p>
+    <article className="premium-card p-6 relative overflow-hidden group">
+      <div className={`absolute top-0 right-0 w-24 h-24 blur-2xl rounded-full opacity-20 -z-10 translate-x-1/2 -translate-y-1/2 transition-opacity group-hover:opacity-40 ${colorMap[theme].split(' ')[0]}`}></div>
+      <div className="flex items-start justify-between mb-4">
+        <div className={`rounded-2xl p-3 shadow-inner ${colorMap[theme]}`}>{icon}</div>
       </div>
-      <p className="text-sm font-semibold text-slate-700">{label}</p>
-      <p className="text-xs text-slate-500 mt-1">{helper}</p>
+      <div>
+        <p className="text-3xl font-extrabold text-slate-900 tracking-tight">{value}</p>
+        <p className="text-sm font-bold text-slate-500 mt-1 uppercase tracking-wide">{label}</p>
+        <p className="text-xs font-semibold text-slate-400 mt-2">{helper}</p>
+      </div>
     </article>
   );
 }

@@ -7,6 +7,9 @@ import {
   FileText,
   Link2,
   Send,
+  ShieldAlert,
+  Sparkles,
+  Target,
   Unlink,
   UserPlus,
 } from 'lucide-react';
@@ -932,10 +935,10 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading assessment workspace...</p>
+      <div className="min-h-[calc(100vh-80px)] bg-slate-50 flex items-center justify-center">
+        <div className="text-center animate-pulse">
+          <div className="rounded-full h-12 w-12 border-4 border-indigo-200 border-t-indigo-600 animate-spin mx-auto mb-4"></div>
+          <p className="text-slate-600 font-medium tracking-wide">Loading workspace...</p>
         </div>
       </div>
     );
@@ -943,12 +946,12 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-gray-600 mb-4">Please sign in to access couple assessment.</p>
+      <div className="min-h-[calc(100vh-80px)] bg-slate-50 flex items-center justify-center">
+        <div className="text-center premium-card p-10">
+          <p className="text-slate-600 mb-6 font-medium text-lg">Please sign in to access couple assessment.</p>
           <button
             onClick={() => onNavigate('home')}
-            className="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition"
+            className="bg-indigo-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-indigo-700 transition shadow-md"
           >
             Go Home
           </button>
@@ -959,12 +962,12 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
 
   if (!profile) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-gray-600 mb-4">Setting up your profile. Please wait and refresh this page.</p>
+      <div className="min-h-[calc(100vh-80px)] bg-slate-50 flex items-center justify-center">
+        <div className="text-center premium-card p-10">
+          <p className="text-slate-600 mb-6 font-medium text-lg">Setting up your profile. Please wait and refresh this page.</p>
           <button
             onClick={() => window.location.reload()}
-            className="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition"
+            className="bg-indigo-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-indigo-700 transition shadow-md"
           >
             Refresh
           </button>
@@ -979,18 +982,18 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
     sessionQuestions.length > 0 ? ((currentQuestionIndex + 1) / sessionQuestions.length) * 100 : 0;
 
   return (
-    <div className="min-h-screen bg-slate-50 py-10">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-          <h1 className="text-2xl font-bold text-slate-900 mb-2">Couple Assessment Workspace</h1>
-          <p className="text-slate-600">
+    <div className="min-h-[calc(100vh-80px)] bg-slate-50 py-10">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        <div className="premium-card p-8 bg-gradient-to-r from-indigo-50 to-blue-50 border-indigo-100">
+          <h1 className="text-3xl font-extrabold text-indigo-900 mb-3 tracking-tight">Couple Assessment Workspace</h1>
+          <p className="text-indigo-800/80 font-medium">
             Each session uses a random set of 15 questions from the 50-question bank (8 MCQ, 5 MSQ, 2 One-line).
             Both partners get the same set for that session.
           </p>
-          {message && <p className="mt-3 text-sm font-medium text-blue-700">{message}</p>}
+          {message && <p className="mt-4 text-sm font-bold text-indigo-700 bg-indigo-100/50 inline-block px-3 py-1.5 rounded-lg">{message}</p>}
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+        <div className="premium-card p-8">
           <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
             <Link2 size={20} /> Partner Connection
           </h2>
@@ -1099,45 +1102,46 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
         </div>
 
         {!partnerProfile && (
-          <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-            <h2 className="text-lg font-bold text-slate-900 mb-2">Assessment Access</h2>
-            <p className="text-slate-600 mb-3">
+          <div className="premium-card p-8">
+            <h2 className="text-xl font-bold text-slate-900 mb-3 flex items-center gap-2">Assessment Access</h2>
+            <p className="text-slate-600 mb-4 text-lg">
               Couple sessions are visible only when a partner connection is active.
             </p>
-            <div className="rounded-lg bg-slate-50 border border-slate-200 px-4 py-3 text-sm text-slate-700">
+            <div className="rounded-xl bg-indigo-50/50 border border-indigo-100 px-5 py-4 text-sm font-medium text-indigo-900 flex items-start gap-3">
+              <Sparkles className="text-indigo-500 shrink-0 mt-0.5" size={18} />
               Connect with one partner to unlock session cards, report analysis, and assessment submission.
             </div>
           </div>
         )}
 
         {partnerProfile && (
-          <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-5">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-                <UserPlus size={20} /> Session Cards
+          <div className="premium-card p-8 space-y-6">
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <h2 className="text-2xl font-extrabold text-slate-900 flex items-center gap-3">
+                <UserPlus className="text-indigo-500" size={24} /> Session Cards
               </h2>
               <button
                 onClick={startNewSession}
                 disabled={busyAction === 'start-session'}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition disabled:opacity-60"
+                className="bg-indigo-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-indigo-700 shadow-md hover:-translate-y-0.5 transition-all disabled:opacity-60 disabled:hover:translate-y-0"
               >
                 Start New Assessment
               </button>
             </div>
 
             {pendingPartnerSession && (
-              <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 flex items-start gap-2">
-                <Bell className="text-amber-700 mt-0.5" size={18} />
-                <p className="text-sm text-amber-900">
+              <div className="rounded-xl border border-amber-200 bg-amber-50 p-5 flex items-start gap-3">
+                <Bell className="text-amber-600 shrink-0 mt-0.5" size={20} />
+                <p className="text-sm font-medium text-amber-900">
                   Your partner has started a new session. Open that card and submit your private answers.
                 </p>
               </div>
             )}
 
             {sessions.length === 0 ? (
-              <p className="text-sm text-slate-500">No sessions yet. Start one to notify your partner.</p>
+              <div className="py-8 text-center text-slate-500 font-medium">No sessions yet. Start one to notify your partner.</div>
             ) : (
-              <div className="grid md:grid-cols-2 gap-4">
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
                 {sessions.map((session) => {
                   const sessionReport = (session.report || null) as FinalReport | null;
                   const questionCount = normalizeSessionQuestionSet(session.question_set).length;
@@ -1147,40 +1151,46 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
                     <button
                       key={session.id}
                       onClick={() => setSelectedSessionId(session.id)}
-                      className={`border rounded-xl p-4 text-left transition ${selectedSessionId === session.id
-                          ? 'border-blue-500 bg-blue-50'
-                          : 'border-slate-200 hover:border-blue-300 bg-white'
+                      className={`text-left transition-all duration-300 rounded-2xl p-6 ${selectedSessionId === session.id
+                        ? 'bg-indigo-50 border-2 border-indigo-500 shadow-md ring-4 ring-indigo-500/10 scale-[1.02]'
+                        : 'bg-white border-2 border-slate-200 hover:border-indigo-300 hover:shadow-lg'
                         }`}
                     >
-                      <div className="flex items-start justify-between gap-3">
+                      <div className="flex flex-col h-full justify-between gap-4">
                         <div>
-                          <p className="font-semibold text-slate-900">
-                            Session {new Date(session.initiated_at).toLocaleString()}
+                          <div className="flex items-center justify-between mb-2">
+                            <span
+                              className={`text-[10px] uppercase tracking-widest px-2.5 py-1 rounded-md font-bold ${completed ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'
+                                }`}
+                            >
+                              {completed ? 'Completed' : 'Pending'}
+                            </span>
+                          </div>
+                          <p className="font-extrabold text-slate-900 text-lg">
+                            Session {new Date(session.initiated_at).toLocaleDateString()}
                           </p>
-                          <p className="text-xs text-slate-600 mt-1">
-                            Questions: {questionCount || 15} (8 MCQ, 5 MSQ, 2 One-line)
+                          <p className="text-xs font-semibold text-slate-500 mt-1 uppercase tracking-wide">
+                            {questionCount || 15} Questions
                           </p>
                         </div>
-                        <span
-                          className={`text-xs px-2 py-1 rounded-full font-semibold ${completed ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'
-                            }`}
-                        >
-                          {completed ? 'Completed' : 'Pending'}
-                        </span>
-                      </div>
 
-                      {completed && sessionReport ? (
-                        <div className="mt-3 space-y-1">
-                          <p className="text-sm text-slate-700">
-                            Compatibility: <span className="font-bold">{sessionReport.overall_compatibility_percent}%</span>
-                          </p>
-                          <p className="text-sm text-slate-700">
-                            Risk: <span className="font-bold">{sessionReport.weighted_risk_percent}%</span>
-                          </p>
-                        </div>
-                      ) : (
-                        <p className="mt-3 text-sm text-slate-600">Waiting for both partner submissions.</p>
-                      )}
+                        {completed && sessionReport ? (
+                          <div className="mt-4 pt-4 border-t border-slate-200/60">
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="text-xs font-semibold text-slate-500">Compatibility</span>
+                              <span className="font-extrabold text-indigo-700">{sessionReport.overall_compatibility_percent}%</span>
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs font-semibold text-slate-500">Risk</span>
+                              <span className="font-extrabold text-rose-700">{sessionReport.weighted_risk_percent}%</span>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="mt-4 pt-4 border-t border-slate-200/60">
+                            <p className="text-xs font-medium text-slate-500">Waiting for submissions.</p>
+                          </div>
+                        )}
+                      </div>
                     </button>
                   );
                 })}
@@ -1190,56 +1200,59 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
         )}
 
         {partnerProfile && selectedSession && (
-          <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+          <div className="premium-card p-8 bg-gradient-to-br from-white to-slate-50 relative overflow-hidden">
             {selectedSession.status === 'completed' && report ? (
-              <div className="space-y-6">
-                <div className="text-center">
-                  <CheckCircle className="text-emerald-500 mx-auto mb-3" size={52} />
-                  <h3 className="text-2xl font-bold text-slate-900">Report & Analysis</h3>
-                  <p className="text-slate-600">Only your own answers are stored per account. Matching is used for scoring.</p>
+              <div className="space-y-8 relative z-10">
+                <div className="text-center bg-white/60 p-8 rounded-[2rem] border border-slate-100 shadow-sm backdrop-blur">
+                  <CheckCircle className="text-emerald-500 mx-auto mb-4 drop-shadow-md" size={64} />
+                  <h3 className="text-3xl font-extrabold text-slate-900 tracking-tight">Report & Analysis</h3>
+                  <p className="text-slate-600 font-medium mt-2 max-w-lg mx-auto">Only your own answers are stored per account. Matching is used for scoring.</p>
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="border rounded-lg p-4 bg-blue-50 border-blue-100">
-                    <p className="text-sm text-blue-700">Final Compatibility</p>
-                    <p className="text-3xl font-bold text-blue-900">{report.overall_compatibility_percent}%</p>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="border border-indigo-100 rounded-3xl p-6 bg-indigo-50 shadow-sm relative overflow-hidden">
+                    <div className="absolute -top-4 -right-4 w-24 h-24 bg-indigo-500 rounded-full blur-3xl opacity-20"></div>
+                    <p className="text-sm font-bold uppercase tracking-widest text-indigo-700 mb-1">Final Compatibility</p>
+                    <p className="text-5xl font-extrabold text-indigo-900">{report.overall_compatibility_percent}%</p>
                   </div>
-                  <div className="border rounded-lg p-4 bg-red-50 border-red-100">
-                    <p className="text-sm text-red-700">Weighted Risk</p>
-                    <p className="text-3xl font-bold text-red-900">{report.weighted_risk_percent}%</p>
+                  <div className="border border-rose-100 rounded-3xl p-6 bg-rose-50 shadow-sm relative overflow-hidden">
+                    <div className="absolute -top-4 -right-4 w-24 h-24 bg-rose-500 rounded-full blur-3xl opacity-20"></div>
+                    <p className="text-sm font-bold uppercase tracking-widest text-rose-700 mb-1">Weighted Risk</p>
+                    <p className="text-5xl font-extrabold text-rose-900">{report.weighted_risk_percent}%</p>
                   </div>
                 </div>
 
                 <div>
-                  <h4 className="font-semibold text-slate-900 mb-3">Category Scores</h4>
-                  <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
+                  <h4 className="font-extrabold text-slate-900 mb-4 text-xl flex items-center gap-2"><Target size={20} className="text-slate-400" /> Category Scores</h4>
+                  <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     {categoryList.map((category) => (
-                      <div key={category} className="border rounded-lg p-3">
-                        <p className="text-sm text-slate-600">{category}</p>
-                        <p className="text-xl font-bold text-slate-900">{report.category_scores[category]}%</p>
+                      <div key={category} className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm hover:shadow-md transition">
+                        <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">{category}</p>
+                        <p className="text-2xl font-extrabold text-slate-900">{report.category_scores[category]}%</p>
                       </div>
                     ))}
                   </div>
                 </div>
 
                 <div>
-                  <h4 className="font-semibold text-slate-900 mb-3">Top Risk Contributors</h4>
-                  <div className="space-y-2">
+                  <h4 className="font-extrabold text-slate-900 mb-4 text-xl flex items-center gap-2"><ShieldAlert size={20} className="text-rose-500" /> Top Risk Contributors</h4>
+                  <div className="space-y-3">
                     {report.top_risk_contributors.map((riskItem) => {
                       const question = QUESTION_BANK.find((entry) => entry.id === riskItem.questionId);
                       return (
-                        <div key={riskItem.questionId} className="border rounded-lg p-3">
-                          <div className="flex items-center justify-between gap-2 mb-1">
-                            <p className="font-semibold text-slate-800">
-                              Q{riskItem.sourceQNo}: {question?.prompt}
+                        <div key={riskItem.questionId} className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                          <div className="flex items-start justify-between gap-4 mb-2">
+                            <p className="font-bold text-slate-800 leading-snug flex-1">
+                              <span className="text-slate-400 mr-2">Q{riskItem.sourceQNo}</span> {question?.prompt}
                             </p>
-                            <span
-                              className={`text-xs px-2 py-1 rounded-full font-semibold ${riskBadgeClass(riskItem.riskLevel)}`}
-                            >
+                            <span className={`text-[10px] px-2.5 py-1 rounded-md font-extrabold uppercase tracking-widest shrink-0 ${riskBadgeClass(riskItem.riskLevel)}`}>
                               {riskItem.riskLevel}
                             </span>
                           </div>
-                          <p className="text-sm text-slate-600">Risk impact: {riskItem.riskImpactPercent}%</p>
+                          <div className="flex items-center gap-2 mt-4 text-sm">
+                            <span className="font-semibold text-slate-500">Risk impact:</span>
+                            <span className="font-bold text-rose-600 bg-rose-50 px-2 py-0.5 rounded">{riskItem.riskImpactPercent}%</span>
+                          </div>
                         </div>
                       );
                     })}
@@ -1247,65 +1260,60 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
                 </div>
 
                 {report.ai_analysis && (
-                  <div className="rounded-lg border border-slate-200 p-4 bg-slate-50">
-                    <h4 className="font-semibold text-slate-900 mb-2 flex items-center gap-2">
-                      <FileText size={18} /> Professional Analysis
+                  <div className="rounded-[2rem] border border-blue-200 p-8 bg-gradient-to-br from-blue-50 to-indigo-50 mt-8 shadow-sm">
+                    <h4 className="font-extrabold text-blue-900 mb-4 flex items-center gap-3 text-xl">
+                      <Sparkles size={24} className="text-blue-600" /> Executive Analysis
                     </h4>
-                    <p className="text-sm text-slate-700 whitespace-pre-wrap leading-6">{report.ai_analysis}</p>
+                    <p className="text-base text-blue-800 leading-relaxed font-medium whitespace-pre-wrap">{report.ai_analysis}</p>
                   </div>
                 )}
               </div>
             ) : mySubmission ? (
-              <div className="rounded-lg border border-blue-200 bg-blue-50 p-5">
-                <p className="font-semibold text-blue-900 mb-2">Your private answers are submitted.</p>
-                <p className="text-sm text-blue-800">
-                  Waiting for your partner to submit the same session question set.
+              <div className="rounded-[2rem] border-2 border-indigo-200 bg-indigo-50 p-10 text-center relative z-10 shadow-sm">
+                <CheckCircle className="mx-auto text-indigo-500 mb-4" size={48} />
+                <p className="text-2xl font-extrabold text-indigo-900 mb-2">Your private answers are submitted.</p>
+                <p className="text-indigo-800/80 font-medium">
+                  Waiting for your partner to submit their assessment to generate the report.
                 </p>
               </div>
             ) : isMyTurnToAnswer && currentQuestion ? (
-              <div className="space-y-5">
-                <div>
-                  <div className="flex justify-between text-sm text-slate-600 mb-2">
-                    <span>
-                      Question {currentQuestionIndex + 1} of {sessionQuestions.length}
-                    </span>
-                    <span>{Math.round(progress)}% complete</span>
+              <div className="space-y-8 relative z-10 max-w-4xl mx-auto">
+                <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+                  <div className="flex justify-between items-center text-sm font-bold text-slate-500 uppercase tracking-widest mb-3">
+                    <span>Question {currentQuestionIndex + 1} / {sessionQuestions.length}</span>
+                    <span className="text-indigo-600">{Math.round(progress)}%</span>
                   </div>
-                  <div className="w-full bg-slate-200 rounded-full h-2">
-                    <div className="bg-blue-600 h-2 rounded-full" style={{ width: `${progress}%` }} />
+                  <div className="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
+                    <div className="bg-indigo-600 h-full rounded-full transition-all duration-500 ease-out" style={{ width: `${progress}%` }} />
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-xs font-semibold px-2 py-1 rounded-full bg-slate-100 text-slate-700">
+                <div className="flex items-center gap-3 flex-wrap">
+                  <span className="text-[10px] font-extrabold uppercase tracking-widest px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-700 shadow-sm">
                     {currentQuestion.type}
                   </span>
-                  <span
-                    className={`text-xs font-semibold px-2 py-1 rounded-full ${riskBadgeClass(
-                      currentQuestion.riskLevel
-                    )}`}
-                  >
+                  <span className={`text-[10px] font-extrabold uppercase tracking-widest px-3 py-1.5 rounded-lg shadow-sm border ${riskBadgeClass(currentQuestion.riskLevel).replace('bg-', 'border-').replace('text-', 'text-')}`}>
                     {currentQuestion.riskLevel} Risk
                   </span>
-                  <span className="text-xs font-semibold px-2 py-1 rounded-full bg-indigo-50 text-indigo-700">
+                  <span className="text-[10px] font-extrabold uppercase tracking-widest px-3 py-1.5 rounded-lg bg-indigo-50 border border-indigo-100 text-indigo-700 shadow-sm">
                     {currentQuestion.category}
                   </span>
                 </div>
 
-                <div>
-                  <h3 className="text-xl font-bold text-slate-900">{currentQuestion.prompt}</h3>
-                  <p className="text-sm text-slate-600 mt-1">{currentQuestion.riskDescription}</p>
+                <div className="mt-8 mb-10">
+                  <h3 className="text-3xl font-extrabold text-slate-900 leading-tight">{currentQuestion.prompt}</h3>
+                  <p className="text-lg text-slate-600 mt-4 leading-relaxed font-medium">{currentQuestion.riskDescription}</p>
                 </div>
 
                 {currentQuestion.type === 'MCQ' && (
-                  <div className="space-y-2">
+                  <div className="grid gap-3">
                     {currentQuestion.options?.map((option) => (
                       <button
                         key={option}
                         onClick={() => setMCQAnswer(currentQuestion.id, option)}
-                        className={`w-full border-2 rounded-lg p-3 text-left transition ${myResponses[currentQuestion.id] === option
-                            ? 'border-blue-500 bg-blue-50'
-                            : 'border-slate-200 hover:border-blue-300'
+                        className={`w-full border-2 rounded-2xl p-5 text-left transition-all duration-300 font-semibold text-lg ${myResponses[currentQuestion.id] === option
+                          ? 'border-indigo-500 bg-indigo-50 text-indigo-900 shadow-sm ring-4 ring-indigo-500/10'
+                          : 'border-slate-200 bg-white text-slate-700 hover:border-indigo-300 hover:shadow-md hover:bg-slate-50'
                           }`}
                       >
                         {option}
@@ -1315,7 +1323,7 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
                 )}
 
                 {currentQuestion.type === 'MSQ' && (
-                  <div className="space-y-2">
+                  <div className="grid gap-3">
                     {currentQuestion.options?.map((option) => {
                       const selected = Array.isArray(myResponses[currentQuestion.id])
                         ? (myResponses[currentQuestion.id] as string[]).includes(option)
@@ -1325,12 +1333,17 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
                         <button
                           key={option}
                           onClick={() => toggleMSQAnswer(currentQuestion.id, option)}
-                          className={`w-full border-2 rounded-lg p-3 text-left transition ${selected
-                              ? 'border-blue-500 bg-blue-50'
-                              : 'border-slate-200 hover:border-blue-300'
+                          className={`w-full border-2 rounded-2xl p-5 text-left transition-all duration-300 font-semibold text-lg ${selected
+                            ? 'border-indigo-500 bg-indigo-50 text-indigo-900 shadow-sm ring-4 ring-indigo-500/10'
+                            : 'border-slate-200 bg-white text-slate-700 hover:border-indigo-300 hover:shadow-md hover:bg-slate-50'
                             }`}
                         >
-                          {option}
+                          <div className="flex items-center gap-3">
+                            <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${selected ? 'border-indigo-500 bg-indigo-500' : 'border-slate-300'}`}>
+                              {selected && <CheckCircle size={14} className="text-white" />}
+                            </div>
+                            {option}
+                          </div>
                         </button>
                       );
                     })}
@@ -1341,41 +1354,50 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
                   <textarea
                     value={String(myResponses[currentQuestion.id] || '')}
                     onChange={(event) => setTextAnswer(currentQuestion.id, event.target.value)}
-                    placeholder="Type your response"
-                    className="w-full min-h-32 border-2 border-slate-200 rounded-lg p-3 focus:outline-none focus:border-blue-500"
+                    placeholder="Type your response thoughtfully..."
+                    className="w-full min-h-[160px] border-2 border-slate-200 rounded-2xl p-5 text-lg font-medium text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all resize-y shadow-sm"
                   />
                 )}
 
-                <div className="flex justify-between">
+                <div className="flex items-center justify-between pt-10 border-t border-slate-200/60 mt-10">
                   <button
                     onClick={() => setCurrentQuestionIndex((prev) => Math.max(prev - 1, 0))}
                     disabled={currentQuestionIndex === 0}
-                    className="inline-flex items-center gap-2 text-slate-700 border border-slate-300 px-4 py-2 rounded-lg font-semibold hover:bg-slate-50 transition disabled:opacity-50"
+                    className="inline-flex items-center gap-2 text-slate-600 bg-white border border-slate-300 shadow-sm px-6 py-3 rounded-xl font-bold hover:bg-slate-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    <ArrowLeft size={16} /> Previous
+                    <ArrowLeft size={18} /> Previous
                   </button>
 
                   {currentQuestionIndex < sessionQuestions.length - 1 ? (
                     <button
                       onClick={() => setCurrentQuestionIndex((prev) => prev + 1)}
                       disabled={!canMoveNext()}
-                      className="inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition disabled:opacity-50"
+                      className="inline-flex items-center gap-2 bg-indigo-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-indigo-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:-translate-y-0.5"
                     >
-                      Next <ArrowRight size={16} />
+                      Next <ArrowRight size={18} />
                     </button>
                   ) : (
                     <button
                       onClick={submitMyAssessment}
                       disabled={!isAllAnswered() || savingSubmission}
-                      className="bg-emerald-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-emerald-700 transition disabled:opacity-50"
+                      className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-8 py-3 rounded-xl font-bold hover:from-emerald-600 hover:to-teal-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:-translate-y-0.5"
                     >
-                      {savingSubmission ? 'Submitting...' : 'Submit Private Answers'}
+                      {savingSubmission ? (
+                        <>Submitting <div className="animate-spin rounded-full h-4 w-4 border-2 border-white/40 border-t-white ml-2"></div></>
+                      ) : (
+                        <>Submit Final Answers <CheckCircle size={18} /></>
+                      )}
                     </button>
                   )}
                 </div>
               </div>
             ) : (
-              <p className="text-sm text-slate-600">Select a pending session card to continue.</p>
+              <div className="text-center py-20 relative z-10">
+                <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <FileText size={24} className="text-slate-400" />
+                </div>
+                <p className="text-xl font-bold text-slate-500">Select a pending session card to continue.</p>
+              </div>
             )}
           </div>
         )}
