@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { ArrowLeft, HeartHandshake, Link2, Users, AlertCircle } from 'lucide-react';
+import { ArrowLeft, HeartHandshake, Users, AlertCircle } from 'lucide-react';
 
 type AuthProps = {
   mode: 'before' | 'after';
@@ -132,7 +132,8 @@ export function Auth({ mode, onBack, onSuccess }: AuthProps) {
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     placeholder="John Doe"
-                    className={`w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-primary/50 px-4 py-3.5 text-slate-900 dark:text-white placeholder:text-slate-400 outline-none transition-all focus:bg-secondary focus:border-transparent focus:ring-2 ${themeConfig.ringColor}`}
+                    style={{ backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}
+                    className={`w-full rounded-xl border border-slate-200 dark:border-slate-700 px-4 py-3.5 placeholder:text-slate-400 dark:placeholder:text-slate-500 outline-none transition-all focus:border-transparent focus:ring-2 ${themeConfig.ringColor}`}
                     required
                   />
                 </div>
@@ -147,7 +148,8 @@ export function Auth({ mode, onBack, onSuccess }: AuthProps) {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@example.com"
-                  className={`w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-primary/50 px-4 py-3.5 text-slate-900 dark:text-white placeholder:text-slate-400 outline-none transition-all focus:bg-secondary focus:border-transparent focus:ring-2 ${themeConfig.ringColor}`}
+                  style={{ backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}
+                  className={`w-full rounded-xl border border-slate-200 dark:border-slate-700 px-4 py-3.5 placeholder:text-slate-400 dark:placeholder:text-slate-500 outline-none transition-all focus:border-transparent focus:ring-2 ${themeConfig.ringColor}`}
                   required
                 />
               </div>
@@ -161,7 +163,8 @@ export function Auth({ mode, onBack, onSuccess }: AuthProps) {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className={`w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-primary/50 px-4 py-3.5 text-slate-900 dark:text-white placeholder:text-slate-400 outline-none transition-all focus:bg-secondary focus:border-transparent focus:ring-2 ${themeConfig.ringColor}`}
+                  style={{ backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}
+                  className={`w-full rounded-xl border border-slate-200 dark:border-slate-700 px-4 py-3.5 placeholder:text-slate-400 dark:placeholder:text-slate-500 outline-none transition-all focus:border-transparent focus:ring-2 ${themeConfig.ringColor}`}
                   required
                   minLength={6}
                 />

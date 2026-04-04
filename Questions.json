@@ -1,0 +1,806 @@
+{
+  "Before Marriage": [
+    {
+      "Q.No": 1,
+      "Question": "How central do you want religious or spiritual practices to be in your daily life together?",
+      "Type": "MCQ",
+      "Options": ["Very High - Daily practice", "Moderate - Weekly/Holidays", "Low - Occasional", "None - Secular lifestyle"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 2,
+      "Question": "What is your ideal living arrangement regarding extended family?",
+      "Type": "MCQ",
+      "Options": ["Joint family (parents/siblings)", "Nuclear family (just us)", "Living close but separate", "Flexible/Depends on need"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 3,
+      "Question": "How often do you expect us to have check-in conversations about our relationship?",
+      "Type": "MCQ",
+      "Options": ["Daily", "Weekly", "Monthly", "Only when issues arise"],
+      "Risk Weight": "Medium",
+      "Risk Description": "Mismatch may create recurring friction"
+    },
+    {
+      "Q.No": 4,
+      "Question": "Which statement best describes your personal financial philosophy?",
+      "Type": "MCQ",
+      "Options": ["Strict saver for the future", "Balanced: save some, spend some", "Enjoy life now (Spender)", "No formal planning"],
+      "Risk Weight": "Medium",
+      "Risk Description": "Mismatch may create recurring friction"
+    },
+    {
+      "Q.No": 5,
+      "Question": "How do you typically react when you face a personal or professional failure?",
+      "Type": "MCQ",
+      "Options": ["Self-reflect and try again", "Look for someone to blame", "Ignore it and move on", "Get stuck in overthinking"],
+      "Risk Weight": "High",
+      "Risk Description": "Critical mismatch can cause long-term conflict"
+    },
+    {
+      "Q.No": 6,
+      "Question": "How do you view your partner’s professional success compared to your own?",
+      "Type": "MCQ",
+      "Options": ["Genuine pride and support", "Neutral as long as I'm okay", "Occasional jealousy", "Competitive drive to beat them"],
+      "Risk Weight": "Medium",
+      "Risk Description": "Mismatch may create recurring friction"
+    },
+    {
+      "Q.No": 7,
+      "Question": "If career and family needs clash, which one generally takes precedence for you?",
+      "Type": "MCQ",
+      "Options": ["Always Career", "Always Family", "Strive for 50/50 balance", "Depends on the phase of life"],
+      "Risk Weight": "High",
+      "Risk Description": "Critical mismatch can cause long-term conflict"
+    },
+    {
+      "Q.No": 8,
+      "Question": "What is your primary style of making big life decisions?",
+      "Type": "MCQ",
+      "Options": ["Logical and data-driven", "Intuitive and emotional", "Collaboration and consensus", "Impulsive and fast"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 9,
+      "Question": "How do you view traditional gender roles in a household?",
+      "Type": "MCQ",
+      "Options": ["Strongly traditional", "Moderately traditional", "Equal/Fluid roles", "Gender is irrelevant to chores"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 10,
+      "Question": "How easily do you forgive a partner after a significant disagreement?",
+      "Type": "MCQ",
+      "Options": ["Very easily - let go fast", "After a sincere apology", "Rarely - I tend to hold grudges", "Depends on the severity"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 11,
+      "Question": "How do you handle feelings of jealousy in a relationship?",
+      "Type": "MCQ",
+      "Options": ["Direct and calm communication", "Passive-aggressive behavior", "Suppress and ignore it", "Attempt to control partner"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 12,
+      "Question": "How much 'alone time' or personal space do you need each week?",
+      "Type": "MCQ",
+      "Options": ["High - I need lots of solo time", "Moderate - A few hours", "Low - I prefer being together", "None - I hate being alone"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 13,
+      "Question": "How would you describe your time management style?",
+      "Type": "MCQ",
+      "Options": ["Highly structured/Scheduled", "Flexible but organized", "Go with the flow/Chaotic", "Always running late"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 14,
+      "Question": "In your view, is love enough to sustain a marriage?",
+      "Type": "MCQ",
+      "Options": ["Yes, love conquers all", "No, compatibility is more vital", "Maybe, but only with effort", "Depends on the couple"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 15,
+      "Question": "Do you believe a person should change their core personality after marriage?",
+      "Type": "MCQ",
+      "Options": ["Yes, for the partner", "No, stay exactly the same", "Only minor habits should change", "Growth is expected, not change"],
+      "Risk Weight": "High",
+      "Risk Description": "Critical mismatch can cause long-term conflict"
+    },
+    {
+      "Q.No": 16,
+      "Question": "What is your stance on having children in the future?",
+      "Type": "MCQ",
+      "Options": ["Definitely want children", "Probably, but not sure when", "Leaning towards child-free", "Undecided/Neutral"],
+      "Risk Weight": "High",
+      "Risk Description": "Critical mismatch can cause long-term conflict"
+    },
+    {
+      "Q.No": 17,
+      "Question": "How important is maintaining a busy social life outside the marriage?",
+      "Type": "MCQ",
+      "Options": ["Very important", "Moderately important", "Relationship is my priority", "I am a homebody"],
+      "Risk Weight": "Medium",
+      "Risk Description": "Mismatch may create recurring friction"
+    },
+    {
+      "Q.No": 18,
+      "Question": "How do you typically behave when under extreme pressure?",
+      "Type": "MCQ",
+      "Options": ["Stay calm and focused", "Become visibly stressed", "Shut down and avoid tasks", "Become aggressive or short"],
+      "Risk Weight": "High",
+      "Risk Description": "Critical mismatch can cause long-term conflict"
+    },
+    {
+      "Q.No": 19,
+      "Question": "How well do you adapt to major life changes (e.g., relocation)?",
+      "Type": "MCQ",
+      "Options": ["Very easily", "With some effort", "I struggle significantly", "I resist change entirely"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 20,
+      "Question": "How much honesty do you expect regarding small 'white lies'?",
+      "Type": "MCQ",
+      "Options": ["100% honesty always", "Small lies are okay to save face", "Honesty only on big things", "Privacy over honesty"],
+      "Risk Weight": "High",
+      "Risk Description": "Critical mismatch can cause long-term conflict"
+    },
+    {
+      "Q.No": 21,
+      "Question": "How do you typically express anger?",
+      "Type": "MCQ",
+      "Options": ["Controlled explanation", "Raising my voice", "Silent treatment", "Immediate explosion"],
+      "Risk Weight": "Medium",
+      "Risk Description": "Mismatch may create recurring friction"
+    },
+    {
+      "Q.No": 22,
+      "Question": "How much influence should in-laws have on our domestic decisions?",
+      "Type": "MCQ",
+      "Options": ["High - respect elders", "Moderate - consult them", "Low - just informational", "None - our life only"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 23,
+      "Question": "How do you respond when someone gives you constructive criticism?",
+      "Type": "MCQ",
+      "Options": ["Listen and reflect", "Immediately get defensive", "Ignore it/Dismiss it", "Counter-attack"],
+      "Risk Weight": "High",
+      "Risk Description": "Critical mismatch can cause long-term conflict"
+    },
+    {
+      "Q.No": 24,
+      "Question": "When a conflict happens, when do you prefer to resolve it?",
+      "Type": "MCQ",
+      "Options": ["Immediately/Never sleep angry", "A few hours later", "The next day after sleeping", "Whenever it comes up again"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 25,
+      "Question": "Which of these are your primary 'Love Languages'? (Select all that apply)",
+      "Type": "MSQ",
+      "Options": ["Words of Affirmation", "Quality Time", "Receiving Gifts", "Acts of Service", "Physical Touch"],
+      "Risk Weight": "Medium",
+      "Risk Description": "Mismatch may create recurring friction"
+    },
+    {
+      "Q.No": 26,
+      "Question": "Which of the following are absolute deal-breakers for you? (Select all that apply)",
+      "Type": "MSQ",
+      "Options": ["Dishonesty", "Addiction Issues", "Financial Irresponsibility", "Lack of Ambition", "Incompatibility with family"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 27,
+      "Question": "What are your most common stress triggers? (Select all that apply)",
+      "Type": "MSQ",
+      "Options": ["Financial instability", "Workplace pressure", "Family interference", "Lack of sleep/health", "Messy environment"],
+      "Risk Weight": "Medium",
+      "Risk Description": "Mismatch may create recurring friction"
+    },
+    {
+      "Q.No": 28,
+      "Question": "Which core values do you seek in a long-term partner? (Select all that apply)",
+      "Type": "MSQ",
+      "Options": ["Loyalty", "Ambition", "Compassion", "Intellect", "Humor"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 29,
+      "Question": "How do you prefer to spend your free time? (Select all that apply)",
+      "Type": "MSQ",
+      "Options": ["Socializing/Partying", "Outdoor activities/Sports", "Quiet time/Reading", "Travel/Exploring", "Gaming/Movies"],
+      "Risk Weight": "Medium",
+      "Risk Description": "Mismatch may create recurring friction"
+    },
+    {
+      "Q.No": 30,
+      "Question": "What traits do you admire most in your partner? (Select all that apply)",
+      "Type": "MSQ",
+      "Options": ["Reliability", "Spontaneity", "Emotional intelligence", "Physical attractiveness", "Financial stability"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 31,
+      "Question": "Which communication methods do you prefer during the day? (Select all that apply)",
+      "Type": "MSQ",
+      "Options": ["Texting frequently", "Phone calls", "Video chats", "Evening catch-up only", "Checking in only for emergencies"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 32,
+      "Question": "Which household tasks are you willing to take full responsibility for? (Select all that apply)",
+      "Type": "MSQ",
+      "Options": ["Cooking", "Cleaning", "Finances/Bills", "Grocery/Errands", "Home Repairs"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 33,
+      "Question": "Which financial goals are most important to you? (Select all that apply)",
+      "Type": "MSQ",
+      "Options": ["Buying a home", "Retiring early", "Traveling the world", "Luxury lifestyle", "Emergency fund security"],
+      "Risk Weight": "Medium",
+      "Risk Description": "Mismatch may create recurring friction"
+    },
+    {
+      "Q.No": 34,
+      "Question": "What is your ideal vacation style? (Select all that apply)",
+      "Type": "MSQ",
+      "Options": ["Relaxing at a beach/resort", "Adventure/Hiking", "City tours/History", "Visiting family", "Luxury/Shopping"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 35,
+      "Question": "Which emotional needs are most critical for you to feel secure? (Select all that apply)",
+      "Type": "MSQ",
+      "Options": ["Consistent validation", "Autonomy/Space", "Shared vulnerability", "Protection/Safety", "Intellectual stimulation"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 36,
+      "Question": "When we disagree, which behaviors do you tend to use? (Select all that apply)",
+      "Type": "MSQ",
+      "Options": ["Active listening", "Withdrawing emotionally", "Using sarcasm", "Focusing on solutions", "Revisiting old issues"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 37,
+      "Question": "What boundaries do you value regarding friends? (Select all that apply)",
+      "Type": "MSQ",
+      "Options": ["Individual nights out", "No secrets about friends", "Shared friend group", "Opposite-sex friendship limits", "Family-only weekends"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 38,
+      "Question": "Which health/wellness habits are important to you? (Select all that apply)",
+      "Type": "MSQ",
+      "Options": ["Daily exercise", "Healthy eating", "Mental health/Therapy", "Regular sleep schedule", "Avoiding toxic habits"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 39,
+      "Question": "How do you prefer to be supported when sad? (Select all that apply)",
+      "Type": "MSQ",
+      "Options": ["Physical touch/Hugs", "Practical advice", "Being left alone", "Listening without judgment", "Distraction/Fun"],
+      "Risk Weight": "High",
+      "Risk Description": "Critical mismatch can cause long-term conflict"
+    },
+    {
+      "Q.No": 40,
+      "Question": "Which parenting roles appeal most to you? (Select all that apply)",
+      "Type": "MSQ",
+      "Options": ["Disciplinarian", "Emotional nurturer", "Provider", "Playmate/Fun parent", "Teacher/Guide"],
+      "Risk Weight": "Medium",
+      "Risk Description": "Mismatch may create recurring friction"
+    },
+    {
+      "Q.No": 41,
+      "Question": "Which cultural or family traditions must be kept? (Select all that apply)",
+      "Type": "MSQ",
+      "Options": ["Religious festivals", "Annual family reunions", "Specific food traditions", "Naming conventions", "Holiday rituals"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 42,
+      "Question": "What are your top long-term life aspirations? (Select all that apply)",
+      "Type": "MSQ",
+      "Options": ["Professional peak", "Parental success", "Financial freedom", "Social impact/Charity", "Creative fulfillment"],
+      "Risk Weight": "Medium",
+      "Risk Description": "Mismatch may create recurring friction"
+    },
+    {
+      "Q.No": 43,
+      "Question": "What are your top 3 non-negotiables in a partner?",
+      "Type": "One-line",
+      "Options": "User defined",
+      "Risk Weight": "Medium",
+      "Risk Description": "Mismatch may create recurring friction"
+    },
+    {
+      "Q.No": 44,
+      "Question": "Describe your career goals for the next 5 years.",
+      "Type": "One-line",
+      "Options": "User defined",
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 45,
+      "Question": "What is one habit of yours that might annoy a future partner?",
+      "Type": "One-line",
+      "Options": "User defined",
+      "Risk Weight": "Medium",
+      "Risk Description": "Mismatch may create recurring friction"
+    },
+    {
+      "Q.No": 46,
+      "Question": "How do you personally define loyalty in a relationship?",
+      "Type": "One-line",
+      "Options": "User defined",
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 47,
+      "Question": "What is your biggest fear regarding getting married?",
+      "Type": "One-line",
+      "Options": "User defined",
+      "Risk Weight": "High",
+      "Risk Description": "Critical mismatch can cause long-term conflict"
+    },
+    {
+      "Q.No": 48,
+      "Question": "How do you typically support a partner during a crisis?",
+      "Type": "One-line",
+      "Options": "User defined",
+      "Risk Weight": "High",
+      "Risk Description": "Critical mismatch can cause long-term conflict"
+    },
+    {
+      "Q.No": 49,
+      "Question": "What does 'trust' mean to you in practical, everyday terms?",
+      "Type": "One-line",
+      "Options": "User defined",
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 50,
+      "Question": "What is your overall vision of a 'successful' marriage?",
+      "Type": "One-line",
+      "Options": "User defined",
+      "Risk Weight": "High",
+      "Risk Description": "Critical mismatch can cause long-term conflict"
+    }
+  ],
+  "After Marriage": [
+    {
+      "Q.No": 1,
+      "Question": "Do you feel like your partner truly hears and understands your concerns?",
+      "Type": "MCQ",
+      "Options": ["Always", "Mostly", "Sometimes", "Never"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 2,
+      "Question": "How often do you find yourselves arguing about the exact same issues?",
+      "Type": "MCQ",
+      "Options": ["Never", "Rarely", "Often", "Always"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 3,
+      "Question": "How would you rate your current level of emotional connection?",
+      "Type": "MCQ",
+      "Options": ["Strong and deep", "Moderate/Stable", "Weak/Fading", "Completely disconnected"],
+      "Risk Weight": "Medium",
+      "Risk Description": "Mismatch may create recurring friction"
+    },
+    {
+      "Q.No": 4,
+      "Question": "How are the household finances currently being managed?",
+      "Type": "MCQ",
+      "Options": ["Jointly and transparently", "Mostly together with some friction", "Rarely discussed/Parallel", "Strictly separate/Conflict-prone"],
+      "Risk Weight": "High",
+      "Risk Description": "Critical mismatch can cause long-term conflict"
+    },
+    {
+      "Q.No": 5,
+      "Question": "How frequently do you feel appreciated by your spouse?",
+      "Type": "MCQ",
+      "Options": ["Daily", "Weekly", "Only on occasions", "Never"],
+      "Risk Weight": "Medium",
+      "Risk Description": "Mismatch may create recurring friction"
+    },
+    {
+      "Q.No": 6,
+      "Question": "Are you satisfied with the amount of quality time you spend together?",
+      "Type": "MCQ",
+      "Options": ["Very satisfied", "Somewhat satisfied", "Need more time", "Very dissatisfied"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 7,
+      "Question": "How would you describe your level of trust in your partner right now?",
+      "Type": "MCQ",
+      "Options": ["Complete/Unshakeable", "Mostly trustful", "Partially suspicious", "No trust left"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 8,
+      "Question": "How do small, everyday issues affect your relationship mood?",
+      "Type": "MCQ",
+      "Options": ["Easily ignored", "Briefly annoying", "Often escalate into fights", "Always ruin the day"],
+      "Risk Weight": "High",
+      "Risk Description": "Critical mismatch can cause long-term conflict"
+    },
+    {
+      "Q.No": 9,
+      "Question": "How balanced do you feel the division of labor is in your home?",
+      "Type": "MCQ",
+      "Options": ["Perfectly balanced", "Mostly fair", "Somewhat unequal", "Extremely lopsided"],
+      "Risk Weight": "Medium",
+      "Risk Description": "Mismatch may create recurring friction"
+    },
+    {
+      "Q.No": 10,
+      "Question": "Do you feel respected when making joint decisions?",
+      "Type": "MCQ",
+      "Options": ["Always", "Often", "Sometimes", "Rarely"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 11,
+      "Question": "How often do you discuss your future goals together?",
+      "Type": "MCQ",
+      "Options": ["Regularly", "Occasionally", "Rarely", "Never"],
+      "Risk Weight": "High",
+      "Risk Description": "Critical mismatch can cause long-term conflict"
+    },
+    {
+      "Q.No": 12,
+      "Question": "How satisfied are you with the level of physical intimacy?",
+      "Type": "MCQ",
+      "Options": ["High", "Medium", "Low", "Non-existent"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 13,
+      "Question": "Do you feel emotionally safe sharing your secrets with your partner?",
+      "Type": "MCQ",
+      "Options": ["Yes, completely", "Mostly", "Sometimes", "No, I'm judged"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 14,
+      "Question": "How often do you feel lonely while being with your partner?",
+      "Type": "MCQ",
+      "Options": ["Never", "Rarely", "Often", "Always"],
+      "Risk Weight": "High",
+      "Risk Description": "Critical mismatch can cause long-term conflict"
+    },
+    {
+      "Q.No": 15,
+      "Question": "Do you feel like you are growing as a person within this marriage?",
+      "Type": "MCQ",
+      "Options": ["Yes, definitely", "Somewhat", "No, I'm stagnant", "I feel I'm declining"],
+      "Risk Weight": "High",
+      "Risk Description": "Critical mismatch can cause long-term conflict"
+    },
+    {
+      "Q.No": 16,
+      "Question": "How often do you laugh or have fun together?",
+      "Type": "MCQ",
+      "Options": ["Daily", "Weekly", "Rarely", "Never"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 17,
+      "Question": "Do you feel secure about the stability of your marriage?",
+      "Type": "MCQ",
+      "Options": ["Very secure", "Mostly secure", "Somewhat insecure", "Very unstable"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 18,
+      "Question": "Are your long-term goals still aligned with your partner’s?",
+      "Type": "MCQ",
+      "Options": ["Perfectly aligned", "Mostly aligned", "Diverging", "Completely opposite"],
+      "Risk Weight": "Medium",
+      "Risk Description": "Mismatch may create recurring friction"
+    },
+    {
+      "Q.No": 19,
+      "Question": "How do you feel your partnership compares to a competition?",
+      "Type": "MCQ",
+      "Options": ["Pure partnership", "Mostly supportive", "Slightly competitive", "Constant competition"],
+      "Risk Weight": "Medium",
+      "Risk Description": "Mismatch may create recurring friction"
+    },
+    {
+      "Q.No": 20,
+      "Question": "How effectively do you resolve financial disagreements?",
+      "Type": "MCQ",
+      "Options": ["Calmly and quickly", "With some tension", "Avoid until necessary", "Always leads to a fight"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 21,
+      "Question": "How often do you criticize each other's personality or habits?",
+      "Type": "MCQ",
+      "Options": ["Never", "Rarely", "Often", "Constantly"],
+      "Risk Weight": "High",
+      "Risk Description": "Critical mismatch can cause long-term conflict"
+    },
+    {
+      "Q.No": 22,
+      "Question": "Do you feel like you disconnect emotionally during busy weeks?",
+      "Type": "MCQ",
+      "Options": ["Never", "Rarely", "Often", "Always"],
+      "Risk Weight": "High",
+      "Risk Description": "Critical mismatch can cause long-term conflict"
+    },
+    {
+      "Q.No": 23,
+      "Question": "Are individual habits (e.g., hygiene, phone use) causing friction?",
+      "Type": "MCQ",
+      "Options": ["No issues", "Minor annoyances", "Moderate friction", "Major recurring fights"],
+      "Risk Weight": "High",
+      "Risk Description": "Critical mismatch can cause long-term conflict"
+    },
+    {
+      "Q.No": 24,
+      "Question": "If you could go back, would you choose this partner again?",
+      "Type": "MCQ",
+      "Options": ["Yes, definitely", "Probably", "Unsure", "No"],
+      "Risk Weight": "High",
+      "Risk Description": "Critical mismatch can cause long-term conflict"
+    },
+    {
+      "Q.No": 25,
+      "Question": "What tactics do you use to resolve a fight? (Select all that apply)",
+      "Type": "MSQ",
+      "Options": ["Calm discussion", "Taking a time-out", "Seeking mediation", "Writing a letter/message", "Apologizing first"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 26,
+      "Question": "How do you currently show love to your partner? (Select all that apply)",
+      "Type": "MSQ",
+      "Options": ["Verbal praise", "Doing chores for them", "Buying small gifts", "Planning dates", "Physical affection"],
+      "Risk Weight": "Medium",
+      "Risk Description": "Mismatch may create recurring friction"
+    },
+    {
+      "Q.No": 27,
+      "Question": "Which interests do you actually share and enjoy together? (Select all that apply)",
+      "Type": "MSQ",
+      "Options": ["Watching shows/movies", "Traveling", "Exercise/Gym", "Cooking/Dining out", "Socializing with friends"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 28,
+      "Question": "What are the biggest current stressors in your marriage? (Select all that apply)",
+      "Type": "MSQ",
+      "Options": ["Work-life balance", "Extended family/In-laws", "Money/Debt", "Parenting duties", "Lack of communication"],
+      "Risk Weight": "Medium",
+      "Risk Description": "Mismatch may create recurring friction"
+    },
+    {
+      "Q.No": 29,
+      "Question": "Where does most of your joint income go? (Select all that apply)",
+      "Type": "MSQ",
+      "Options": ["Rent/Mortgage", "Lifestyle/Dining", "Savings/Investments", "Children's needs", "Travel/Luxury"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 30,
+      "Question": "Which parenting areas are most challenging for you? (Select all that apply)",
+      "Type": "MSQ",
+      "Options": ["Consistency in discipline", "Managing schedules", "Emotional support", "Educational choices", "Screen time limits"],
+      "Risk Weight": "Medium",
+      "Risk Description": "Mismatch may create recurring friction"
+    },
+    {
+      "Q.No": 31,
+      "Question": "Which areas do you feel you need to grow in as a couple? (Select all that apply)",
+      "Type": "MSQ",
+      "Options": ["Better listening", "Financial transparency", "Sexual intimacy", "Shared hobbies", "Managing anger"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 32,
+      "Question": "How does your partner support you during a work crisis? (Select all that apply)",
+      "Type": "MSQ",
+      "Options": ["Giving advice", "Handling home chores", "Listening patiently", "Giving me space", "Encouragement/Distraction"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 33,
+      "Question": "Which topics do you currently avoid talking about? (Select all that apply)",
+      "Type": "MSQ",
+      "Options": ["Past relationships", "Spending habits", "Sexual needs", "In-law issues", "Career dissatisfaction"],
+      "Risk Weight": "Medium",
+      "Risk Description": "Mismatch may create recurring friction"
+    },
+    {
+      "Q.No": 34,
+      "Question": "What does a perfect date night look like now? (Select all that apply)",
+      "Type": "MSQ",
+      "Options": ["Fancy dinner", "Staying in with a movie", "Active/Outdoors", "Double date with friends", "Cultural event/Concert"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 35,
+      "Question": "What triggers emotional distance in your relationship? (Select all that apply)",
+      "Type": "MSQ",
+      "Options": ["Work fatigue", "Feeling criticized", "Unresolved fights", "Lack of physical touch", "Boredom/Routine"],
+      "Risk Weight": "High",
+      "Risk Description": "Critical mismatch can cause long-term conflict"
+    },
+    {
+      "Q.No": 36,
+      "Question": "How are you maintaining boundaries with families? (Select all that apply)",
+      "Type": "MSQ",
+      "Options": ["Limiting visits", "No financial dependence", "Privacy on marital issues", "Joint decision on holidays", "Setting rules for visits"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 37,
+      "Question": "Which daily routines do you value most? (Select all that apply)",
+      "Type": "MSQ",
+      "Options": ["Morning coffee together", "Eating dinner together", "Sleeping at the same time", "Evening walks", "Sharing daily highs/lows"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 38,
+      "Question": "How do you communicate when not physically together? (Select all that apply)",
+      "Type": "MSQ",
+      "Options": ["Frequent texts", "Long phone calls", "Occasional memes/links", "Brief check-ins", "Rarely communicate"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 39,
+      "Question": "Which spiritual/religious activities do you share? (Select all that apply)",
+      "Type": "MSQ",
+      "Options": ["Attending services", "Daily prayer/Meditation", "Holiday traditions", "Religious fasting", "None - separate beliefs"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 40,
+      "Question": "How do you celebrate each other's achievements? (Select all that apply)",
+      "Type": "MSQ",
+      "Options": ["Public praise", "Private gifts", "Special dinners", "Verbal acknowledgment", "Helping with next steps"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 41,
+      "Question": "What are your common travel preferences now? (Select all that apply)",
+      "Type": "MSQ",
+      "Options": ["Budget-friendly", "Luxury/Comfort", "Kid-friendly", "Spontaneous trips", "Plan a year ahead"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 42,
+      "Question": "Which household management tools do you use? (Select all that apply)",
+      "Type": "MSQ",
+      "Options": ["Shared calendar", "Shared bank account", "Budgeting apps", "Chore charts", "Grocery list apps"],
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 43,
+      "Question": "Describe the current state of your emotional bond in one sentence.",
+      "Type": "One-line",
+      "Options": "User defined",
+      "Risk Weight": "Medium",
+      "Risk Description": "Mismatch may create recurring friction"
+    },
+    {
+      "Q.No": 44,
+      "Question": "What is the single biggest point of friction in your home today?",
+      "Type": "One-line",
+      "Options": "User defined",
+      "Risk Weight": "High",
+      "Risk Description": "Critical mismatch can cause long-term conflict"
+    },
+    {
+      "Q.No": 45,
+      "Question": "What is the trait you value most in your partner after being married?",
+      "Type": "One-line",
+      "Options": "User defined",
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 46,
+      "Question": "What is your shared vision for where you want to be in 10 years?",
+      "Type": "One-line",
+      "Options": "User defined",
+      "Risk Weight": "Medium",
+      "Risk Description": "Mismatch may create recurring friction"
+    },
+    {
+      "Q.No": 47,
+      "Question": "How has your definition of marriage changed since the wedding day?",
+      "Type": "One-line",
+      "Options": "User defined",
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 48,
+      "Question": "If you could change one thing about your daily dynamic, what would it be?",
+      "Type": "One-line",
+      "Options": "User defined",
+      "Risk Weight": "High",
+      "Risk Description": "Critical mismatch can cause long-term conflict"
+    },
+    {
+      "Q.No": 49,
+      "Question": "What is your favorite memory as a married couple so far?",
+      "Type": "One-line",
+      "Options": "User defined",
+      "Risk Weight": "Low",
+      "Risk Description": "Mismatch has minor or manageable impact"
+    },
+    {
+      "Q.No": 50,
+      "Question": "What is the most important message you want to give your partner today?",
+      "Type": "One-line",
+      "Options": "User defined",
+      "Risk Weight": "High",
+      "Risk Description": "Critical mismatch can cause long-term conflict"
+    }
+  ]
+}
