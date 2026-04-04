@@ -511,15 +511,15 @@ const remoteKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 export const supabase = USE_LOCAL_DB
   ? (createLocalSupabase() as never)
   : createClient(
-      (() => {
-        if (!remoteUrl) throw new Error('Missing VITE_SUPABASE_URL');
-        return remoteUrl;
-      })(),
-      (() => {
-        if (!remoteKey) throw new Error('Missing VITE_SUPABASE_ANON_KEY');
-        return remoteKey;
-      })()
-    );
+    (() => {
+      if (!remoteUrl) throw new Error('Missing VITE_SUPABASE_URL');
+      return remoteUrl;
+    })(),
+    (() => {
+      if (!remoteKey) throw new Error('Missing VITE_SUPABASE_ANON_KEY');
+      return remoteKey;
+    })()
+  );
 
 export type Profile = {
   id: string;
@@ -581,7 +581,10 @@ export type RelationshipHealth = {
   conflict_score: number;
   overall_score: number;
   notes?: string;
+  improvements?: string;
+  journal_entry?: string;
   recorded_at: string;
+  created_at: string;
 };
 
 export type PartnerInvitation = {

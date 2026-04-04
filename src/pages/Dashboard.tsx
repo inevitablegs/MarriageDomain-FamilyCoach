@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useMemo, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { CompatibilityAssessment, RedFlag, RelationshipHealth, supabase } from '../lib/supabase';
+import { CompatibilityAssessment, RedFlag, RelationshipHealth, supabase, CoupleAssessmentSession } from '../lib/supabase';
 import {
   AlertTriangle,
   ArrowRight,
@@ -89,6 +89,7 @@ export function Dashboard({ mode, onNavigate }: DashboardProps) {
   const [assessments, setAssessments] = useState<CompatibilityAssessment[]>([]);
   const [redFlags, setRedFlags] = useState<RedFlag[]>([]);
   const [healthRecords, setHealthRecords] = useState<RelationshipHealth[]>([]);
+  const [jointSessions, setJointSessions] = useState<CoupleAssessmentSession[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -96,7 +97,7 @@ export function Dashboard({ mode, onNavigate }: DashboardProps) {
 
     const loadData = async () => {
       try {
-        const [assessmentsData, redFlagsData, healthData] = await Promise.all([
+        const [assessmentsData, redFlagsData, healthData, jointData] = await Promise.all([
           supabase
             .from('compatibility_assessments')
             .select('*')
@@ -115,11 +116,19 @@ export function Dashboard({ mode, onNavigate }: DashboardProps) {
             .eq('user_id', profile.id)
             .order('recorded_at', { ascending: false })
             .limit(6),
+          supabase
+            .from('couple_assessment_sessions')
+            .select('*')
+            .or(`partner_a_id.eq.${profile.id},partner_b_id.eq.${profile.id}`)
+            .eq('status', 'completed')
+            .order('completed_at', { ascending: false })
+            .limit(1),
         ]);
 
         if (assessmentsData.data) setAssessments(assessmentsData.data);
         if (redFlagsData.data) setRedFlags(redFlagsData.data);
         if (healthData.data) setHealthRecords(healthData.data);
+        if (jointData && jointData.data) setJointSessions(jointData.data as CoupleAssessmentSession[]);
       } catch (error) {
         console.error('Error loading dashboard data:', error);
       } finally {
@@ -132,10 +141,10 @@ export function Dashboard({ mode, onNavigate }: DashboardProps) {
 
   if (authLoading || loading || !profile) {
     return (
-      <div className="min-h-[calc(100vh-80px)] bg-slate-50 flex items-center justify-center">
+      <div className="min-h-[calc(100vh-80px)] bg-primary flex items-center justify-center">
         <div className="text-center animate-pulse">
-          <div className="rounded-full h-12 w-12 border-4 border-indigo-200 border-t-indigo-600 animate-spin mx-auto mb-4"></div>
-          <p className="text-slate-600 font-medium tracking-wide">Loading workspace...</p>
+          <div className="rounded-full h-12 w-12 border-4 border-indigo-200 dark:border-indigo-900/30 border-t-indigo-600 animate-spin mx-auto mb-4"></div>
+          <p className="text-slate-600 dark:text-slate-400 font-medium tracking-wide">Loading workspace...</p>
         </div>
       </div>
     );
@@ -151,6 +160,7 @@ export function Dashboard({ mode, onNavigate }: DashboardProps) {
       assessments={assessments}
       redFlags={redFlags}
       healthRecords={healthRecords}
+      jointSessions={jointSessions}
     />
   ) : (
     <BeforeMarriageDashboard
@@ -172,6 +182,7 @@ type CommonDataProps = {
 type CoupleDataProps = CommonDataProps & {
   hasPartnerConnected: boolean;
   healthRecords: RelationshipHealth[];
+  jointSessions: CoupleAssessmentSession[];
 };
 
 function BeforeMarriageDashboard({ onNavigate, profileName, assessments, redFlags }: CommonDataProps) {
@@ -179,7 +190,7 @@ function BeforeMarriageDashboard({ onNavigate, profileName, assessments, redFlag
   const highRisk = redFlags.filter((entry) => entry.severity === 'high').length;
 
   return (
-    <div className="min-h-[calc(100vh-80px)] bg-slate-50 py-10">
+    <div className="min-h-[calc(100vh-80px)] py-10 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
         <section className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-r from-indigo-700 to-blue-600 px-8 py-12 shadow-2xl shadow-indigo-900/20 sm:px-12">
           <div className="absolute top-0 right-0 h-64 w-64 bg-white/10 blur-[80px] rounded-full translate-x-1/2 -translate-y-1/2"></div>
@@ -201,8 +212,8 @@ function BeforeMarriageDashboard({ onNavigate, profileName, assessments, redFlag
         </section>
 
         <div className="grid lg:grid-cols-[1fr,300px] gap-8">
-          <section className="premium-card p-8 bg-white/80 backdrop-blur-sm">
-            <h2 className="text-2xl font-extrabold text-slate-900 mb-6 flex items-center gap-3">
+          <section className="premium-card p-8 bg-secondary/80 backdrop-blur-sm">
+            <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white mb-6 flex items-center gap-3">
               <Sparkles className="text-indigo-500" size={24} />
               Recommended Resources
             </h2>
@@ -213,8 +224,8 @@ function BeforeMarriageDashboard({ onNavigate, profileName, assessments, redFlag
             </div>
           </section>
 
-          <section className="premium-card p-8 bg-gradient-to-b from-white to-slate-50/50 flex flex-col">
-            <h2 className="text-xl font-bold text-slate-900 mb-6">Quick Actions</h2>
+          <section className="premium-card p-8 bg-gradient-to-b from-secondary to-bg-primary flex flex-col">
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-6">Quick Actions</h2>
             <div className="flex flex-col gap-4 flex-grow">
               <ActionButton onClick={() => onNavigate('quiz')} label="Start Compatibility Assessment" theme="indigo" />
               <ActionButton onClick={() => onNavigate('red-flags')} label="Run Red Flag Checker" variant="secondary" theme="indigo" />
@@ -237,10 +248,23 @@ function AfterMarriageDashboard({
   redFlags,
   healthRecords,
   hasPartnerConnected,
+  jointSessions,
 }: CoupleDataProps) {
+  const latestJointSession = jointSessions[0];
   const latestAssessment = assessments[0];
   const latestHealth = healthRecords[0];
   const highRisk = redFlags.filter((entry) => entry.severity === 'high').length;
+
+  const jointReport = latestJointSession?.report as any;
+  const alignmentScore = jointReport?.overall_compatibility_percent;
+
+  const alignmentHelper = useMemo(() => {
+    if (!jointReport?.category_scores) return "Most recent joint score";
+    const categories = Object.entries(jointReport.category_scores)
+      .map(([cat, score]) => `${cat}: ${score}%`)
+      .join(' | ');
+    return categories || "Most recent joint score";
+  }, [jointReport]);
 
   const healthLabel = useMemo(() => {
     if (!latestHealth) return 'Not Tracked';
@@ -250,7 +274,7 @@ function AfterMarriageDashboard({
   }, [latestHealth]);
 
   return (
-    <div className="min-h-[calc(100vh-80px)] bg-slate-50 py-10">
+    <div className="min-h-[calc(100vh-80px)] py-10 transition-colors duration-300" style={{ backgroundColor: 'var(--bg-primary)' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
         <section className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-r from-emerald-700 to-teal-600 px-8 py-12 shadow-2xl shadow-emerald-900/20 sm:px-12">
           <div className="absolute top-0 right-0 h-64 w-64 bg-white/10 blur-[80px] rounded-full translate-x-1/2 -translate-y-1/2"></div>
@@ -267,10 +291,10 @@ function AfterMarriageDashboard({
         </section>
 
         {!hasPartnerConnected && (
-          <section className="animate-rise-in rounded-[2rem] border-l-8 border-l-amber-500 bg-amber-50/80 p-6 sm:p-8 shadow-sm backdrop-blur border border-r-amber-100 border-y-amber-100 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+          <section className="animate-rise-in rounded-[2rem] border-l-8 border-l-amber-500 bg-amber-50/80 dark:bg-amber-900/20 p-6 sm:p-8 shadow-sm backdrop-blur border border-r-amber-100 dark:border-r-amber-900/30 border-y-amber-100 dark:border-y-amber-900/30 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
             <div>
-              <h2 className="text-xl font-extrabold text-amber-900 flex items-center gap-3"><Link2 size={22} className="text-amber-600" /> Joint Account Required</h2>
-              <p className="text-amber-800 font-medium mt-2 max-w-2xl">
+              <h2 className="text-xl font-extrabold text-amber-900 dark:text-amber-200 flex items-center gap-3"><Link2 size={22} className="text-amber-600" /> Joint Account Required</h2>
+              <p className="text-amber-800 dark:text-amber-300 font-medium mt-2 max-w-2xl">
                 Couples dashboard features require an active partner connection. Open Couple Assessment to invite your partner or link accounts.
               </p>
             </div>
@@ -285,14 +309,20 @@ function AfterMarriageDashboard({
 
         <section className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <MetricCard theme="teal" icon={<Users size={24} />} label="Joint Status" value={hasPartnerConnected ? 'Connected' : 'Pending'} helper="Partner linked" />
-          <MetricCard theme="rose" icon={<Heart size={24} />} label="Couples Alignment" value={latestAssessment ? `${latestAssessment.total_score}%` : 'N/A'} helper="Most recent joint score" />
+          <MetricCard
+            theme="rose"
+            icon={<Heart size={24} />}
+            label="Couples Alignment"
+            value={alignmentScore ? `${alignmentScore}%` : (latestAssessment ? `${latestAssessment.total_score}%` : 'N/A')}
+            helper={alignmentHelper}
+          />
           <MetricCard theme="red" icon={<AlertTriangle size={24} />} label="High Risk Flags" value={String(highRisk)} helper="Urgent issues" />
           <MetricCard theme="emerald" icon={<MessageCircleHeart size={24} />} label="Relationship Health" value={healthLabel} helper={latestHealth ? `Overall ${latestHealth.overall_score}%` : 'Track it now'} />
         </section>
 
         <div className="grid lg:grid-cols-[1fr,300px] gap-8">
-          <section className="premium-card p-8 bg-white/80 backdrop-blur-sm">
-            <h2 className="text-2xl font-extrabold text-slate-900 mb-6 flex items-center gap-3">
+          <section className="premium-card p-8 bg-secondary/80 backdrop-blur-sm">
+            <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white mb-6 flex items-center gap-3">
               <Handshake className="text-emerald-500" size={24} />
               Couple Services
             </h2>
@@ -303,16 +333,16 @@ function AfterMarriageDashboard({
             </div>
           </section>
 
-          <section className="premium-card p-8 bg-gradient-to-b from-white to-slate-50/50 flex flex-col">
-            <h2 className="text-xl font-bold text-slate-900 mb-6">Action Center</h2>
+          <section className="premium-card p-8 bg-gradient-to-b from-secondary to-bg-primary flex flex-col">
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-6">Action Center</h2>
             <div className="flex flex-col gap-4 flex-grow">
               <ActionButton onClick={() => onNavigate('quiz')} label="Open Couple Assessment" theme="emerald" />
               <ActionButton onClick={() => onNavigate('health-tracker')} label="Track Relationship Health" variant="secondary" theme="emerald" disabled={!hasPartnerConnected} />
               <ActionButton onClick={() => onNavigate('red-flags')} label="Check Conflict Risks" variant="secondary" disabled={!hasPartnerConnected} theme="emerald" />
             </div>
-            <div className="mt-8 rounded-2xl bg-emerald-50 border border-emerald-100 p-5">
-              <p className="text-xs font-bold text-emerald-800 uppercase tracking-wide">Tip</p>
-              <p className="text-sm text-emerald-700 font-medium mt-1">Review the Relationship Health once a week together with your partner.</p>
+            <div className="mt-8 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-900/30 p-5">
+              <p className="text-xs font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wide">Tip</p>
+              <p className="text-sm text-emerald-700 dark:text-emerald-400 font-medium mt-1">Review the Relationship Health once a week together with your partner.</p>
             </div>
           </section>
         </div>
@@ -332,18 +362,18 @@ function ServiceCard({ service, onNavigate, disabled = false, color }: ServiceCa
   const isPremium = service.priceLabel === 'PREMIUM';
   const colorMap = {
     indigo: {
-      tag: 'text-indigo-700 bg-indigo-50 border-indigo-200',
+      tag: 'text-indigo-700 bg-indigo-50 dark:bg-indigo-900/30 border-indigo-200 dark:border-indigo-800',
       icon: 'text-indigo-500',
       btn: 'bg-indigo-600 hover:bg-indigo-700',
-      hover: 'hover:border-indigo-200 hover:shadow-indigo-900/5',
-      premium: 'text-amber-700 bg-amber-50 border-amber-200'
+      hover: 'hover:border-indigo-200 dark:hover:border-indigo-700 hover:shadow-indigo-900/5',
+      premium: 'text-amber-700 bg-amber-50 dark:bg-amber-900/30 border-amber-200 dark:border-amber-800'
     },
     emerald: {
-      tag: 'text-emerald-700 bg-emerald-50 border-emerald-200',
+      tag: 'text-emerald-700 bg-emerald-50 dark:bg-emerald-900/30 border-emerald-200 dark:border-emerald-800',
       icon: 'text-emerald-500',
       btn: 'bg-emerald-600 hover:bg-emerald-700',
-      hover: 'hover:border-emerald-200 hover:shadow-emerald-900/5',
-      premium: 'text-amber-700 bg-amber-50 border-amber-200'
+      hover: 'hover:border-emerald-200 dark:hover:border-emerald-700 hover:shadow-emerald-900/5',
+      premium: 'text-amber-700 bg-amber-50 dark:bg-amber-900/30 border-amber-200 dark:border-amber-800'
     }
   };
 
@@ -355,11 +385,11 @@ function ServiceCard({ service, onNavigate, disabled = false, color }: ServiceCa
         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-bold uppercase tracking-wider border mb-4 ${isPremium ? theme.premium : theme.tag}`}>
           {service.priceLabel}
         </span>
-        <h3 className="text-xl font-extrabold text-slate-900 leading-tight">{service.name}</h3>
-        <p className="text-sm text-slate-600 font-medium mt-2 line-clamp-2">{service.description}</p>
+        <h3 className="text-xl font-extrabold text-slate-900 dark:text-white leading-tight">{service.name}</h3>
+        <p className="text-sm text-slate-600 dark:text-slate-400 font-medium mt-2 line-clamp-2">{service.description}</p>
         <ul className="mt-5 space-y-2 mb-6">
           {service.bullets.map((bullet) => (
-            <li key={bullet} className="text-sm font-medium text-slate-700 flex items-start gap-2.5">
+            <li key={bullet} className="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-start gap-2.5">
               <CheckCircle2 size={16} className={`${theme.icon} flex-shrink-0 mt-0.5`} />
               <span>{bullet}</span>
             </li>
@@ -390,8 +420,8 @@ type ActionButtonProps = {
 function ActionButton({ onClick, label, variant = 'primary', disabled = false, theme }: ActionButtonProps) {
   const isPrimary = variant === 'primary';
   const colorMap = {
-    indigo: isPrimary ? 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-sm border-transparent' : 'bg-white text-slate-800 border-slate-200 hover:bg-slate-50 hover:border-indigo-200 shadow-sm',
-    emerald: isPrimary ? 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm border-transparent' : 'bg-white text-slate-800 border-slate-200 hover:bg-slate-50 hover:border-emerald-200 shadow-sm',
+    indigo: isPrimary ? 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-sm border-transparent' : 'bg-secondary text-slate-800 dark:text-slate-200 border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-indigo-200 shadow-sm',
+    emerald: isPrimary ? 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm border-transparent' : 'bg-secondary text-slate-800 dark:text-slate-200 border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-emerald-200 shadow-sm',
   };
 
   return (
@@ -416,12 +446,12 @@ type MetricCardProps = {
 
 function MetricCard({ icon, label, value, helper, theme }: MetricCardProps) {
   const colorMap = {
-    indigo: 'bg-indigo-50 text-indigo-600',
-    emerald: 'bg-emerald-50 text-emerald-600',
-    rose: 'bg-rose-50 text-rose-600',
-    blue: 'bg-blue-50 text-blue-600',
-    teal: 'bg-teal-50 text-teal-600',
-    red: 'bg-red-50 text-red-600',
+    indigo: 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400',
+    emerald: 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400',
+    rose: 'bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400',
+    blue: 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400',
+    teal: 'bg-teal-50 dark:bg-teal-900/30 text-teal-600 dark:text-teal-400',
+    red: 'bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400',
   };
 
   return (
@@ -431,9 +461,9 @@ function MetricCard({ icon, label, value, helper, theme }: MetricCardProps) {
         <div className={`rounded-2xl p-3 shadow-inner ${colorMap[theme]}`}>{icon}</div>
       </div>
       <div>
-        <p className="text-3xl font-extrabold text-slate-900 tracking-tight">{value}</p>
-        <p className="text-sm font-bold text-slate-500 mt-1 uppercase tracking-wide">{label}</p>
-        <p className="text-xs font-semibold text-slate-400 mt-2">{helper}</p>
+        <p className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">{value}</p>
+        <p className="text-sm font-bold text-slate-500 dark:text-slate-400 mt-1 uppercase tracking-wide">{label}</p>
+        <p className="text-xs font-semibold text-slate-400 dark:text-slate-500 mt-2">{helper}</p>
       </div>
     </article>
   );

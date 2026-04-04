@@ -7,6 +7,7 @@ import { Dashboard } from './pages/Dashboard';
 import { CompatibilityQuiz } from './pages/CompatibilityQuiz';
 import { RedFlagChecker } from './pages/RedFlagChecker';
 import { HealthTracker } from './pages/HealthTracker';
+import { ThemeProvider } from './contexts/ThemeContext';
 
 type Page = 'home' | 'dashboard' | 'quiz' | 'red-flags' | 'health-tracker';
 type AppPage = Page | 'auth-before' | 'auth-after' | 'dashboard-before' | 'dashboard-after';
@@ -63,17 +64,17 @@ function AppContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center transition-colors duration-300">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
+          <p className="text-gray-600 dark:text-slate-400">Loading...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-800 flex flex-col">
+    <div className="min-h-screen font-sans flex flex-col transition-colors duration-300" style={{ backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
       <Header
         onAuthClick={handleAuthClick}
         onNavigate={handleNavigate}
@@ -131,9 +132,11 @@ function AppContent() {
 
 function App() {
   return (
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 

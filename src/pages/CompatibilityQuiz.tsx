@@ -935,10 +935,10 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
 
   if (loading) {
     return (
-      <div className="min-h-[calc(100vh-80px)] bg-slate-50 flex items-center justify-center">
+      <div className="min-h-[calc(100vh-80px)] bg-primary flex items-center justify-center">
         <div className="text-center animate-pulse">
-          <div className="rounded-full h-12 w-12 border-4 border-indigo-200 border-t-indigo-600 animate-spin mx-auto mb-4"></div>
-          <p className="text-slate-600 font-medium tracking-wide">Loading workspace...</p>
+          <div className="rounded-full h-12 w-12 border-4 border-indigo-200 dark:border-indigo-900/30 border-t-indigo-600 animate-spin mx-auto mb-4"></div>
+          <p className="text-slate-600 dark:text-slate-400 font-medium tracking-wide">Loading workspace...</p>
         </div>
       </div>
     );
@@ -946,9 +946,9 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
 
   if (!user) {
     return (
-      <div className="min-h-[calc(100vh-80px)] bg-slate-50 flex items-center justify-center">
-        <div className="text-center premium-card p-10">
-          <p className="text-slate-600 mb-6 font-medium text-lg">Please sign in to access couple assessment.</p>
+      <div className="min-h-[calc(100vh-80px)] bg-primary flex items-center justify-center">
+        <div className="text-center premium-card p-10 bg-secondary">
+          <p className="text-slate-600 dark:text-slate-400 mb-6 font-medium text-lg">Please sign in to access couple assessment.</p>
           <button
             onClick={() => onNavigate('home')}
             className="bg-indigo-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-indigo-700 transition shadow-md"
@@ -962,7 +962,7 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
 
   if (!profile) {
     return (
-      <div className="min-h-[calc(100vh-80px)] bg-slate-50 flex items-center justify-center">
+      <div className="min-h-[calc(100vh-80px)] flex items-center justify-center transition-colors duration-300" style={{ backgroundColor: 'var(--bg-primary)' }}>
         <div className="text-center premium-card p-10">
           <p className="text-slate-600 mb-6 font-medium text-lg">Setting up your profile. Please wait and refresh this page.</p>
           <button
@@ -982,30 +982,30 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
     sessionQuestions.length > 0 ? ((currentQuestionIndex + 1) / sessionQuestions.length) * 100 : 0;
 
   return (
-    <div className="min-h-[calc(100vh-80px)] bg-slate-50 py-10">
+    <div className="min-h-[calc(100vh-80px)] py-10 transition-colors duration-300">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-        <div className="premium-card p-8 bg-gradient-to-r from-indigo-50 to-blue-50 border-indigo-100">
-          <h1 className="text-3xl font-extrabold text-indigo-900 mb-3 tracking-tight">Couple Assessment Workspace</h1>
-          <p className="text-indigo-800/80 font-medium">
+        <div className="premium-card p-8 bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-indigo-900/20 dark:to-blue-900/20 border-indigo-100 dark:border-indigo-900/30">
+          <h1 className="text-3xl font-extrabold text-indigo-900 dark:text-indigo-200 mb-3 tracking-tight">Couple Assessment Workspace</h1>
+          <p className="text-indigo-800/80 dark:text-indigo-300/80 font-medium">
             Each session uses a random set of 15 questions from the 50-question bank (8 MCQ, 5 MSQ, 2 One-line).
             Both partners get the same set for that session.
           </p>
-          {message && <p className="mt-4 text-sm font-bold text-indigo-700 bg-indigo-100/50 inline-block px-3 py-1.5 rounded-lg">{message}</p>}
+          {message && <p className="mt-4 text-sm font-bold text-indigo-700 dark:text-indigo-300 bg-indigo-100/50 dark:bg-indigo-900/30 inline-block px-3 py-1.5 rounded-lg">{message}</p>}
         </div>
 
-        <div className="premium-card p-8">
-          <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+        <div className="premium-card p-8 bg-secondary transition-colors duration-300">
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
             <Link2 size={20} /> Partner Connection
           </h2>
 
           {partnerProfile ? (
             <div className="space-y-4">
-              <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-4">
-                <p className="font-semibold text-emerald-900">Connected Partner</p>
-                <p className="text-emerald-800">
-                  {partnerProfile.full_name} ({partnerProfile.email})
+              <div className="rounded-lg border border-emerald-200 dark:border-emerald-900/30 bg-emerald-50 dark:bg-emerald-900/10 p-4">
+                <p className="font-semibold text-emerald-900 dark:text-emerald-300">Connected Partner</p>
+                <p className="text-emerald-800 dark:text-emerald-400">
+                  {partnerProfile!.full_name} ({partnerProfile!.email})
                 </p>
-                <p className="text-xs text-emerald-700 mt-1">
+                <p className="text-xs text-emerald-700 dark:text-emerald-500 mt-1">
                   One partner connection per account is enforced.
                 </p>
               </div>
@@ -1020,14 +1020,14 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
           ) : (
             <div className="space-y-6">
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">Invite partner by email</label>
+                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Invite partner by email</label>
                 <div className="flex gap-3">
                   <input
                     type="email"
                     value={inviteEmail}
                     onChange={(event) => setInviteEmail(event.target.value)}
                     placeholder="partner@example.com"
-                    className="flex-1 border border-slate-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="flex-1 border border-slate-300 dark:border-slate-800 bg-primary/50 text-slate-900 dark:text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                   <button
                     onClick={sendInvitation}
@@ -1044,8 +1044,8 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
               </div>
 
               <div className="grid md:grid-cols-2 gap-5">
-                <div className="rounded-lg border border-slate-200 p-4">
-                  <h3 className="font-semibold text-slate-800 mb-3">Incoming Invitations</h3>
+                <div className="rounded-lg border border-slate-200 dark:border-slate-800 p-4 bg-primary/30">
+                  <h3 className="font-semibold text-slate-800 dark:text-slate-200 mb-3">Incoming Invitations</h3>
                   {incomingInvites.length === 0 ? (
                     <p className="text-sm text-slate-500">No pending invitations.</p>
                   ) : (
@@ -1075,15 +1075,15 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
                   )}
                 </div>
 
-                <div className="rounded-lg border border-slate-200 p-4">
-                  <h3 className="font-semibold text-slate-800 mb-3">Outgoing Invitations</h3>
+                <div className="rounded-lg border border-slate-200 dark:border-slate-800 p-4 bg-primary/30">
+                  <h3 className="font-semibold text-slate-800 dark:text-slate-200 mb-3">Outgoing Invitations</h3>
                   {outgoingInvites.length === 0 ? (
-                    <p className="text-sm text-slate-500">No pending outgoing invitations.</p>
+                    <p className="text-sm text-slate-500 dark:text-slate-400">No pending outgoing invitations.</p>
                   ) : (
                     <div className="space-y-3">
                       {outgoingInvites.map((invite) => (
-                        <div key={invite.id} className="border rounded-lg p-3">
-                          <p className="text-sm text-slate-700 mb-2">To {invite.invitee_email}</p>
+                        <div key={invite.id} className="border border-slate-200 dark:border-slate-800 rounded-lg p-3 bg-secondary/50">
+                          <p className="text-sm text-slate-700 dark:text-slate-300 mb-2">To {invite.invitee_email}</p>
                           <button
                             onClick={() => cancelInvitation(invite.id)}
                             disabled={busyAction === `cancel-${invite.id}`}
@@ -1102,12 +1102,12 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
         </div>
 
         {!partnerProfile && (
-          <div className="premium-card p-8">
-            <h2 className="text-xl font-bold text-slate-900 mb-3 flex items-center gap-2">Assessment Access</h2>
-            <p className="text-slate-600 mb-4 text-lg">
+          <div className="premium-card p-8 bg-secondary">
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-2">Assessment Access</h2>
+            <p className="text-slate-600 dark:text-slate-400 mb-4 text-lg">
               Couple sessions are visible only when a partner connection is active.
             </p>
-            <div className="rounded-xl bg-indigo-50/50 border border-indigo-100 px-5 py-4 text-sm font-medium text-indigo-900 flex items-start gap-3">
+            <div className="rounded-xl bg-indigo-50/50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-900/30 px-5 py-4 text-sm font-medium text-indigo-900 dark:text-indigo-300 flex items-start gap-3">
               <Sparkles className="text-indigo-500 shrink-0 mt-0.5" size={18} />
               Connect with one partner to unlock session cards, report analysis, and assessment submission.
             </div>
@@ -1115,9 +1115,9 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
         )}
 
         {partnerProfile && (
-          <div className="premium-card p-8 space-y-6">
+          <div className="premium-card p-8 bg-secondary transition-colors duration-300 space-y-6">
             <div className="flex flex-wrap items-center justify-between gap-4">
-              <h2 className="text-2xl font-extrabold text-slate-900 flex items-center gap-3">
+              <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white flex items-center gap-3">
                 <UserPlus className="text-indigo-500" size={24} /> Session Cards
               </h2>
               <button
@@ -1200,25 +1200,25 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
         )}
 
         {partnerProfile && selectedSession && (
-          <div className="premium-card p-8 bg-gradient-to-br from-white to-slate-50 relative overflow-hidden">
+          <div className="premium-card p-8 bg-gradient-to-br from-secondary to-primary relative overflow-hidden transition-colors duration-300">
             {selectedSession.status === 'completed' && report ? (
               <div className="space-y-8 relative z-10">
-                <div className="text-center bg-white/60 p-8 rounded-[2rem] border border-slate-100 shadow-sm backdrop-blur">
+                <div className="text-center bg-secondary/60 dark:bg-slate-900/40 p-8 rounded-[2rem] border border-slate-100 dark:border-slate-800 shadow-sm backdrop-blur">
                   <CheckCircle className="text-emerald-500 mx-auto mb-4 drop-shadow-md" size={64} />
-                  <h3 className="text-3xl font-extrabold text-slate-900 tracking-tight">Report & Analysis</h3>
-                  <p className="text-slate-600 font-medium mt-2 max-w-lg mx-auto">Only your own answers are stored per account. Matching is used for scoring.</p>
+                  <h3 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Report & Analysis</h3>
+                  <p className="text-slate-600 dark:text-slate-400 font-medium mt-2 max-w-lg mx-auto">Only your own answers are stored per account. Matching is used for scoring.</p>
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-6">
-                  <div className="border border-indigo-100 rounded-3xl p-6 bg-indigo-50 shadow-sm relative overflow-hidden">
+                  <div className="border border-indigo-100 dark:border-indigo-900/30 rounded-3xl p-6 bg-indigo-50 dark:bg-indigo-900/20 shadow-sm relative overflow-hidden">
                     <div className="absolute -top-4 -right-4 w-24 h-24 bg-indigo-500 rounded-full blur-3xl opacity-20"></div>
-                    <p className="text-sm font-bold uppercase tracking-widest text-indigo-700 mb-1">Final Compatibility</p>
-                    <p className="text-5xl font-extrabold text-indigo-900">{report.overall_compatibility_percent}%</p>
+                    <p className="text-sm font-bold uppercase tracking-widest text-indigo-700 dark:text-indigo-300 mb-1">Final Compatibility</p>
+                    <p className="text-5xl font-extrabold text-indigo-900 dark:text-indigo-100">{report!.overall_compatibility_percent}%</p>
                   </div>
-                  <div className="border border-rose-100 rounded-3xl p-6 bg-rose-50 shadow-sm relative overflow-hidden">
+                  <div className="border border-rose-100 dark:border-rose-900/30 rounded-3xl p-6 bg-rose-50 dark:bg-rose-900/20 shadow-sm relative overflow-hidden">
                     <div className="absolute -top-4 -right-4 w-24 h-24 bg-rose-500 rounded-full blur-3xl opacity-20"></div>
-                    <p className="text-sm font-bold uppercase tracking-widest text-rose-700 mb-1">Weighted Risk</p>
-                    <p className="text-5xl font-extrabold text-rose-900">{report.weighted_risk_percent}%</p>
+                    <p className="text-sm font-bold uppercase tracking-widest text-rose-700 dark:text-rose-300 mb-1">Weighted Risk</p>
+                    <p className="text-5xl font-extrabold text-rose-900 dark:text-rose-100">{report!.weighted_risk_percent}%</p>
                   </div>
                 </div>
 
@@ -1226,9 +1226,9 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
                   <h4 className="font-extrabold text-slate-900 mb-4 text-xl flex items-center gap-2"><Target size={20} className="text-slate-400" /> Category Scores</h4>
                   <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     {categoryList.map((category) => (
-                      <div key={category} className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm hover:shadow-md transition">
-                        <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">{category}</p>
-                        <p className="text-2xl font-extrabold text-slate-900">{report.category_scores[category]}%</p>
+                      <div key={category} className="bg-secondary border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm hover:shadow-md transition transition-colors duration-300">
+                        <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1">{category}</p>
+                        <p className="text-2xl font-extrabold text-slate-900 dark:text-white">{report!.category_scores[category]}%</p>
                       </div>
                     ))}
                   </div>
@@ -1237,21 +1237,21 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
                 <div>
                   <h4 className="font-extrabold text-slate-900 mb-4 text-xl flex items-center gap-2"><ShieldAlert size={20} className="text-rose-500" /> Top Risk Contributors</h4>
                   <div className="space-y-3">
-                    {report.top_risk_contributors.map((riskItem) => {
+                    {report!.top_risk_contributors.map((riskItem) => {
                       const question = QUESTION_BANK.find((entry) => entry.id === riskItem.questionId);
                       return (
-                        <div key={riskItem.questionId} className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                        <div key={riskItem.questionId} className="bg-secondary border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm transition-colors duration-300">
                           <div className="flex items-start justify-between gap-4 mb-2">
-                            <p className="font-bold text-slate-800 leading-snug flex-1">
-                              <span className="text-slate-400 mr-2">Q{riskItem.sourceQNo}</span> {question?.prompt}
+                            <p className="font-bold text-slate-800 dark:text-slate-200 leading-snug flex-1">
+                              <span className="text-slate-400 dark:text-slate-500 mr-2">Q{riskItem.sourceQNo}</span> {question?.prompt}
                             </p>
                             <span className={`text-[10px] px-2.5 py-1 rounded-md font-extrabold uppercase tracking-widest shrink-0 ${riskBadgeClass(riskItem.riskLevel)}`}>
                               {riskItem.riskLevel}
                             </span>
                           </div>
                           <div className="flex items-center gap-2 mt-4 text-sm">
-                            <span className="font-semibold text-slate-500">Risk impact:</span>
-                            <span className="font-bold text-rose-600 bg-rose-50 px-2 py-0.5 rounded">{riskItem.riskImpactPercent}%</span>
+                            <span className="font-semibold text-slate-500 dark:text-slate-400">Risk impact:</span>
+                            <span className="font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/20 px-2 py-0.5 rounded transition-colors">{riskItem.riskImpactPercent}%</span>
                           </div>
                         </div>
                       );
@@ -1259,12 +1259,12 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
                   </div>
                 </div>
 
-                {report.ai_analysis && (
-                  <div className="rounded-[2rem] border border-blue-200 p-8 bg-gradient-to-br from-blue-50 to-indigo-50 mt-8 shadow-sm">
-                    <h4 className="font-extrabold text-blue-900 mb-4 flex items-center gap-3 text-xl">
+                {report!.ai_analysis && (
+                  <div className="rounded-[2rem] border border-blue-200 dark:border-blue-900/30 p-8 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/10 dark:to-indigo-900/10 mt-8 shadow-sm">
+                    <h4 className="font-extrabold text-blue-900 dark:text-blue-300 mb-4 flex items-center gap-3 text-xl">
                       <Sparkles size={24} className="text-blue-600" /> Executive Analysis
                     </h4>
-                    <p className="text-base text-blue-800 leading-relaxed font-medium whitespace-pre-wrap">{report.ai_analysis}</p>
+                    <p className="text-base text-blue-800 dark:text-blue-200 leading-relaxed font-medium whitespace-pre-wrap">{report!.ai_analysis}</p>
                   </div>
                 )}
               </div>
@@ -1278,31 +1278,31 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
               </div>
             ) : isMyTurnToAnswer && currentQuestion ? (
               <div className="space-y-8 relative z-10 max-w-4xl mx-auto">
-                <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
-                  <div className="flex justify-between items-center text-sm font-bold text-slate-500 uppercase tracking-widest mb-3">
+                <div className="bg-secondary rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-sm transition-colors duration-300">
+                  <div className="flex justify-between items-center text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-3">
                     <span>Question {currentQuestionIndex + 1} / {sessionQuestions.length}</span>
-                    <span className="text-indigo-600">{Math.round(progress)}%</span>
+                    <span className="text-indigo-600 dark:text-indigo-400">{Math.round(progress)}%</span>
                   </div>
-                  <div className="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
-                    <div className="bg-indigo-600 h-full rounded-full transition-all duration-500 ease-out" style={{ width: `${progress}%` }} />
+                  <div className="w-full bg-primary/50 rounded-full h-3 overflow-hidden">
+                    <div className="bg-indigo-600 dark:bg-indigo-500 h-full rounded-full transition-all duration-500 ease-out" style={{ width: `${progress}%` }} />
                   </div>
                 </div>
 
                 <div className="flex items-center gap-3 flex-wrap">
-                  <span className="text-[10px] font-extrabold uppercase tracking-widest px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-700 shadow-sm">
+                  <span className="text-[10px] font-extrabold uppercase tracking-widest px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-secondary text-slate-700 dark:text-slate-300 shadow-sm transition-colors">
                     {currentQuestion.type}
                   </span>
                   <span className={`text-[10px] font-extrabold uppercase tracking-widest px-3 py-1.5 rounded-lg shadow-sm border ${riskBadgeClass(currentQuestion.riskLevel).replace('bg-', 'border-').replace('text-', 'text-')}`}>
                     {currentQuestion.riskLevel} Risk
                   </span>
-                  <span className="text-[10px] font-extrabold uppercase tracking-widest px-3 py-1.5 rounded-lg bg-indigo-50 border border-indigo-100 text-indigo-700 shadow-sm">
+                  <span className="text-[10px] font-extrabold uppercase tracking-widest px-3 py-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 text-indigo-700 dark:text-indigo-300 shadow-sm transition-colors">
                     {currentQuestion.category}
                   </span>
                 </div>
 
                 <div className="mt-8 mb-10">
-                  <h3 className="text-3xl font-extrabold text-slate-900 leading-tight">{currentQuestion.prompt}</h3>
-                  <p className="text-lg text-slate-600 mt-4 leading-relaxed font-medium">{currentQuestion.riskDescription}</p>
+                  <h3 className="text-3xl font-extrabold text-slate-900 dark:text-white leading-tight">{currentQuestion.prompt}</h3>
+                  <p className="text-lg text-slate-600 dark:text-slate-400 mt-4 leading-relaxed font-medium">{currentQuestion.riskDescription}</p>
                 </div>
 
                 {currentQuestion.type === 'MCQ' && (
@@ -1312,8 +1312,8 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
                         key={option}
                         onClick={() => setMCQAnswer(currentQuestion.id, option)}
                         className={`w-full border-2 rounded-2xl p-5 text-left transition-all duration-300 font-semibold text-lg ${myResponses[currentQuestion.id] === option
-                          ? 'border-indigo-500 bg-indigo-50 text-indigo-900 shadow-sm ring-4 ring-indigo-500/10'
-                          : 'border-slate-200 bg-white text-slate-700 hover:border-indigo-300 hover:shadow-md hover:bg-slate-50'
+                          ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-900 dark:text-indigo-200 shadow-sm ring-4 ring-indigo-500/10'
+                          : 'border-slate-200 dark:border-slate-800 bg-secondary text-slate-700 dark:text-slate-300 hover:border-indigo-300 dark:hover:border-indigo-700 hover:shadow-md hover:bg-primary/50'
                           }`}
                       >
                         {option}
@@ -1334,8 +1334,8 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
                           key={option}
                           onClick={() => toggleMSQAnswer(currentQuestion.id, option)}
                           className={`w-full border-2 rounded-2xl p-5 text-left transition-all duration-300 font-semibold text-lg ${selected
-                            ? 'border-indigo-500 bg-indigo-50 text-indigo-900 shadow-sm ring-4 ring-indigo-500/10'
-                            : 'border-slate-200 bg-white text-slate-700 hover:border-indigo-300 hover:shadow-md hover:bg-slate-50'
+                            ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-900 dark:text-indigo-200 shadow-sm ring-4 ring-indigo-500/10'
+                            : 'border-slate-200 dark:border-slate-800 bg-secondary text-slate-700 dark:text-slate-300 hover:border-indigo-300 dark:hover:border-indigo-700 hover:shadow-md hover:bg-primary/50'
                             }`}
                         >
                           <div className="flex items-center gap-3">
@@ -1355,7 +1355,7 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
                     value={String(myResponses[currentQuestion.id] || '')}
                     onChange={(event) => setTextAnswer(currentQuestion.id, event.target.value)}
                     placeholder="Type your response thoughtfully..."
-                    className="w-full min-h-[160px] border-2 border-slate-200 rounded-2xl p-5 text-lg font-medium text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all resize-y shadow-sm"
+                    className="w-full min-h-[160px] border-2 border-slate-200 dark:border-slate-800 bg-secondary rounded-2xl p-5 text-lg font-medium text-slate-800 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all resize-y shadow-sm"
                   />
                 )}
 

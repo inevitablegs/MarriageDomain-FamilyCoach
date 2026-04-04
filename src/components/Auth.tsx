@@ -68,7 +68,7 @@ export function Auth({ mode, onBack, onSuccess }: AuthProps) {
   };
 
   return (
-    <div className="min-h-[calc(100vh-80px)] flex items-center justify-center bg-slate-50 relative overflow-hidden p-4 sm:p-6 lg:p-8">
+    <div className="min-h-[calc(100vh-80px)] flex items-center justify-center bg-primary transition-colors duration-300 relative overflow-hidden p-4 sm:p-6 lg:p-8">
       {/* Decorative Blur Backgrounds */}
       <div className={`absolute top-0 right-0 h-[500px] w-[500px] rounded-full blur-[120px] opacity-20 ${isAfterMarriage ? 'bg-emerald-500' : 'bg-indigo-500'}`} />
       <div className={`absolute bottom-0 left-0 h-[500px] w-[500px] rounded-full blur-[120px] opacity-20 ${isAfterMarriage ? 'bg-teal-500' : 'bg-blue-500'}`} />
@@ -109,12 +109,12 @@ export function Auth({ mode, onBack, onSuccess }: AuthProps) {
           </div>
 
           {/* Right / Bottom Side: Auth Form */}
-          <div className="p-8 sm:p-12 lg:p-16 flex flex-col justify-center bg-white">
+          <div className="p-8 sm:p-12 lg:p-16 flex flex-col justify-center bg-secondary transition-colors duration-300">
             <div className="mb-10">
-              <h3 className="text-3xl font-extrabold tracking-tight text-slate-900">
+              <h3 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
                 {isSignUp ? 'Create Account' : 'Welcome Back'}
               </h3>
-              <p className="mt-2 text-slate-500 font-medium">
+              <p className="mt-2 text-slate-500 dark:text-slate-400 font-medium">
                 {isSignUp
                   ? 'Enter your details to get started.'
                   : 'Sign in to your account to continue.'}
@@ -124,7 +124,7 @@ export function Auth({ mode, onBack, onSuccess }: AuthProps) {
             <form onSubmit={handleSubmit} className="space-y-5">
               {isSignUp && (
                 <div>
-                  <label className="mb-1.5 block text-sm font-bold text-slate-700">
+                  <label className="mb-1.5 block text-sm font-bold text-slate-700 dark:text-slate-300">
                     Full Name
                   </label>
                   <input
@@ -132,14 +132,14 @@ export function Auth({ mode, onBack, onSuccess }: AuthProps) {
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     placeholder="John Doe"
-                    className={`w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3.5 text-slate-900 placeholder:text-slate-400 outline-none transition-all focus:bg-white focus:border-transparent focus:ring-2 ${themeConfig.ringColor}`}
+                    className={`w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-primary/50 px-4 py-3.5 text-slate-900 dark:text-white placeholder:text-slate-400 outline-none transition-all focus:bg-secondary focus:border-transparent focus:ring-2 ${themeConfig.ringColor}`}
                     required
                   />
                 </div>
               )}
 
               <div>
-                <label className="mb-1.5 block text-sm font-bold text-slate-700">
+                <label className="mb-1.5 block text-sm font-bold text-slate-700 dark:text-slate-300">
                   Email Address
                 </label>
                 <input
@@ -147,13 +147,13 @@ export function Auth({ mode, onBack, onSuccess }: AuthProps) {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@example.com"
-                  className={`w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3.5 text-slate-900 placeholder:text-slate-400 outline-none transition-all focus:bg-white focus:border-transparent focus:ring-2 ${themeConfig.ringColor}`}
+                  className={`w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-primary/50 px-4 py-3.5 text-slate-900 dark:text-white placeholder:text-slate-400 outline-none transition-all focus:bg-secondary focus:border-transparent focus:ring-2 ${themeConfig.ringColor}`}
                   required
                 />
               </div>
 
               <div>
-                <label className="mb-1.5 block text-sm font-bold text-slate-700">
+                <label className="mb-1.5 block text-sm font-bold text-slate-700 dark:text-slate-300">
                   Password
                 </label>
                 <input
@@ -161,16 +161,16 @@ export function Auth({ mode, onBack, onSuccess }: AuthProps) {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className={`w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3.5 text-slate-900 placeholder:text-slate-400 outline-none transition-all focus:bg-white focus:border-transparent focus:ring-2 ${themeConfig.ringColor}`}
+                  className={`w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-primary/50 px-4 py-3.5 text-slate-900 dark:text-white placeholder:text-slate-400 outline-none transition-all focus:bg-secondary focus:border-transparent focus:ring-2 ${themeConfig.ringColor}`}
                   required
                   minLength={6}
                 />
               </div>
 
               {error && (
-                <div className="flex items-start gap-3 rounded-xl bg-rose-50 border border-rose-100 p-4 animate-fade-in">
+                <div className="flex items-start gap-3 rounded-xl bg-rose-50 dark:bg-rose-900/20 border border-rose-100 dark:border-rose-900/30 p-4 animate-fade-in">
                   <AlertCircle size={20} className="text-rose-500 flex-shrink-0 mt-0.5" />
-                  <p className="text-sm font-medium text-rose-700">{error}</p>
+                  <p className="text-sm font-medium text-rose-700 dark:text-rose-300">{error}</p>
                 </div>
               )}
 
@@ -183,8 +183,8 @@ export function Auth({ mode, onBack, onSuccess }: AuthProps) {
               </button>
             </form>
 
-            <div className="mt-8 text-center border-t border-slate-100 pt-8">
-              <p className="text-sm font-medium text-slate-600">
+            <div className="mt-8 text-center border-t border-slate-100 dark:border-slate-800 pt-8">
+              <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
                 {isSignUp ? 'Already have an account?' : "Don't have an account?"}{' '}
                 <button
                   onClick={() => setIsSignUp(!isSignUp)}

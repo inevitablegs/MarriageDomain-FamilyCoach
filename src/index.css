@@ -5,14 +5,36 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --bg-primary: #f8fafc; /* slate-50 */
+    --bg-secondary: #ffffff;
+    --text-primary: #0f172a; /* slate-900 */
+    --text-secondary: #475569; /* slate-600 */
+    --border-primary: rgba(226, 232, 240, 0.6); /* slate-200/60 */
+    --card-bg: #ffffff;
+  }
+
+  :root.dark {
+    --bg-primary: #020617; /* slate-950 */
+    --bg-secondary: #0f172a; /* slate-900 */
+    --text-primary: #f1f5f9; /* slate-100 */
+    --text-secondary: #94a3b8; /* slate-400 */
+    --border-primary: rgba(30, 41, 59, 0.6); /* slate-800/60 */
+    --card-bg: #0f172a;
+  }
+
 	html,
 	body,
 	#root {
 		font-family: 'Inter', system-ui, sans-serif;
+    transition: background-color 0.3s ease, color 0.3s ease;
 	}
 
 	body {
-		@apply text-slate-800 bg-slate-50 antialiased selection:bg-indigo-500/30 selection:text-indigo-900;
+		@apply transition-colors duration-300;
+    color: var(--text-primary);
+    background-color: var(--bg-primary);
+    -webkit-font-smoothing: antialiased;
 	}
 }
 
@@ -26,11 +48,25 @@
   }
 
   .glass-effect {
-    @apply bg-white/70 backdrop-blur-md border border-white/40 shadow-sm transition-all duration-300;
+    @apply backdrop-blur-md border transition-all duration-300;
+    background-color: var(--theme-glass-bg, rgba(255, 255, 255, 0.7));
+    border-color: var(--theme-glass-border, rgba(255, 255, 255, 0.4));
+  }
+
+  .dark .glass-effect {
+    --theme-glass-bg: rgba(15, 23, 42, 0.7);
+    --theme-glass-border: rgba(30, 41, 59, 0.4);
   }
 
   .premium-card {
-    @apply bg-white rounded-2xl shadow-sm border border-slate-200/60 hover:shadow-md hover:border-slate-300/60 transition-all duration-300;
+    @apply rounded-2xl shadow-sm border transition-all duration-300;
+    background-color: var(--card-bg);
+    border-color: var(--border-primary);
+  }
+
+  .premium-card:hover {
+    @apply shadow-md;
+    border-color: var(--text-secondary);
   }
 }
 
