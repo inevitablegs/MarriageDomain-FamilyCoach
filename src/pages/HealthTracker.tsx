@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useTheme } from '../contexts/ThemeContext';
 import { supabase, RelationshipHealth } from '../lib/supabase';
 import { TrendingUp, TrendingDown, Minus, Activity, Plus, Sparkles, Loader2, MessageSquareText } from 'lucide-react';
 import { GoogleGenAI } from '@google/genai';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, Radar } from 'recharts';
+import { SolutionReport } from '../lib/ai';
 
 type HealthTrackerProps = {
   onNavigate: (page: string) => void;
@@ -18,6 +20,7 @@ if (geminiApiKey) {
 
 export function HealthTracker({ onNavigate }: HealthTrackerProps) {
   const { profile, loading: authLoading } = useAuth();
+  const { theme } = useTheme();
   const [healthRecords, setHealthRecords] = useState<RelationshipHealth[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -89,7 +92,12 @@ Read their entry and evaluate the state of their relationship on four metrics ou
 - conflict_score (0-100): Constructive conflict resolution (higher means fewer destructive arguments and better resolution).
 
 If a metric isn't explicitly mentioned, infer a baseline (e.g., 60-70) based on the overall tone.
-Also provide a short (1-2 sentence) encouraging piece of advice based on what they wrote (notes), plus 2-3 specific, actionable bullet points for improvement for the week ahead (improvements).
+Also generate a comprehensive clinical solution report containing:
+- insight (string): A short, compassionate core takeaway.
+- mainProblems (array of strings): Specific issues identified from the data.
+- stepByStepActions (array of strings): Concrete behavioral steps for the coming week.
+- futurePrecautions (array of strings): What to watch for or avoid.
+- recommendedActions (array of strings): High-priority actions, including professional referrals if needed.
 
 User's Journal Entry: "${journalEntry}"
 
@@ -99,8 +107,11 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
   "communication_score": number,
   "intimacy_score": number,
   "conflict_score": number,
-  "notes": "string",
-  "improvements": ["string", "string", "string"]
+  "insight": "string",
+  "mainProblems": ["string", "string"],
+  "stepByStepActions": ["string", "string"],
+  "futurePrecautions": ["string", "string"],
+  "recommendedActions": ["string", "string"]
 }
 `;
 
@@ -122,6 +133,14 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
       const conflict = Math.max(0, Math.min(100, output.conflict_score || 50));
 
       const overallScore = Math.round((emotional + communication + intimacy + conflict) / 4);
+      
+      const newReport: SolutionReport = {
+        insight: output.insight || "Focus on building a stronger connection.",
+        mainProblems: output.mainProblems || [],
+        stepByStepActions: output.stepByStepActions || [],
+        futurePrecautions: output.futurePrecautions || [],
+        recommendedActions: output.recommendedActions || []
+      };
 
       const { error } = await supabase.from('relationship_health').insert({
         user_id: profile!.id,
@@ -130,8 +149,8 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
         intimacy_score: intimacy,
         conflict_score: conflict,
         overall_score: overallScore,
-        notes: output.notes || 'No insights generated.',
-        improvements: Array.isArray(output.improvements) ? '• ' + output.improvements.join('\n\n• ') : (output.improvements || 'Focus on open communication.'),
+        notes: JSON.stringify(newReport),
+        improvements: null, // Legacy field unused for new format
         journal_entry: journalEntry,
         recorded_at: new Date().toISOString(),
       });
@@ -213,6 +232,28 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
     { subject: 'Intimacy', A: latestRecord.intimacy_score, fullMark: 100 },
     { subject: 'Conflict', A: latestRecord.conflict_score, fullMark: 100 },
   ] : [];
+
+  const parseReport = (notes?: string, legacyImprovements?: string): SolutionReport | null => {
+    if (!notes) return null;
+    try {
+      const parsed = JSON.parse(notes);
+      if (parsed && typeof parsed === 'object' && 'insight' in parsed) {
+        return parsed as SolutionReport;
+      }
+    } catch {
+      // Legacy data fallback, reconstruct missing fields visually
+      return {
+        insight: notes,
+        mainProblems: [],
+        stepByStepActions: legacyImprovements ? legacyImprovements.split('\n\n') : [],
+        futurePrecautions: [],
+        recommendedActions: []
+      };
+    }
+    return null;
+  };
+
+  const latestSolution = latestRecord ? parseReport(latestRecord.notes, latestRecord.improvements) : null;
 
   return (
     <div className="min-h-[calc(100vh-80px)] py-12 sm:py-16 transition-colors duration-300">
@@ -326,19 +367,65 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
                     </details>
                   )}
 
-                  <div className="bg-white/10 backdrop-blur-md border border-white/20 p-5 rounded-2xl">
-                    <div className="flex items-start gap-3">
-                      <Sparkles className="text-emerald-300 shrink-0 mt-1" size={20} />
+                  <div className="bg-white/10 backdrop-blur-md border border-white/20 p-6 rounded-2xl space-y-6">
+                    <div className="flex items-start gap-3 border-b border-emerald-500/30 pb-5">
+                      <Sparkles className="text-emerald-300 shrink-0 mt-1" size={24} />
                       <div>
-                        <p className="text-emerald-50 leading-relaxed font-medium text-lg mb-3">"{latestRecord.notes}"</p>
-                        {latestRecord.improvements && (
-                          <div className="bg-emerald-950/40 p-4 rounded-xl border border-emerald-500/30">
-                            <h4 className="text-emerald-200 text-sm font-bold uppercase tracking-widest mb-2">Recommended Actions</h4>
-                            <p className="text-emerald-50 text-sm whitespace-pre-line leading-relaxed opacity-90">{latestRecord.improvements}</p>
-                          </div>
-                        )}
+                        <h4 className="text-emerald-200 text-sm font-bold uppercase tracking-widest mb-2">Core Insight</h4>
+                        <p className="text-emerald-50 leading-relaxed font-medium text-lg">{latestSolution?.insight}</p>
                       </div>
                     </div>
+
+                    {latestSolution && latestSolution.mainProblems.length > 0 && (
+                      <div className="border-b border-emerald-500/30 pb-5">
+                        <h4 className="text-emerald-200 text-xs font-bold uppercase tracking-widest mb-3">Identified Areas of Focus</h4>
+                        <ul className="space-y-2">
+                          {latestSolution.mainProblems.map((prob, i) => (
+                            <li key={i} className="flex gap-2 text-emerald-100 text-sm">
+                              <span className="text-rose-400 shrink-0 mt-1">•</span> {prob}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {latestSolution && latestSolution.stepByStepActions.length > 0 && (
+                      <div className="bg-emerald-950/40 p-4 rounded-xl border border-emerald-500/30">
+                        <h4 className="text-emerald-200 text-sm font-bold uppercase tracking-widest mb-4">Step-by-Step Action Plan</h4>
+                        <ul className="space-y-4">
+                          {latestSolution.stepByStepActions.map((action, i) => (
+                            <li key={i} className="flex items-start gap-4 text-emerald-50 text-sm leading-relaxed">
+                              <span className="bg-emerald-600 font-bold w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-xs text-white">{i + 1}</span> 
+                              <span>{action}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    
+                    {latestSolution && latestSolution.futurePrecautions.length > 0 && (
+                      <div>
+                        <h4 className="text-emerald-200 text-xs font-bold uppercase tracking-widest mb-3">Future Precautions</h4>
+                        <ul className="space-y-2">
+                          {latestSolution.futurePrecautions.map((prec, i) => (
+                            <li key={i} className="flex gap-2 text-emerald-100 text-sm">
+                               <span className="text-amber-400 shrink-0 font-bold">!</span> {prec}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {latestSolution && latestSolution.recommendedActions.length > 0 && (
+                      <div className="bg-emerald-800/40 p-3 rounded-lg border border-emerald-500/50">
+                         <h4 className="text-emerald-200 text-xs font-bold uppercase tracking-widest mb-2">Priority Recommendations</h4>
+                         <ul className="space-y-1">
+                           {latestSolution.recommendedActions.map((rec, i) => (
+                             <li key={i} className="text-emerald-50 font-medium text-sm border-b border-emerald-700/50 last:border-0 pb-1 mb-1 last:mb-0 last:pb-0">{rec}</li>
+                           ))}
+                         </ul>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -349,22 +436,26 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
                 </h3>
                 <div className="grid sm:grid-cols-2 gap-4">
                   {[
-                    { label: 'Emotional', score: latestRecord.emotional_score, prev: previousRecord?.emotional_score, color: 'indigo' },
-                    { label: 'Communication', score: latestRecord.communication_score, prev: previousRecord?.communication_score, color: 'teal' },
-                    { label: 'Intimacy', score: latestRecord.intimacy_score, prev: previousRecord?.intimacy_score, color: 'rose' },
-                    { label: 'Conflict Mgmt', score: latestRecord.conflict_score, prev: previousRecord?.conflict_score, color: 'amber' },
+                    { label: 'Emotional', score: latestRecord.emotional_score, prev: previousRecord?.emotional_score,
+                      classes: 'bg-indigo-50/50 dark:bg-indigo-900/10 border-indigo-100 dark:border-indigo-900/30 text-indigo-900 dark:text-indigo-300', scoreColor: 'text-indigo-700 dark:text-indigo-400', progressBg: 'bg-indigo-100 dark:bg-indigo-900/30', progressFill: 'bg-indigo-500' },
+                    { label: 'Communication', score: latestRecord.communication_score, prev: previousRecord?.communication_score,
+                      classes: 'bg-teal-50/50 dark:bg-teal-900/10 border-teal-100 dark:border-teal-900/30 text-teal-900 dark:text-teal-300', scoreColor: 'text-teal-700 dark:text-teal-400', progressBg: 'bg-teal-100 dark:bg-teal-900/30', progressFill: 'bg-teal-500' },
+                    { label: 'Intimacy', score: latestRecord.intimacy_score, prev: previousRecord?.intimacy_score,
+                      classes: 'bg-rose-50/50 dark:bg-rose-900/10 border-rose-100 dark:border-rose-900/30 text-rose-900 dark:text-rose-300', scoreColor: 'text-rose-700 dark:text-rose-400', progressBg: 'bg-rose-100 dark:bg-rose-900/30', progressFill: 'bg-rose-500' },
+                    { label: 'Conflict Mgmt', score: latestRecord.conflict_score, prev: previousRecord?.conflict_score,
+                      classes: 'bg-amber-50/50 dark:bg-amber-900/10 border-amber-100 dark:border-amber-900/30 text-amber-900 dark:text-amber-300', scoreColor: 'text-amber-700 dark:text-amber-400', progressBg: 'bg-amber-100 dark:bg-amber-900/30', progressFill: 'bg-amber-500' },
                   ].map((metric) => (
-                    <div key={metric.label} className={`bg-${metric.color}-50/50 dark:bg-${metric.color}-900/10 p-5 rounded-2xl border border-${metric.color}-100 dark:border-${metric.color}-900/30`}>
+                    <div key={metric.label} className={`p-5 rounded-2xl border ${metric.classes}`}>
                       <div className="flex items-center justify-between mb-2">
-                        <span className={`font-bold text-${metric.color}-900 dark:text-${metric.color}-300`}>{metric.label}</span>
+                        <span className="font-bold">{metric.label}</span>
                         <div className="flex items-center gap-2">
-                          <span className={`font-extrabold text-lg text-${metric.color}-700 dark:text-${metric.color}-400`}>{metric.score}%</span>
+                          <span className={`font-extrabold text-lg ${metric.scoreColor}`}>{metric.score}%</span>
                           <TrendIcon trend={getTrend(metric.score, metric.prev)} />
                         </div>
                       </div>
-                      <div className={`w-full bg-${metric.color}-100 dark:bg-${metric.color}-900/30 rounded-full h-2`}>
+                      <div className={`w-full rounded-full h-2 ${metric.progressBg}`}>
                         <div
-                          className={`bg-${metric.color}-500 h-full rounded-full`}
+                          className={`h-full rounded-full ${metric.progressFill}`}
                           style={{ width: `${metric.score}%` }}
                         ></div>
                       </div>
@@ -380,7 +471,7 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
                 <div className="w-full h-[250px]">
                   <ResponsiveContainer width="100%" height="100%">
                     <RadarChart cx="50%" cy="50%" outerRadius="70%" data={radarData}>
-                      <PolarGrid stroke="#e2e8f0" />
+                      <PolarGrid stroke={theme === 'dark' ? '#334155' : '#e2e8f0'} />
                       <PolarAngleAxis dataKey="subject" tick={{ fill: '#64748b', fontSize: 12, fontWeight: 600 }} />
                       <Radar name="Score" dataKey="A" stroke="#10b981" fill="#10b981" fillOpacity={0.4} />
                     </RadarChart>
@@ -393,7 +484,7 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
                 <div className="w-full h-[200px]">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={chartData}>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={theme === 'dark' ? '#334155' : '#f1f5f9'} />
                       <XAxis
                         dataKey="date"
                         axisLine={false}
@@ -468,18 +559,32 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
                             </div>
                           </details>
                         )}
-                        {record.notes && (
-                          <div className="bg-emerald-50/50 dark:bg-emerald-900/10 p-4 rounded-xl border border-emerald-100 dark:border-emerald-900/30 shadow-sm transition hover:shadow-md">
-                            <h4 className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest mb-2 flex items-center gap-1.5"><Sparkles size={14} /> AI Insight</h4>
-                            <p className="text-sm text-slate-700 dark:text-slate-300 font-medium leading-relaxed">{record.notes}</p>
-                            {record.improvements && (
-                              <div className="mt-3 pt-3 border-t border-emerald-200/50 dark:border-emerald-800/50">
-                                <h5 className="text-xs font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-widest mb-2">Action Plan</h5>
-                                <p className="text-sm text-slate-700 dark:text-slate-300 whitespace-pre-line leading-relaxed">{record.improvements}</p>
+                        {(() => {
+                          const sol = parseReport(record.notes, record.improvements);
+                          if (!sol) return null;
+                          return (
+                            <div className="bg-emerald-50/50 dark:bg-emerald-900/10 p-5 rounded-xl border border-emerald-100 dark:border-emerald-900/30 shadow-sm transition hover:shadow-md space-y-4">
+                              <div>
+                                <h4 className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest mb-2 flex items-center gap-1.5"><Sparkles size={14} /> Core Insight</h4>
+                                <p className="text-sm text-slate-700 dark:text-slate-300 font-medium leading-relaxed">{sol.insight}</p>
                               </div>
-                            )}
-                          </div>
-                        )}
+                              
+                              {sol.stepByStepActions.length > 0 && (
+                                <div className="pt-3 border-t border-emerald-200/50 dark:border-emerald-800/50">
+                                  <h5 className="text-[11px] font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-widest mb-3">Action Plan</h5>
+                                  <ul className="space-y-3">
+                                    {sol.stepByStepActions.map((action, i) => (
+                                      <li key={i} className="flex gap-3 text-emerald-900 dark:text-emerald-200 text-xs leading-relaxed">
+                                        <span className="font-bold bg-emerald-200 dark:bg-emerald-800 text-emerald-800 dark:text-emerald-100 w-5 h-5 rounded-full flex items-center justify-center shrink-0">{i + 1}</span> 
+                                        <span>{action}</span>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })()}
                         <div className="flex flex-wrap gap-2 pt-2">
                           <span className="text-xs font-bold text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 px-3 py-1.5 rounded-lg shadow-sm">Emotional: {record.emotional_score}%</span>
                           <span className="text-xs font-bold text-teal-700 dark:text-teal-300 bg-teal-50 dark:bg-teal-900/30 border border-teal-100 dark:border-teal-800 px-3 py-1.5 rounded-lg shadow-sm">Communication: {record.communication_score}%</span>
@@ -497,7 +602,7 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
                             { subject: 'Intimacy', A: record.intimacy_score, fullMark: 100 },
                             { subject: 'Conflict', A: record.conflict_score, fullMark: 100 },
                           ]}>
-                            <PolarGrid stroke="#e2e8f0" />
+                            <PolarGrid stroke={theme === 'dark' ? '#334155' : '#e2e8f0'} />
                             <PolarAngleAxis dataKey="subject" tick={{ fill: '#64748b', fontSize: 10, fontWeight: 700 }} />
                             <Radar name="Score" dataKey="A" stroke="#10b981" fill="#10b981" fillOpacity={0.4} />
                           </RadarChart>
@@ -524,7 +629,7 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
               </p>
               <button
                 onClick={() => setShowForm(true)}
-                className="bg-slate-900 text-white px-8 py-4 rounded-xl font-bold hover:bg-slate-800 transition shadow-md hover:-translate-y-0.5 inline-flex items-center gap-2"
+                className="bg-slate-900 dark:bg-emerald-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-slate-800 dark:hover:bg-emerald-700 transition shadow-md hover:-translate-y-0.5 inline-flex items-center gap-2"
               >
                 <Plus size={20} /> Create First Entry
               </button>

@@ -7,9 +7,10 @@ import { Dashboard } from './pages/Dashboard';
 import { CompatibilityQuiz } from './pages/CompatibilityQuiz';
 import { RedFlagChecker } from './pages/RedFlagChecker';
 import { HealthTracker } from './pages/HealthTracker';
+import { PreMarriageAnalysis } from './pages/PreMarriageAnalysis';
 import { ThemeProvider } from './contexts/ThemeContext';
 
-type Page = 'home' | 'dashboard' | 'quiz' | 'red-flags' | 'health-tracker';
+type Page = 'home' | 'dashboard' | 'quiz' | 'red-flags' | 'health-tracker' | 'pre-marriage-analysis';
 type AppPage = Page | 'auth-before' | 'auth-after' | 'dashboard-before' | 'dashboard-after';
 
 function AppContent() {
@@ -32,7 +33,7 @@ function AppContent() {
       return;
     }
 
-    if (page === 'quiz' || page === 'red-flags' || page === 'health-tracker' || page === 'dashboard') {
+    if (page === 'quiz' || page === 'red-flags' || page === 'health-tracker' || page === 'dashboard' || page === 'pre-marriage-analysis') {
       if (!user) {
         setCurrentPage(page === 'health-tracker' ? 'auth-after' : 'auth-before');
         return;
@@ -49,7 +50,8 @@ function AppContent() {
       currentPage === 'dashboard-after' ||
       currentPage === 'quiz' ||
       currentPage === 'red-flags' ||
-      currentPage === 'health-tracker';
+      currentPage === 'health-tracker' ||
+      currentPage === 'pre-marriage-analysis';
 
     if (!user && isProtectedPage) {
       setCurrentPage('home');
@@ -124,6 +126,10 @@ function AppContent() {
 
         {currentPage === 'health-tracker' && user && (
           <HealthTracker onNavigate={handleNavigate} />
+        )}
+
+        {currentPage === 'pre-marriage-analysis' && user && (
+          <PreMarriageAnalysis onNavigate={handleNavigate} />
         )}
       </main>
     </div>

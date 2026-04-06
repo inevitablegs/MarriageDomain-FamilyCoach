@@ -27,7 +27,7 @@ type ServiceItem = {
   description: string;
   bullets: string[];
   cta: string;
-  targetPage: 'quiz' | 'red-flags' | 'health-tracker';
+  targetPage: 'quiz' | 'red-flags' | 'health-tracker' | 'pre-marriage-analysis';
 };
 
 const beforeMarriageServices: ServiceItem[] = [
@@ -53,7 +53,7 @@ const beforeMarriageServices: ServiceItem[] = [
     description: 'Identify potential warning signs before commitment.',
     bullets: ['Behavior pattern analysis', 'Warning indicators', 'Guided interpretation'],
     cta: 'Run Deep Analysis',
-    targetPage: 'red-flags',
+    targetPage: 'pre-marriage-analysis',
   },
 ];
 
@@ -228,7 +228,7 @@ function BeforeMarriageDashboard({ onNavigate, profileName, assessments, redFlag
             <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-6">Quick Actions</h2>
             <div className="flex flex-col gap-4 flex-grow">
               <ActionButton onClick={() => onNavigate('quiz')} label="Start Compatibility Assessment" theme="indigo" />
-              <ActionButton onClick={() => onNavigate('red-flags')} label="Run Red Flag Checker" variant="secondary" theme="indigo" />
+              <ActionButton onClick={() => onNavigate('pre-marriage-analysis')} label="Run Deep Behavior Analysis" variant="secondary" theme="indigo" />
             </div>
             <div className="mt-8 rounded-2xl bg-indigo-50 border border-indigo-100 p-5">
               <p className="text-xs font-bold text-indigo-800 uppercase tracking-wide">Next Step</p>
@@ -353,7 +353,7 @@ function AfterMarriageDashboard({
 
 type ServiceCardProps = {
   service: ServiceItem;
-  onNavigate: (page: 'quiz' | 'red-flags' | 'health-tracker') => void;
+  onNavigate: (page: string) => void;
   disabled?: boolean;
   color: 'indigo' | 'emerald';
 };

@@ -21,6 +21,17 @@ export default {
           500: '#f43f5e',
         }
       },
+      backgroundColor: {
+        primary: 'var(--bg-primary)',
+        secondary: 'var(--bg-secondary)',
+      },
+      textColor: {
+        primary: 'var(--text-primary)',
+        secondary: 'var(--text-secondary)',
+      },
+      borderColor: {
+        primary: 'var(--border-primary)',
+      },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
       },

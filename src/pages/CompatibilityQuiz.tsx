@@ -33,6 +33,7 @@ import {
 import {
   generateRelationshipAnalysisWithGemini,
   scoreOneLineSimilarityWithGemini,
+  SolutionReport
 } from '../lib/ai';
 
 type QuizProps = {
@@ -70,7 +71,7 @@ type FinalReport = {
     riskImpactPercent: number;
   }[];
   score_breakdown: QuestionReport[];
-  ai_analysis?: string;
+  ai_analysis?: SolutionReport;
 };
 
 const categoryList: Category[] = [
@@ -1259,12 +1260,69 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
                   </div>
                 </div>
 
-                {report!.ai_analysis && (
-                  <div className="rounded-[2rem] border border-blue-200 dark:border-blue-900/30 p-8 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/10 dark:to-indigo-900/10 mt-8 shadow-sm">
-                    <h4 className="font-extrabold text-blue-900 dark:text-blue-300 mb-4 flex items-center gap-3 text-xl">
-                      <Sparkles size={24} className="text-blue-600" /> Executive Analysis
+                {report!.ai_analysis && typeof report!.ai_analysis === 'object' && (
+                  <div className="rounded-[2rem] border border-blue-200 dark:border-blue-900/30 p-8 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/10 dark:to-indigo-900/10 mt-8 shadow-sm space-y-6">
+                    <h4 className="font-extrabold text-blue-900 dark:text-blue-300 mb-4 flex items-center gap-3 text-2xl">
+                      <Sparkles size={24} className="text-blue-600 dark:text-blue-400 -mt-1" /> Executive Analysis
                     </h4>
-                    <p className="text-base text-blue-800 dark:text-blue-200 leading-relaxed font-medium whitespace-pre-wrap">{report!.ai_analysis}</p>
+
+                    {/* Core Insight */}
+                    <div className="bg-white/60 dark:bg-slate-900/40 p-5 rounded-2xl border border-blue-100 dark:border-blue-800/50">
+                      <h5 className="text-sm font-bold text-blue-800 dark:text-blue-400 uppercase tracking-wider mb-2">Core Insight</h5>
+                      <p className="text-blue-900 dark:text-blue-200 font-medium leading-relaxed">{report!.ai_analysis.insight}</p>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-6">
+                      {/* Issues */}
+                      <div>
+                        <h5 className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3">Main Problems</h5>
+                        <ul className="space-y-2">
+                          {report!.ai_analysis.mainProblems.map((prob, i) => (
+                            <li key={i} className="flex gap-2 text-slate-700 dark:text-slate-300 text-sm">
+                              <span className="text-rose-500 shrink-0">•</span> {prob}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      {/* Precautions */}
+                      <div>
+                        <h5 className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3">Future Precautions</h5>
+                        <ul className="space-y-2">
+                          {report!.ai_analysis.futurePrecautions.map((prec, i) => (
+                            <li key={i} className="flex gap-2 text-slate-700 dark:text-slate-300 text-sm">
+                              <span className="text-amber-500 shrink-0">•</span> {prec}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-6">
+                      {/* Step By Step */}
+                      <div className="bg-emerald-50/50 dark:bg-emerald-900/10 p-5 rounded-2xl border border-emerald-100 dark:border-emerald-900/30">
+                        <h5 className="text-sm font-bold text-emerald-800 dark:text-emerald-400 uppercase tracking-wider mb-3">Daily/Weekly Steps</h5>
+                        <ul className="space-y-3">
+                          {report!.ai_analysis.stepByStepActions.map((action, i) => (
+                            <li key={i} className="flex gap-3 text-emerald-900 dark:text-emerald-200 text-sm leading-snug">
+                              <span className="font-bold text-emerald-600 dark:text-emerald-500 shrink-0">{i + 1}.</span> {action}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      {/* Recommendations */}
+                      <div className="bg-blue-50/50 dark:bg-blue-900/10 p-5 rounded-2xl border border-blue-100 dark:border-blue-900/30">
+                        <h5 className="text-sm font-bold text-blue-800 dark:text-blue-400 uppercase tracking-wider mb-3">Recommended Actions</h5>
+                        <ul className="space-y-3">
+                          {report!.ai_analysis.recommendedActions.map((rec, i) => (
+                            <li key={i} className="bg-white/50 dark:bg-slate-900/40 p-2.5 rounded-lg border border-blue-100 dark:border-blue-800/30 text-blue-950 dark:text-blue-200 text-sm font-medium">
+                              {rec}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>
