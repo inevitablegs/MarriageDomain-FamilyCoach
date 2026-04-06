@@ -936,10 +936,10 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
 
   if (loading) {
     return (
-      <div className="min-h-[calc(100vh-80px)] bg-primary flex items-center justify-center">
-        <div className="text-center animate-pulse">
-          <div className="rounded-full h-12 w-12 border-4 border-indigo-200 dark:border-indigo-900/30 border-t-indigo-600 animate-spin mx-auto mb-4"></div>
-          <p className="text-slate-600 dark:text-slate-400 font-medium tracking-wide">Loading workspace...</p>
+      <div className="min-h-[calc(100vh-68px)] flex items-center justify-center" style={{ backgroundColor: 'var(--bg-primary)' }}>
+        <div className="text-center">
+          <div className="rounded-full h-10 w-10 border-4 border-t-transparent animate-spin mx-auto mb-4" style={{ borderColor: 'rgba(99,102,241,0.2)', borderTopColor: '#6366f1' }} />
+          <p className="text-sm font-semibold" style={{ color: 'var(--text-muted)' }}>Loading workspace…</p>
         </div>
       </div>
     );
@@ -947,15 +947,10 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
 
   if (!user) {
     return (
-      <div className="min-h-[calc(100vh-80px)] bg-primary flex items-center justify-center">
-        <div className="text-center premium-card p-10 bg-secondary">
-          <p className="text-slate-600 dark:text-slate-400 mb-6 font-medium text-lg">Please sign in to access couple assessment.</p>
-          <button
-            onClick={() => onNavigate('home')}
-            className="bg-indigo-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-indigo-700 transition shadow-md"
-          >
-            Go Home
-          </button>
+      <div className="min-h-[calc(100vh-68px)] flex items-center justify-center px-4" style={{ backgroundColor: 'var(--bg-primary)' }}>
+        <div className="text-center premium-card p-10" style={{ backgroundColor: 'var(--bg-secondary)' }}>
+          <p className="mb-6 font-medium text-lg" style={{ color: 'var(--text-secondary)' }}>Please sign in to access couple assessment.</p>
+          <button onClick={() => onNavigate('home')} className="bg-gradient-to-r from-indigo-600 to-blue-600 text-white px-8 py-3 rounded-xl font-bold hover:opacity-90 transition shadow-md">Go Home</button>
         </div>
       </div>
     );
@@ -963,15 +958,10 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
 
   if (!profile) {
     return (
-      <div className="min-h-[calc(100vh-80px)] flex items-center justify-center transition-colors duration-300" style={{ backgroundColor: 'var(--bg-primary)' }}>
-        <div className="text-center premium-card p-10">
-          <p className="text-slate-600 mb-6 font-medium text-lg">Setting up your profile. Please wait and refresh this page.</p>
-          <button
-            onClick={() => window.location.reload()}
-            className="bg-indigo-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-indigo-700 transition shadow-md"
-          >
-            Refresh
-          </button>
+      <div className="min-h-[calc(100vh-68px)] flex items-center justify-center transition-colors duration-300" style={{ backgroundColor: 'var(--bg-primary)' }}>
+        <div className="text-center premium-card p-10" style={{ backgroundColor: 'var(--bg-secondary)' }}>
+          <p className="mb-6 font-medium text-lg" style={{ color: 'var(--text-secondary)' }}>Setting up your profile. Please wait and refresh this page.</p>
+          <button onClick={() => window.location.reload()} className="bg-gradient-to-r from-indigo-600 to-blue-600 text-white px-8 py-3 rounded-xl font-bold hover:opacity-90 transition shadow-md">Refresh</button>
         </div>
       </div>
     );
@@ -983,37 +973,37 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
     sessionQuestions.length > 0 ? ((currentQuestionIndex + 1) / sessionQuestions.length) * 100 : 0;
 
   return (
-    <div className="min-h-[calc(100vh-80px)] py-10 transition-colors duration-300">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-        <div className="premium-card p-8 bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-indigo-900/20 dark:to-blue-900/20 border-indigo-100 dark:border-indigo-900/30">
-          <h1 className="text-3xl font-extrabold text-indigo-900 dark:text-indigo-200 mb-3 tracking-tight">Couple Assessment Workspace</h1>
-          <p className="text-indigo-800/80 dark:text-indigo-300/80 font-medium">
+    <div className="min-h-[calc(100vh-68px)] py-10 transition-colors duration-300" style={{ backgroundColor: 'var(--bg-primary)' }}>
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 animate-rise-in">
+        <div className="premium-card p-8 border" style={{ background: 'linear-gradient(135deg, var(--brand-indigo-light), var(--bg-secondary))', borderColor: 'var(--border-primary)' }}>
+          <h1 className="text-3xl font-extrabold mb-3 tracking-tight" style={{ color: 'var(--brand-indigo)' }}>Couple Assessment Workspace</h1>
+          <p className="font-medium" style={{ color: 'var(--text-secondary)' }}>
             Each session uses a random set of 15 questions from the 50-question bank (8 MCQ, 5 MSQ, 2 One-line).
             Both partners get the same set for that session.
           </p>
-          {message && <p className="mt-4 text-sm font-bold text-indigo-700 dark:text-indigo-300 bg-indigo-100/50 dark:bg-indigo-900/30 inline-block px-3 py-1.5 rounded-lg">{message}</p>}
+          {message && <p className="mt-4 text-sm font-bold inline-block px-3 py-1.5 rounded-lg" style={{ color: 'var(--brand-indigo)', backgroundColor: 'var(--brand-indigo-light)' }}>{message}</p>}
         </div>
 
-        <div className="premium-card p-8 bg-secondary transition-colors duration-300">
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+        <div className="premium-card p-8 transition-colors duration-300" style={{ backgroundColor: 'var(--bg-secondary)' }}>
+          <h2 className="text-xl font-bold mb-4 flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
             <Link2 size={20} /> Partner Connection
           </h2>
 
           {partnerProfile ? (
             <div className="space-y-4">
-              <div className="rounded-lg border border-emerald-200 dark:border-emerald-900/30 bg-emerald-50 dark:bg-emerald-900/10 p-4">
-                <p className="font-semibold text-emerald-900 dark:text-emerald-300">Connected Partner</p>
-                <p className="text-emerald-800 dark:text-emerald-400">
+              <div className="rounded-lg border p-4" style={{ backgroundColor: 'var(--brand-emerald-light)', borderColor: 'rgba(16,185,129,0.2)' }}>
+                <p className="font-semibold" style={{ color: 'var(--brand-emerald)' }}>Connected Partner</p>
+                <p style={{ color: 'var(--text-primary)' }}>
                   {partnerProfile!.full_name} ({partnerProfile!.email})
                 </p>
-                <p className="text-xs text-emerald-700 dark:text-emerald-500 mt-1">
+                <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
                   One partner connection per account is enforced.
                 </p>
               </div>
               <button
                 onClick={disconnectPartner}
                 disabled={busyAction === 'disconnect'}
-                className="inline-flex items-center gap-2 border border-red-600 text-red-600 px-4 py-2 rounded-lg font-semibold hover:bg-red-50 transition disabled:opacity-60"
+                className="inline-flex items-center gap-2 border px-4 py-2 rounded-lg font-semibold transition disabled:opacity-60" style={{ borderColor: 'var(--brand-rose)', color: 'var(--brand-rose)' }}
               >
                 <Unlink size={16} /> Disconnect Partner
               </button>
@@ -1021,14 +1011,14 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
           ) : (
             <div className="space-y-6">
               <div>
-                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Invite partner by email</label>
+                <label className="block text-sm font-semibold mb-2" style={{ color: 'var(--text-secondary)' }}>Invite partner by email</label>
                 <div className="flex gap-3">
                   <input
                     type="email"
                     value={inviteEmail}
                     onChange={(event) => setInviteEmail(event.target.value)}
                     placeholder="partner@example.com"
-                    className="flex-1 border border-slate-300 dark:border-slate-800 bg-primary/50 text-slate-900 dark:text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="flex-1 input-base"
                   />
                   <button
                     onClick={sendInvitation}
@@ -1037,7 +1027,7 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
                       inviteEmail.trim().length === 0 ||
                       Boolean(selfProfile?.partner_id)
                     }
-                    className="inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition disabled:opacity-60"
+                    className="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-blue-600 text-white px-4 py-2 rounded-xl font-semibold hover:opacity-90 transition disabled:opacity-60"
                   >
                     <Send size={16} /> Send Invite
                   </button>
@@ -1045,15 +1035,15 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
               </div>
 
               <div className="grid md:grid-cols-2 gap-5">
-                <div className="rounded-lg border border-slate-200 dark:border-slate-800 p-4 bg-primary/30">
-                  <h3 className="font-semibold text-slate-800 dark:text-slate-200 mb-3">Incoming Invitations</h3>
+                <div className="rounded-xl border p-4" style={{ backgroundColor: 'var(--bg-tertiary)', borderColor: 'var(--border-primary)' }}>
+                  <h3 className="font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>Incoming Invitations</h3>
                   {incomingInvites.length === 0 ? (
-                    <p className="text-sm text-slate-500">No pending invitations.</p>
+                    <p className="text-sm" style={{ color: 'var(--text-muted)' }}>No pending invitations.</p>
                   ) : (
                     <div className="space-y-3">
                       {incomingInvites.map((invite) => (
-                        <div key={invite.id} className="border rounded-lg p-3">
-                          <p className="text-sm text-slate-700 mb-2">Pending partner invitation</p>
+                        <div key={invite.id} className="border rounded-lg p-3" style={{ borderColor: 'var(--border-primary)' }}>
+                          <p className="text-sm mb-2" style={{ color: 'var(--text-secondary)' }}>Pending partner invitation</p>
                           <div className="flex gap-2">
                             <button
                               onClick={() => acceptInvitation(invite.id)}
@@ -1065,7 +1055,7 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
                             <button
                               onClick={() => declineInvitation(invite.id)}
                               disabled={busyAction === `decline-${invite.id}`}
-                              className="border border-slate-300 text-slate-700 px-3 py-1.5 rounded-md text-sm font-semibold hover:bg-slate-50 transition disabled:opacity-60"
+                              className="border px-3 py-1.5 rounded-md text-sm font-semibold transition disabled:opacity-60" style={{ borderColor: 'var(--border-primary)', color: 'var(--text-secondary)' }}
                             >
                               Decline
                             </button>
@@ -1076,19 +1066,19 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
                   )}
                 </div>
 
-                <div className="rounded-lg border border-slate-200 dark:border-slate-800 p-4 bg-primary/30">
-                  <h3 className="font-semibold text-slate-800 dark:text-slate-200 mb-3">Outgoing Invitations</h3>
+                <div className="rounded-xl border p-4" style={{ backgroundColor: 'var(--bg-tertiary)', borderColor: 'var(--border-primary)' }}>
+                  <h3 className="font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>Outgoing Invitations</h3>
                   {outgoingInvites.length === 0 ? (
-                    <p className="text-sm text-slate-500 dark:text-slate-400">No pending outgoing invitations.</p>
+                    <p className="text-sm" style={{ color: 'var(--text-muted)' }}>No pending outgoing invitations.</p>
                   ) : (
                     <div className="space-y-3">
                       {outgoingInvites.map((invite) => (
-                        <div key={invite.id} className="border border-slate-200 dark:border-slate-800 rounded-lg p-3 bg-secondary/50">
-                          <p className="text-sm text-slate-700 dark:text-slate-300 mb-2">To {invite.invitee_email}</p>
+                        <div key={invite.id} className="border rounded-lg p-3" style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--bg-secondary)' }}>
+                          <p className="text-sm mb-2" style={{ color: 'var(--text-secondary)' }}>To {invite.invitee_email}</p>
                           <button
                             onClick={() => cancelInvitation(invite.id)}
                             disabled={busyAction === `cancel-${invite.id}`}
-                            className="border border-red-300 text-red-700 px-3 py-1.5 rounded-md text-sm font-semibold hover:bg-red-50 transition disabled:opacity-60"
+                            className="border px-3 py-1.5 rounded-md text-sm font-semibold transition disabled:opacity-60" style={{ borderColor: 'var(--brand-rose)', color: 'var(--brand-rose)' }}
                           >
                             Cancel
                           </button>
@@ -1103,92 +1093,99 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
         </div>
 
         {!partnerProfile && (
-          <div className="premium-card p-8 bg-secondary">
-            <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-2">Assessment Access</h2>
-            <p className="text-slate-600 dark:text-slate-400 mb-4 text-lg">
+          <div className="premium-card p-8" style={{ backgroundColor: 'var(--bg-secondary)' }}>
+            <h2 className="text-xl font-bold mb-3 flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>Assessment Access</h2>
+            <p className="mb-4 text-lg" style={{ color: 'var(--text-secondary)' }}>
               Couple sessions are visible only when a partner connection is active.
             </p>
-            <div className="rounded-xl bg-indigo-50/50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-900/30 px-5 py-4 text-sm font-medium text-indigo-900 dark:text-indigo-300 flex items-start gap-3">
-              <Sparkles className="text-indigo-500 shrink-0 mt-0.5" size={18} />
+            <div className="rounded-xl border px-5 py-4 text-sm font-medium flex items-start gap-3" style={{ backgroundColor: 'var(--brand-indigo-light)', borderColor: 'var(--border-primary)', color: 'var(--brand-indigo)' }}>
+              <Sparkles className="shrink-0 mt-0.5" size={18} style={{ color: 'var(--brand-indigo)' }} />
               Connect with one partner to unlock session cards, report analysis, and assessment submission.
             </div>
           </div>
         )}
 
         {partnerProfile && (
-          <div className="premium-card p-8 bg-secondary transition-colors duration-300 space-y-6">
+          <div className="premium-card p-8 transition-colors duration-300 space-y-6" style={{ backgroundColor: 'var(--bg-secondary)' }}>
             <div className="flex flex-wrap items-center justify-between gap-4">
-              <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white flex items-center gap-3">
-                <UserPlus className="text-indigo-500" size={24} /> Session Cards
+              <h2 className="text-2xl font-extrabold flex items-center gap-3" style={{ color: 'var(--text-primary)' }}>
+                <UserPlus size={24} style={{ color: 'var(--brand-indigo)' }} /> Session Cards
               </h2>
               <button
                 onClick={startNewSession}
                 disabled={busyAction === 'start-session'}
-                className="bg-indigo-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-indigo-700 shadow-md hover:-translate-y-0.5 transition-all disabled:opacity-60 disabled:hover:translate-y-0"
+                className="bg-gradient-to-r from-indigo-600 to-blue-600 text-white px-6 py-3 rounded-xl font-bold hover:opacity-90 shadow-md hover:-translate-y-0.5 transition-all disabled:opacity-60 disabled:hover:translate-y-0"
               >
                 Start New Assessment
               </button>
             </div>
 
             {pendingPartnerSession && (
-              <div className="rounded-xl border border-amber-200 bg-amber-50 p-5 flex items-start gap-3">
-                <Bell className="text-amber-600 shrink-0 mt-0.5" size={20} />
-                <p className="text-sm font-medium text-amber-900">
+              <div className="rounded-xl border p-5 flex items-start gap-3" style={{ backgroundColor: 'rgba(245,158,11,0.08)', borderColor: 'rgba(245,158,11,0.2)' }}>
+                <Bell className="shrink-0 mt-0.5" size={20} style={{ color: '#f59e0b' }} />
+                <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
                   Your partner has started a new session. Open that card and submit your private answers.
                 </p>
               </div>
             )}
 
             {sessions.length === 0 ? (
-              <div className="py-8 text-center text-slate-500 font-medium">No sessions yet. Start one to notify your partner.</div>
+              <div className="py-8 text-center font-medium" style={{ color: 'var(--text-muted)' }}>No sessions yet. Start one to notify your partner.</div>
             ) : (
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
                 {sessions.map((session) => {
                   const sessionReport = (session.report || null) as FinalReport | null;
                   const questionCount = normalizeSessionQuestionSet(session.question_set).length;
                   const completed = session.status === 'completed';
+                  const isSelected = selectedSessionId === session.id;
 
                   return (
                     <button
                       key={session.id}
                       onClick={() => setSelectedSessionId(session.id)}
-                      className={`text-left transition-all duration-300 rounded-2xl p-6 ${selectedSessionId === session.id
-                        ? 'bg-indigo-50 border-2 border-indigo-500 shadow-md ring-4 ring-indigo-500/10 scale-[1.02]'
-                        : 'bg-white border-2 border-slate-200 hover:border-indigo-300 hover:shadow-lg'
-                        }`}
+                      className="text-left transition-all duration-300 rounded-2xl p-6 border-2"
+                      style={{
+                        backgroundColor: isSelected ? 'var(--brand-indigo-light)' : 'var(--bg-secondary)',
+                        borderColor: isSelected ? 'var(--brand-indigo)' : 'var(--border-primary)',
+                        boxShadow: isSelected ? '0 0 0 4px rgba(99,102,241,0.1)' : 'none',
+                        transform: isSelected ? 'scale(1.02)' : 'scale(1)',
+                      }}
                     >
                       <div className="flex flex-col h-full justify-between gap-4">
                         <div>
                           <div className="flex items-center justify-between mb-2">
                             <span
-                              className={`text-[10px] uppercase tracking-widest px-2.5 py-1 rounded-md font-bold ${completed ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'
-                                }`}
+                              className="text-[10px] uppercase tracking-widest px-2.5 py-1 rounded-md font-bold"
+                              style={{
+                                backgroundColor: completed ? 'var(--brand-emerald-light)' : 'rgba(245,158,11,0.1)',
+                                color: completed ? 'var(--brand-emerald)' : '#f59e0b',
+                              }}
                             >
                               {completed ? 'Completed' : 'Pending'}
                             </span>
                           </div>
-                          <p className="font-extrabold text-slate-900 text-lg">
+                          <p className="font-extrabold text-lg" style={{ color: 'var(--text-primary)' }}>
                             Session {new Date(session.initiated_at).toLocaleDateString()}
                           </p>
-                          <p className="text-xs font-semibold text-slate-500 mt-1 uppercase tracking-wide">
+                          <p className="text-xs font-semibold mt-1 uppercase tracking-wide" style={{ color: 'var(--text-muted)' }}>
                             {questionCount || 15} Questions
                           </p>
                         </div>
 
                         {completed && sessionReport ? (
-                          <div className="mt-4 pt-4 border-t border-slate-200/60">
+                          <div className="mt-4 pt-4 border-t" style={{ borderColor: 'var(--border-primary)' }}>
                             <div className="flex items-center justify-between mb-1">
-                              <span className="text-xs font-semibold text-slate-500">Compatibility</span>
-                              <span className="font-extrabold text-indigo-700">{sessionReport.overall_compatibility_percent}%</span>
+                              <span className="text-xs font-semibold" style={{ color: 'var(--text-muted)' }}>Compatibility</span>
+                              <span className="font-extrabold" style={{ color: 'var(--brand-indigo)' }}>{sessionReport.overall_compatibility_percent}%</span>
                             </div>
                             <div className="flex items-center justify-between">
-                              <span className="text-xs font-semibold text-slate-500">Risk</span>
-                              <span className="font-extrabold text-rose-700">{sessionReport.weighted_risk_percent}%</span>
+                              <span className="text-xs font-semibold" style={{ color: 'var(--text-muted)' }}>Risk</span>
+                              <span className="font-extrabold" style={{ color: 'var(--brand-rose)' }}>{sessionReport.weighted_risk_percent}%</span>
                             </div>
                           </div>
                         ) : (
-                          <div className="mt-4 pt-4 border-t border-slate-200/60">
-                            <p className="text-xs font-medium text-slate-500">Waiting for submissions.</p>
+                          <div className="mt-4 pt-4 border-t" style={{ borderColor: 'var(--border-primary)' }}>
+                            <p className="text-xs font-medium" style={{ color: 'var(--text-muted)' }}>Waiting for submissions.</p>
                           </div>
                         )}
                       </div>
@@ -1201,58 +1198,58 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
         )}
 
         {partnerProfile && selectedSession && (
-          <div className="premium-card p-8 bg-gradient-to-br from-secondary to-primary relative overflow-hidden transition-colors duration-300">
+          <div className="premium-card p-8 relative overflow-hidden transition-colors duration-300" style={{ backgroundColor: 'var(--bg-secondary)' }}>
             {selectedSession.status === 'completed' && report ? (
               <div className="space-y-8 relative z-10">
-                <div className="text-center bg-secondary/60 dark:bg-slate-900/40 p-8 rounded-[2rem] border border-slate-100 dark:border-slate-800 shadow-sm backdrop-blur">
+                <div className="text-center p-8 rounded-[2rem] border shadow-sm" style={{ backgroundColor: 'var(--bg-tertiary)', borderColor: 'var(--border-primary)' }}>
                   <CheckCircle className="text-emerald-500 mx-auto mb-4 drop-shadow-md" size={64} />
-                  <h3 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Report & Analysis</h3>
-                  <p className="text-slate-600 dark:text-slate-400 font-medium mt-2 max-w-lg mx-auto">Only your own answers are stored per account. Matching is used for scoring.</p>
+                  <h3 className="text-3xl font-extrabold tracking-tight" style={{ color: 'var(--text-primary)' }}>Report & Analysis</h3>
+                  <p className="font-medium mt-2 max-w-lg mx-auto" style={{ color: 'var(--text-secondary)' }}>Only your own answers are stored per account. Matching is used for scoring.</p>
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-6">
-                  <div className="border border-indigo-100 dark:border-indigo-900/30 rounded-3xl p-6 bg-indigo-50 dark:bg-indigo-900/20 shadow-sm relative overflow-hidden">
+                  <div className="rounded-3xl p-6 shadow-sm relative overflow-hidden border" style={{ backgroundColor: 'var(--brand-indigo-light)', borderColor: 'var(--border-primary)' }}>
                     <div className="absolute -top-4 -right-4 w-24 h-24 bg-indigo-500 rounded-full blur-3xl opacity-20"></div>
-                    <p className="text-sm font-bold uppercase tracking-widest text-indigo-700 dark:text-indigo-300 mb-1">Final Compatibility</p>
-                    <p className="text-5xl font-extrabold text-indigo-900 dark:text-indigo-100">{report!.overall_compatibility_percent}%</p>
+                    <p className="text-sm font-bold uppercase tracking-widest mb-1" style={{ color: 'var(--brand-indigo)' }}>Final Compatibility</p>
+                    <p className="text-5xl font-extrabold" style={{ color: 'var(--text-primary)' }}>{report!.overall_compatibility_percent}%</p>
                   </div>
-                  <div className="border border-rose-100 dark:border-rose-900/30 rounded-3xl p-6 bg-rose-50 dark:bg-rose-900/20 shadow-sm relative overflow-hidden">
+                  <div className="rounded-3xl p-6 shadow-sm relative overflow-hidden border" style={{ backgroundColor: 'var(--brand-rose-light)', borderColor: 'var(--border-primary)' }}>
                     <div className="absolute -top-4 -right-4 w-24 h-24 bg-rose-500 rounded-full blur-3xl opacity-20"></div>
-                    <p className="text-sm font-bold uppercase tracking-widest text-rose-700 dark:text-rose-300 mb-1">Weighted Risk</p>
-                    <p className="text-5xl font-extrabold text-rose-900 dark:text-rose-100">{report!.weighted_risk_percent}%</p>
+                    <p className="text-sm font-bold uppercase tracking-widest mb-1" style={{ color: 'var(--brand-rose)' }}>Weighted Risk</p>
+                    <p className="text-5xl font-extrabold" style={{ color: 'var(--text-primary)' }}>{report!.weighted_risk_percent}%</p>
                   </div>
                 </div>
 
                 <div>
-                  <h4 className="font-extrabold text-slate-900 mb-4 text-xl flex items-center gap-2"><Target size={20} className="text-slate-400" /> Category Scores</h4>
+                  <h4 className="font-extrabold mb-4 text-xl flex items-center gap-2" style={{ color: 'var(--text-primary)' }}><Target size={20} style={{ color: 'var(--text-muted)' }} /> Category Scores</h4>
                   <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     {categoryList.map((category) => (
-                      <div key={category} className="bg-secondary border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm hover:shadow-md transition transition-colors duration-300">
-                        <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1">{category}</p>
-                        <p className="text-2xl font-extrabold text-slate-900 dark:text-white">{report!.category_scores[category]}%</p>
+                      <div key={category} className="border rounded-2xl p-4 shadow-sm hover:shadow-md transition-all" style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-primary)' }}>
+                        <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: 'var(--text-muted)' }}>{category}</p>
+                        <p className="text-2xl font-extrabold" style={{ color: 'var(--text-primary)' }}>{report!.category_scores[category]}%</p>
                       </div>
                     ))}
                   </div>
                 </div>
 
                 <div>
-                  <h4 className="font-extrabold text-slate-900 mb-4 text-xl flex items-center gap-2"><ShieldAlert size={20} className="text-rose-500" /> Top Risk Contributors</h4>
+                  <h4 className="font-extrabold mb-4 text-xl flex items-center gap-2" style={{ color: 'var(--text-primary)' }}><ShieldAlert size={20} style={{ color: 'var(--brand-rose)' }} /> Top Risk Contributors</h4>
                   <div className="space-y-3">
                     {report!.top_risk_contributors.map((riskItem) => {
                       const question = QUESTION_BANK.find((entry) => entry.id === riskItem.questionId);
                       return (
-                        <div key={riskItem.questionId} className="bg-secondary border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm transition-colors duration-300">
+                        <div key={riskItem.questionId} className="border rounded-2xl p-5 shadow-sm transition-colors duration-300" style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-primary)' }}>
                           <div className="flex items-start justify-between gap-4 mb-2">
-                            <p className="font-bold text-slate-800 dark:text-slate-200 leading-snug flex-1">
-                              <span className="text-slate-400 dark:text-slate-500 mr-2">Q{riskItem.sourceQNo}</span> {question?.prompt}
+                            <p className="font-bold leading-snug flex-1" style={{ color: 'var(--text-primary)' }}>
+                              <span className="mr-2" style={{ color: 'var(--text-muted)' }}>Q{riskItem.sourceQNo}</span> {question?.prompt}
                             </p>
                             <span className={`text-[10px] px-2.5 py-1 rounded-md font-extrabold uppercase tracking-widest shrink-0 ${riskBadgeClass(riskItem.riskLevel)}`}>
                               {riskItem.riskLevel}
                             </span>
                           </div>
                           <div className="flex items-center gap-2 mt-4 text-sm">
-                            <span className="font-semibold text-slate-500 dark:text-slate-400">Risk impact:</span>
-                            <span className="font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/20 px-2 py-0.5 rounded transition-colors">{riskItem.riskImpactPercent}%</span>
+                            <span className="font-semibold" style={{ color: 'var(--text-muted)' }}>Risk impact:</span>
+                            <span className="font-bold px-2 py-0.5 rounded" style={{ color: 'var(--brand-rose)', backgroundColor: 'var(--brand-rose-light)' }}>{riskItem.riskImpactPercent}%</span>
                           </div>
                         </div>
                       );
@@ -1261,25 +1258,25 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
                 </div>
 
                 {report!.ai_analysis && typeof report!.ai_analysis === 'object' && (
-                  <div className="rounded-[2rem] border border-blue-200 dark:border-blue-900/30 p-8 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/10 dark:to-indigo-900/10 mt-8 shadow-sm space-y-6">
-                    <h4 className="font-extrabold text-blue-900 dark:text-blue-300 mb-4 flex items-center gap-3 text-2xl">
-                      <Sparkles size={24} className="text-blue-600 dark:text-blue-400 -mt-1" /> Executive Analysis
+                  <div className="rounded-[2rem] border p-8 mt-8 shadow-sm space-y-6" style={{ background: 'linear-gradient(135deg, var(--brand-indigo-light), var(--bg-secondary))', borderColor: 'var(--border-primary)' }}>
+                    <h4 className="font-extrabold mb-4 flex items-center gap-3 text-2xl" style={{ color: 'var(--brand-indigo)' }}>
+                      <Sparkles size={24} style={{ color: 'var(--brand-indigo)' }} /> Executive Analysis
                     </h4>
 
                     {/* Core Insight */}
-                    <div className="bg-white/60 dark:bg-slate-900/40 p-5 rounded-2xl border border-blue-100 dark:border-blue-800/50">
-                      <h5 className="text-sm font-bold text-blue-800 dark:text-blue-400 uppercase tracking-wider mb-2">Core Insight</h5>
-                      <p className="text-blue-900 dark:text-blue-200 font-medium leading-relaxed">{report!.ai_analysis.insight}</p>
+                    <div className="p-5 rounded-2xl border" style={{ backgroundColor: 'var(--bg-tertiary)', borderColor: 'var(--border-primary)' }}>
+                      <h5 className="text-sm font-bold uppercase tracking-wider mb-2" style={{ color: 'var(--brand-indigo)' }}>Core Insight</h5>
+                      <p className="font-medium leading-relaxed" style={{ color: 'var(--text-primary)' }}>{report!.ai_analysis.insight}</p>
                     </div>
 
                     <div className="grid md:grid-cols-2 gap-6">
                       {/* Issues */}
                       <div>
-                        <h5 className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3">Main Problems</h5>
+                        <h5 className="text-sm font-bold uppercase tracking-wider mb-3" style={{ color: 'var(--text-muted)' }}>Main Problems</h5>
                         <ul className="space-y-2">
                           {report!.ai_analysis.mainProblems.map((prob, i) => (
-                            <li key={i} className="flex gap-2 text-slate-700 dark:text-slate-300 text-sm">
-                              <span className="text-rose-500 shrink-0">•</span> {prob}
+                            <li key={i} className="flex gap-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                              <span className="shrink-0" style={{ color: 'var(--brand-rose)' }}>•</span> {prob}
                             </li>
                           ))}
                         </ul>
@@ -1287,11 +1284,11 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
 
                       {/* Precautions */}
                       <div>
-                        <h5 className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3">Future Precautions</h5>
+                        <h5 className="text-sm font-bold uppercase tracking-wider mb-3" style={{ color: 'var(--text-muted)' }}>Future Precautions</h5>
                         <ul className="space-y-2">
                           {report!.ai_analysis.futurePrecautions.map((prec, i) => (
-                            <li key={i} className="flex gap-2 text-slate-700 dark:text-slate-300 text-sm">
-                              <span className="text-amber-500 shrink-0">•</span> {prec}
+                            <li key={i} className="flex gap-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                              <span className="shrink-0" style={{ color: '#f59e0b' }}>•</span> {prec}
                             </li>
                           ))}
                         </ul>
@@ -1300,23 +1297,23 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
 
                     <div className="grid md:grid-cols-2 gap-6">
                       {/* Step By Step */}
-                      <div className="bg-emerald-50/50 dark:bg-emerald-900/10 p-5 rounded-2xl border border-emerald-100 dark:border-emerald-900/30">
-                        <h5 className="text-sm font-bold text-emerald-800 dark:text-emerald-400 uppercase tracking-wider mb-3">Daily/Weekly Steps</h5>
+                      <div className="p-5 rounded-2xl border" style={{ backgroundColor: 'var(--brand-emerald-light)', borderColor: 'rgba(16,185,129,0.15)' }}>
+                        <h5 className="text-sm font-bold uppercase tracking-wider mb-3" style={{ color: 'var(--brand-emerald)' }}>Daily/Weekly Steps</h5>
                         <ul className="space-y-3">
                           {report!.ai_analysis.stepByStepActions.map((action, i) => (
-                            <li key={i} className="flex gap-3 text-emerald-900 dark:text-emerald-200 text-sm leading-snug">
-                              <span className="font-bold text-emerald-600 dark:text-emerald-500 shrink-0">{i + 1}.</span> {action}
+                            <li key={i} className="flex gap-3 text-sm leading-snug" style={{ color: 'var(--text-primary)' }}>
+                              <span className="font-bold shrink-0" style={{ color: 'var(--brand-emerald)' }}>{i + 1}.</span> {action}
                             </li>
                           ))}
                         </ul>
                       </div>
 
                       {/* Recommendations */}
-                      <div className="bg-blue-50/50 dark:bg-blue-900/10 p-5 rounded-2xl border border-blue-100 dark:border-blue-900/30">
-                        <h5 className="text-sm font-bold text-blue-800 dark:text-blue-400 uppercase tracking-wider mb-3">Recommended Actions</h5>
+                      <div className="p-5 rounded-2xl border" style={{ backgroundColor: 'var(--brand-indigo-light)', borderColor: 'var(--border-primary)' }}>
+                        <h5 className="text-sm font-bold uppercase tracking-wider mb-3" style={{ color: 'var(--brand-indigo)' }}>Recommended Actions</h5>
                         <ul className="space-y-3">
                           {report!.ai_analysis.recommendedActions.map((rec, i) => (
-                            <li key={i} className="bg-white/50 dark:bg-slate-900/40 p-2.5 rounded-lg border border-blue-100 dark:border-blue-800/30 text-blue-950 dark:text-blue-200 text-sm font-medium">
+                            <li key={i} className="p-2.5 rounded-lg border text-sm font-medium" style={{ backgroundColor: 'var(--bg-tertiary)', borderColor: 'var(--border-primary)', color: 'var(--text-primary)' }}>
                               {rec}
                             </li>
                           ))}
@@ -1327,56 +1324,62 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
                 )}
               </div>
             ) : mySubmission ? (
-              <div className="rounded-[2rem] border-2 border-indigo-200 bg-indigo-50 p-10 text-center relative z-10 shadow-sm">
-                <CheckCircle className="mx-auto text-indigo-500 mb-4" size={48} />
-                <p className="text-2xl font-extrabold text-indigo-900 mb-2">Your private answers are submitted.</p>
-                <p className="text-indigo-800/80 font-medium">
+              <div className="rounded-[2rem] border-2 p-10 text-center relative z-10 shadow-sm" style={{ borderColor: 'var(--brand-indigo)', backgroundColor: 'var(--brand-indigo-light)' }}>
+                <CheckCircle className="mx-auto mb-4" size={48} style={{ color: 'var(--brand-indigo)' }} />
+                <p className="text-2xl font-extrabold mb-2" style={{ color: 'var(--text-primary)' }}>Your private answers are submitted.</p>
+                <p className="font-medium" style={{ color: 'var(--text-secondary)' }}>
                   Waiting for your partner to submit their assessment to generate the report.
                 </p>
               </div>
             ) : isMyTurnToAnswer && currentQuestion ? (
               <div className="space-y-8 relative z-10 max-w-4xl mx-auto">
-                <div className="bg-secondary rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-sm transition-colors duration-300">
-                  <div className="flex justify-between items-center text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-3">
+                <div className="rounded-2xl p-5 border shadow-sm transition-colors duration-300" style={{ backgroundColor: 'var(--bg-tertiary)', borderColor: 'var(--border-primary)' }}>
+                  <div className="flex justify-between items-center text-sm font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--text-muted)' }}>
                     <span>Question {currentQuestionIndex + 1} / {sessionQuestions.length}</span>
-                    <span className="text-indigo-600 dark:text-indigo-400">{Math.round(progress)}%</span>
+                    <span style={{ color: 'var(--brand-indigo)' }}>{Math.round(progress)}%</span>
                   </div>
-                  <div className="w-full bg-primary/50 rounded-full h-3 overflow-hidden">
-                    <div className="bg-indigo-600 dark:bg-indigo-500 h-full rounded-full transition-all duration-500 ease-out" style={{ width: `${progress}%` }} />
+                  <div className="w-full rounded-full h-3 overflow-hidden" style={{ backgroundColor: 'var(--bg-primary)' }}>
+                    <div className="h-full rounded-full transition-all duration-500 ease-out" style={{ width: `${progress}%`, backgroundColor: 'var(--brand-indigo)' }} />
                   </div>
                 </div>
 
                 <div className="flex items-center gap-3 flex-wrap">
-                  <span className="text-[10px] font-extrabold uppercase tracking-widest px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-secondary text-slate-700 dark:text-slate-300 shadow-sm transition-colors">
+                  <span className="text-[10px] font-extrabold uppercase tracking-widest px-3 py-1.5 rounded-lg border shadow-sm" style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--bg-secondary)', color: 'var(--text-secondary)' }}>
                     {currentQuestion.type}
                   </span>
-                  <span className={`text-[10px] font-extrabold uppercase tracking-widest px-3 py-1.5 rounded-lg shadow-sm border ${riskBadgeClass(currentQuestion.riskLevel).replace('bg-', 'border-').replace('text-', 'text-')}`}>
+                  <span className={`text-[10px] font-extrabold uppercase tracking-widest px-3 py-1.5 rounded-lg shadow-sm border ${riskBadgeClass(currentQuestion.riskLevel)}`}>
                     {currentQuestion.riskLevel} Risk
                   </span>
-                  <span className="text-[10px] font-extrabold uppercase tracking-widest px-3 py-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 text-indigo-700 dark:text-indigo-300 shadow-sm transition-colors">
+                  <span className="text-[10px] font-extrabold uppercase tracking-widest px-3 py-1.5 rounded-lg border shadow-sm" style={{ backgroundColor: 'var(--brand-indigo-light)', borderColor: 'var(--border-primary)', color: 'var(--brand-indigo)' }}>
                     {currentQuestion.category}
                   </span>
                 </div>
 
                 <div className="mt-8 mb-10">
-                  <h3 className="text-3xl font-extrabold text-slate-900 dark:text-white leading-tight">{currentQuestion.prompt}</h3>
-                  <p className="text-lg text-slate-600 dark:text-slate-400 mt-4 leading-relaxed font-medium">{currentQuestion.riskDescription}</p>
+                  <h3 className="text-3xl font-extrabold leading-tight" style={{ color: 'var(--text-primary)' }}>{currentQuestion.prompt}</h3>
+                  <p className="text-lg mt-4 leading-relaxed font-medium" style={{ color: 'var(--text-secondary)' }}>{currentQuestion.riskDescription}</p>
                 </div>
 
                 {currentQuestion.type === 'MCQ' && (
                   <div className="grid gap-3">
-                    {currentQuestion.options?.map((option) => (
-                      <button
-                        key={option}
-                        onClick={() => setMCQAnswer(currentQuestion.id, option)}
-                        className={`w-full border-2 rounded-2xl p-5 text-left transition-all duration-300 font-semibold text-lg ${myResponses[currentQuestion.id] === option
-                          ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-900 dark:text-indigo-200 shadow-sm ring-4 ring-indigo-500/10'
-                          : 'border-slate-200 dark:border-slate-800 bg-secondary text-slate-700 dark:text-slate-300 hover:border-indigo-300 dark:hover:border-indigo-700 hover:shadow-md hover:bg-primary/50'
-                          }`}
-                      >
-                        {option}
-                      </button>
-                    ))}
+                    {currentQuestion.options?.map((option) => {
+                      const isSelected = myResponses[currentQuestion.id] === option;
+                      return (
+                        <button
+                          key={option}
+                          onClick={() => setMCQAnswer(currentQuestion.id, option)}
+                          className="w-full border-2 rounded-2xl p-5 text-left transition-all duration-300 font-semibold text-lg"
+                          style={{
+                            borderColor: isSelected ? 'var(--brand-indigo)' : 'var(--border-primary)',
+                            backgroundColor: isSelected ? 'var(--brand-indigo-light)' : 'var(--bg-secondary)',
+                            color: isSelected ? 'var(--brand-indigo)' : 'var(--text-primary)',
+                            boxShadow: isSelected ? '0 0 0 4px rgba(99,102,241,0.1)' : 'none',
+                          }}
+                        >
+                          {option}
+                        </button>
+                      );
+                    })}
                   </div>
                 )}
 
@@ -1391,13 +1394,22 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
                         <button
                           key={option}
                           onClick={() => toggleMSQAnswer(currentQuestion.id, option)}
-                          className={`w-full border-2 rounded-2xl p-5 text-left transition-all duration-300 font-semibold text-lg ${selected
-                            ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-900 dark:text-indigo-200 shadow-sm ring-4 ring-indigo-500/10'
-                            : 'border-slate-200 dark:border-slate-800 bg-secondary text-slate-700 dark:text-slate-300 hover:border-indigo-300 dark:hover:border-indigo-700 hover:shadow-md hover:bg-primary/50'
-                            }`}
+                          className="w-full border-2 rounded-2xl p-5 text-left transition-all duration-300 font-semibold text-lg"
+                          style={{
+                            borderColor: selected ? 'var(--brand-indigo)' : 'var(--border-primary)',
+                            backgroundColor: selected ? 'var(--brand-indigo-light)' : 'var(--bg-secondary)',
+                            color: selected ? 'var(--brand-indigo)' : 'var(--text-primary)',
+                            boxShadow: selected ? '0 0 0 4px rgba(99,102,241,0.1)' : 'none',
+                          }}
                         >
                           <div className="flex items-center gap-3">
-                            <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${selected ? 'border-indigo-500 bg-indigo-500' : 'border-slate-300'}`}>
+                            <div
+                              className="w-5 h-5 rounded border-2 flex items-center justify-center transition-colors"
+                              style={{
+                                borderColor: selected ? 'var(--brand-indigo)' : 'var(--border-primary)',
+                                backgroundColor: selected ? 'var(--brand-indigo)' : 'transparent',
+                              }}
+                            >
                               {selected && <CheckCircle size={14} className="text-white" />}
                             </div>
                             {option}
@@ -1413,15 +1425,16 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
                     value={String(myResponses[currentQuestion.id] || '')}
                     onChange={(event) => setTextAnswer(currentQuestion.id, event.target.value)}
                     placeholder="Type your response thoughtfully..."
-                    className="w-full min-h-[160px] border-2 border-slate-200 dark:border-slate-800 bg-secondary rounded-2xl p-5 text-lg font-medium text-slate-800 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all resize-y shadow-sm"
+                    className="input-base min-h-[160px] resize-y text-lg font-medium"
                   />
                 )}
 
-                <div className="flex items-center justify-between pt-10 border-t border-slate-200/60 mt-10">
+                <div className="flex items-center justify-between pt-10 border-t mt-10" style={{ borderColor: 'var(--border-primary)' }}>
                   <button
                     onClick={() => setCurrentQuestionIndex((prev) => Math.max(prev - 1, 0))}
                     disabled={currentQuestionIndex === 0}
-                    className="inline-flex items-center gap-2 text-slate-600 bg-white border border-slate-300 shadow-sm px-6 py-3 rounded-xl font-bold hover:bg-slate-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="inline-flex items-center gap-2 border shadow-sm px-6 py-3 rounded-xl font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-primary)', color: 'var(--text-primary)' }}
                   >
                     <ArrowLeft size={18} /> Previous
                   </button>
@@ -1430,7 +1443,7 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
                     <button
                       onClick={() => setCurrentQuestionIndex((prev) => prev + 1)}
                       disabled={!canMoveNext()}
-                      className="inline-flex items-center gap-2 bg-indigo-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-indigo-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:-translate-y-0.5"
+                      className="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-blue-600 text-white px-8 py-3 rounded-xl font-bold hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:-translate-y-0.5"
                     >
                       Next <ArrowRight size={18} />
                     </button>
@@ -1438,7 +1451,7 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
                     <button
                       onClick={submitMyAssessment}
                       disabled={!isAllAnswered() || savingSubmission}
-                      className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-8 py-3 rounded-xl font-bold hover:from-emerald-600 hover:to-teal-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:-translate-y-0.5"
+                      className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-8 py-3 rounded-xl font-bold hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:-translate-y-0.5"
                     >
                       {savingSubmission ? (
                         <>Submitting <div className="animate-spin rounded-full h-4 w-4 border-2 border-white/40 border-t-white ml-2"></div></>
@@ -1451,10 +1464,10 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
               </div>
             ) : (
               <div className="text-center py-20 relative z-10">
-                <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <FileText size={24} className="text-slate-400" />
+                <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: 'var(--bg-tertiary)' }}>
+                  <FileText size={24} style={{ color: 'var(--text-muted)' }} />
                 </div>
-                <p className="text-xl font-bold text-slate-500">Select a pending session card to continue.</p>
+                <p className="text-xl font-bold" style={{ color: 'var(--text-muted)' }}>Select a pending session card to continue.</p>
               </div>
             )}
           </div>

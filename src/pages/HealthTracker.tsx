@@ -170,10 +170,18 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
 
   if (authLoading || loading) {
     return (
-      <div className="min-h-[calc(100vh-80px)] bg-primary flex items-center justify-center">
-        <div className="text-center animate-pulse">
-          <div className="rounded-full h-12 w-12 border-4 border-emerald-200 dark:border-emerald-900/30 border-t-emerald-600 animate-spin mx-auto mb-4"></div>
-          <p className="text-slate-600 dark:text-slate-400 font-medium tracking-wide">Loading records...</p>
+      <div
+        className="min-h-[calc(100vh-68px)] flex items-center justify-center transition-colors duration-300"
+        style={{ backgroundColor: 'var(--bg-primary)' }}
+      >
+        <div className="text-center">
+          <div
+            className="h-10 w-10 rounded-full border-4 border-t-transparent animate-spin mx-auto mb-4"
+            style={{ borderColor: 'rgba(16,185,129,0.2)', borderTopColor: '#10b981' }}
+          />
+          <p className="text-sm font-semibold" style={{ color: 'var(--text-muted)' }}>
+            Loading records…
+          </p>
         </div>
       </div>
     );
@@ -181,13 +189,26 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
 
   if (!profile) {
     return (
-      <div className="min-h-[calc(100vh-80px)] bg-primary flex items-center justify-center py-10 transition-colors duration-300">
-        <div className="text-center premium-card p-10 max-w-md w-full mx-4 bg-secondary">
-          <Activity className="text-emerald-500 mx-auto mb-5" size={48} />
-          <p className="text-slate-700 dark:text-slate-200 font-bold text-lg mb-6 leading-relaxed">Please sign in to track your relationship health</p>
+      <div
+        className="min-h-[calc(100vh-68px)] flex items-center justify-center px-4 transition-colors duration-300"
+        style={{ backgroundColor: 'var(--bg-primary)' }}
+      >
+        <div
+          className="premium-card p-10 max-w-sm w-full text-center animate-rise-in"
+          style={{ backgroundColor: 'var(--bg-secondary)' }}
+        >
+          <div
+            className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-5"
+            style={{ backgroundColor: 'var(--brand-emerald-light)', color: 'var(--brand-emerald)' }}
+          >
+            <Activity size={26} />
+          </div>
+          <p className="font-bold text-base mb-6 leading-relaxed" style={{ color: 'var(--text-primary)' }}>
+            Please sign in to track your relationship health
+          </p>
           <button
             onClick={() => onNavigate('home')}
-            className="w-full bg-emerald-600 text-white px-6 py-3.5 rounded-xl font-bold hover:bg-emerald-700 transition shadow-md hover:-translate-y-0.5"
+            className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 py-3.5 rounded-xl font-bold hover:opacity-90 transition shadow-md hover:-translate-y-0.5 focus-ring"
           >
             Go Home
           </button>
@@ -207,9 +228,9 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
   };
 
   const TrendIcon = ({ trend }: { trend: string | null }) => {
-    if (trend === 'up') return <TrendingUp className="text-emerald-500 bg-emerald-50 p-1 rounded-full shrink-0" size={24} />;
-    if (trend === 'down') return <TrendingDown className="text-rose-500 bg-rose-50 p-1 rounded-full shrink-0" size={24} />;
-    return <Minus className="text-slate-400 bg-slate-100 p-1 rounded-full shrink-0" size={24} />;
+    if (trend === 'up') return <TrendingUp className="shrink-0" size={20} style={{ color: '#10b981', backgroundColor: 'rgba(16,185,129,0.1)', padding: 3, borderRadius: '50%' }} />;
+    if (trend === 'down') return <TrendingDown className="shrink-0" size={20} style={{ color: '#f43f5e', backgroundColor: 'rgba(244,63,94,0.1)', padding: 3, borderRadius: '50%' }} />;
+    return <Minus className="shrink-0" size={20} style={{ color: 'var(--text-muted)', backgroundColor: 'var(--bg-tertiary)', padding: 3, borderRadius: '50%' }} />;
   };
 
   const formatSafeDate = (record: RelationshipHealth, options?: Intl.DateTimeFormatOptions) => {
@@ -255,62 +276,99 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
 
   const latestSolution = latestRecord ? parseReport(latestRecord.notes, latestRecord.improvements) : null;
 
+  const metricConfig = [
+    { label: 'Emotional', key: 'emotional_score' as const, prev: previousRecord?.emotional_score, color: '#6366f1', bg: 'rgba(99,102,241,0.08)', border: 'rgba(99,102,241,0.15)' },
+    { label: 'Communication', key: 'communication_score' as const, prev: previousRecord?.communication_score, color: '#14b8a6', bg: 'rgba(20,184,166,0.08)', border: 'rgba(20,184,166,0.15)' },
+    { label: 'Intimacy', key: 'intimacy_score' as const, prev: previousRecord?.intimacy_score, color: '#f43f5e', bg: 'rgba(244,63,94,0.08)', border: 'rgba(244,63,94,0.15)' },
+    { label: 'Conflict Mgmt', key: 'conflict_score' as const, prev: previousRecord?.conflict_score, color: '#f59e0b', bg: 'rgba(245,158,11,0.08)', border: 'rgba(245,158,11,0.15)' },
+  ];
+
+  const gridColor = theme === 'dark' ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
+
   return (
-    <div className="min-h-[calc(100vh-80px)] py-12 sm:py-16 transition-colors duration-300">
+    <div
+      className="min-h-[calc(100vh-68px)] py-12 sm:py-16 transition-colors duration-300"
+      style={{ backgroundColor: 'var(--bg-primary)' }}
+    >
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 animate-rise-in">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-10 bg-secondary/40 dark:bg-slate-900/40 border border-slate-200/60 dark:border-slate-800/60 p-6 rounded-[2rem] backdrop-blur-sm shadow-sm">
+        {/* Header */}
+        <div
+          className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-10 p-6 rounded-[2rem] border"
+          style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-primary)' }}
+        >
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/20 shrink-0">
-              <Sparkles className="text-white" size={28} />
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/20 shrink-0">
+              <Sparkles className="text-white" size={24} />
             </div>
             <div>
-              <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">AI Health Tracker</h1>
-              <p className="text-slate-600 dark:text-slate-400 font-medium">Conversational insights for your relationship</p>
+              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight" style={{ color: 'var(--text-primary)' }}>
+                AI Health Tracker
+              </h1>
+              <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                Conversational insights for your relationship
+              </p>
             </div>
           </div>
           <button
             onClick={() => setShowForm(true)}
-            className="inline-flex flex-shrink-0 items-center justify-center gap-2 bg-slate-900 dark:bg-emerald-600 text-white w-full sm:w-auto px-6 py-3.5 rounded-xl font-bold hover:bg-slate-800 dark:hover:bg-emerald-700 transition shadow-md hover:-translate-y-0.5"
+            className="inline-flex flex-shrink-0 items-center justify-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white w-full sm:w-auto px-6 py-3 rounded-xl font-bold hover:opacity-90 transition shadow-md hover:-translate-y-0.5 focus-ring"
           >
             <Plus size={18} /> New AI Check-in
           </button>
         </div>
 
+        {/* Modal Form */}
         {showForm && (
-          <div className="fixed inset-0 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in transition-all">
-            <div className="bg-secondary rounded-3xl shadow-2xl max-w-2xl w-full p-8 sm:p-10 max-h-[90vh] overflow-y-auto animate-rise-in border border-slate-200 dark:border-slate-800">
-              <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white mb-2 tracking-tight flex items-center gap-3">
-                <MessageSquareText className="text-emerald-500" size={28} /> Weekly Reflection
+          <div
+            className="fixed inset-0 flex items-center justify-center z-50 p-4 animate-fade-in"
+            style={{ backgroundColor: 'rgba(8,12,20,0.7)', backdropFilter: 'blur(6px)' }}
+          >
+            <div
+              className="rounded-3xl shadow-2xl max-w-2xl w-full p-8 sm:p-10 max-h-[90vh] overflow-y-auto animate-rise-in border"
+              style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-primary)' }}
+            >
+              <h2 className="text-2xl font-extrabold mb-2 tracking-tight flex items-center gap-3" style={{ color: 'var(--text-primary)' }}>
+                <MessageSquareText className="text-emerald-500" size={24} /> Weekly Reflection
               </h2>
-              <p className="text-slate-500 dark:text-slate-400 mb-8 font-medium">Write a few sentences about your relationship this week. Our AI will analyze your entry to extract scores and provide tailored advice securely.</p>
+              <p className="text-sm mb-8" style={{ color: 'var(--text-secondary)' }}>
+                Write a few sentences about your relationship this week. Our AI will analyze your entry to extract scores and provide tailored advice securely.
+              </p>
 
-              <form onSubmit={handleSubmit} className="space-y-6">
-
+              <form onSubmit={handleSubmit} className="space-y-5">
                 <div className="relative">
                   <textarea
                     value={journalEntry}
                     onChange={(e) => setJournalEntry(e.target.value)}
-                    className="w-full px-5 py-4 bg-primary border-2 border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none text-slate-800 dark:text-slate-100 font-medium transition placeholder:text-slate-400 dark:placeholder:text-slate-600 min-h-[160px] resize-y"
+                    className="input-base min-h-[160px] resize-y"
                     placeholder="E.g., We had a minor argument about chores on Tuesday but resolved it quickly by talking it out. Date night on Friday was amazing and we felt really connected..."
                     disabled={saving}
                   />
                   {saving && (
-                    <div className="absolute inset-0 bg-secondary/60 dark:bg-slate-900/60 backdrop-blur-[2px] rounded-2xl flex flex-col items-center justify-center z-10 transition-all">
-                      <Loader2 className="animate-spin text-emerald-600 mb-3" size={36} />
-                      <p className="text-emerald-800 dark:text-emerald-300 font-bold bg-emerald-50 dark:bg-emerald-900/30 px-4 py-2 rounded-full border border-emerald-100 dark:border-emerald-800 shadow-sm">
-                        Gemini is analyzing your entry...
+                    <div
+                      className="absolute inset-0 backdrop-blur-[2px] rounded-xl flex flex-col items-center justify-center z-10"
+                      style={{ backgroundColor: 'rgba(255,255,255,0.6)' }}
+                    >
+                      <Loader2 className="animate-spin text-emerald-600 mb-3" size={32} />
+                      <p
+                        className="font-bold text-sm px-4 py-2 rounded-full border"
+                        style={{ backgroundColor: 'var(--brand-emerald-light)', color: 'var(--brand-emerald)', borderColor: 'rgba(16,185,129,0.2)' }}
+                      >
+                        Gemini is analyzing your entry…
                       </p>
                     </div>
                   )}
                 </div>
 
                 {aiError && (
-                  <div className="bg-rose-50 border border-rose-200 text-rose-700 py-3 px-4 rounded-xl text-sm font-medium">
+                  <div
+                    className="flex items-start gap-3 rounded-xl px-4 py-3 border text-sm animate-fade-in"
+                    style={{ backgroundColor: '#fff1f2', borderColor: '#fecdd3', color: '#be123c' }}
+                  >
                     {aiError}
                   </div>
                 )}
 
-                <div className="flex flex-col sm:flex-row gap-4 pt-2">
+                <div className="flex flex-col sm:flex-row gap-3 pt-2">
                   <button
                     type="button"
                     onClick={() => {
@@ -319,16 +377,17 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
                       setJournalEntry('');
                     }}
                     disabled={saving}
-                    className="flex-1 bg-secondary border-2 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 py-4 rounded-xl font-bold hover:bg-slate-50 dark:hover:bg-slate-800 transition shadow-sm"
+                    className="flex-1 py-3.5 rounded-xl font-bold border transition-all hover:-translate-y-0.5 focus-ring"
+                    style={{ backgroundColor: 'var(--bg-tertiary)', borderColor: 'var(--border-primary)', color: 'var(--text-primary)' }}
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={saving}
-                    className="flex-1 bg-emerald-600 text-white flex items-center justify-center gap-2 py-4 rounded-xl font-bold hover:bg-emerald-700 transition disabled:opacity-50 shadow-md transform hover:-translate-y-0.5"
+                    className="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 text-white flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold hover:opacity-90 transition disabled:opacity-50 shadow-md hover:-translate-y-0.5 focus-ring"
                   >
-                    {saving ? 'Analyzing...' : <><Sparkles size={18} /> Ask AI</>}
+                    {saving ? 'Analyzing…' : <><Sparkles size={16} /> Ask AI</>}
                   </button>
                 </div>
               </form>
@@ -338,18 +397,19 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
 
         {latestRecord && (
           <div className="grid lg:grid-cols-[1fr,400px] gap-8">
-            <div className="space-y-8">
-              <div className="premium-card p-8 bg-gradient-to-br from-emerald-900 to-teal-900 text-white relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 blur-3xl rounded-full translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
+            <div className="space-y-6">
+              {/* AI Insights Hero */}
+              <div className="premium-card p-8 bg-gradient-to-br from-emerald-900 to-teal-900 text-white relative overflow-hidden noise-overlay">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 blur-3xl rounded-full translate-x-1/2 -translate-y-1/2 pointer-events-none" />
                 <div className="relative z-10">
                   <div className="flex justify-between items-start mb-4">
                     <div>
                       <h2 className="text-2xl font-extrabold tracking-tight">AI Insights</h2>
-                      <p className="text-emerald-200/80 font-medium text-sm mt-1">Based on your latest response</p>
+                      <p className="text-emerald-200/80 text-sm mt-1">Based on your latest response</p>
                     </div>
                     <div className="text-right">
                       <div className="text-4xl font-extrabold text-emerald-300 drop-shadow-md">{latestRecord.overall_score}%</div>
-                      <div className="text-xs font-bold text-emerald-200/70 uppercase tracking-widest mt-1">Overall Vitality</div>
+                      <div className="text-[10px] font-bold text-emerald-200/70 uppercase tracking-widest mt-1">Overall Vitality</div>
                     </div>
                   </div>
 
@@ -430,48 +490,48 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
                 </div>
               </div>
 
-              <div className="premium-card p-8">
-                <h3 className="text-xl font-extrabold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
-                  <Activity className="text-emerald-500" /> Metrics Breakdown
+              {/* Metrics Breakdown */}
+              <div className="premium-card p-8" style={{ backgroundColor: 'var(--bg-secondary)' }}>
+                <h3 className="text-lg font-extrabold mb-6 flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
+                  <Activity className="text-emerald-500" size={20} /> Metrics Breakdown
                 </h3>
                 <div className="grid sm:grid-cols-2 gap-4">
-                  {[
-                    { label: 'Emotional', score: latestRecord.emotional_score, prev: previousRecord?.emotional_score,
-                      classes: 'bg-indigo-50/50 dark:bg-indigo-900/10 border-indigo-100 dark:border-indigo-900/30 text-indigo-900 dark:text-indigo-300', scoreColor: 'text-indigo-700 dark:text-indigo-400', progressBg: 'bg-indigo-100 dark:bg-indigo-900/30', progressFill: 'bg-indigo-500' },
-                    { label: 'Communication', score: latestRecord.communication_score, prev: previousRecord?.communication_score,
-                      classes: 'bg-teal-50/50 dark:bg-teal-900/10 border-teal-100 dark:border-teal-900/30 text-teal-900 dark:text-teal-300', scoreColor: 'text-teal-700 dark:text-teal-400', progressBg: 'bg-teal-100 dark:bg-teal-900/30', progressFill: 'bg-teal-500' },
-                    { label: 'Intimacy', score: latestRecord.intimacy_score, prev: previousRecord?.intimacy_score,
-                      classes: 'bg-rose-50/50 dark:bg-rose-900/10 border-rose-100 dark:border-rose-900/30 text-rose-900 dark:text-rose-300', scoreColor: 'text-rose-700 dark:text-rose-400', progressBg: 'bg-rose-100 dark:bg-rose-900/30', progressFill: 'bg-rose-500' },
-                    { label: 'Conflict Mgmt', score: latestRecord.conflict_score, prev: previousRecord?.conflict_score,
-                      classes: 'bg-amber-50/50 dark:bg-amber-900/10 border-amber-100 dark:border-amber-900/30 text-amber-900 dark:text-amber-300', scoreColor: 'text-amber-700 dark:text-amber-400', progressBg: 'bg-amber-100 dark:bg-amber-900/30', progressFill: 'bg-amber-500' },
-                  ].map((metric) => (
-                    <div key={metric.label} className={`p-5 rounded-2xl border ${metric.classes}`}>
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="font-bold">{metric.label}</span>
-                        <div className="flex items-center gap-2">
-                          <span className={`font-extrabold text-lg ${metric.scoreColor}`}>{metric.score}%</span>
-                          <TrendIcon trend={getTrend(metric.score, metric.prev)} />
+                  {metricConfig.map((metric) => {
+                    const score = latestRecord[metric.key];
+                    return (
+                      <div
+                        key={metric.label}
+                        className="p-5 rounded-2xl border"
+                        style={{ backgroundColor: metric.bg, borderColor: metric.border }}
+                      >
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="font-bold text-sm" style={{ color: 'var(--text-primary)' }}>{metric.label}</span>
+                          <div className="flex items-center gap-2">
+                            <span className="font-extrabold text-lg" style={{ color: metric.color }}>{score}%</span>
+                            <TrendIcon trend={getTrend(score, metric.prev)} />
+                          </div>
+                        </div>
+                        <div className="w-full rounded-full h-2" style={{ backgroundColor: `${metric.color}15` }}>
+                          <div
+                            className="h-full rounded-full transition-all duration-700"
+                            style={{ width: `${score}%`, backgroundColor: metric.color }}
+                          />
                         </div>
                       </div>
-                      <div className={`w-full rounded-full h-2 ${metric.progressBg}`}>
-                        <div
-                          className={`h-full rounded-full ${metric.progressFill}`}
-                          style={{ width: `${metric.score}%` }}
-                        ></div>
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             </div>
 
-            <div className="space-y-8">
-              <div className="premium-card p-6 flex flex-col items-center justify-center">
-                <h3 className="font-extrabold text-slate-800 dark:text-slate-200 self-start mb-4">Relationship Balance</h3>
+            {/* Sidebar: Charts */}
+            <div className="space-y-6">
+              <div className="premium-card p-6 flex flex-col items-center justify-center" style={{ backgroundColor: 'var(--bg-secondary)' }}>
+                <h3 className="font-extrabold self-start mb-4 text-sm" style={{ color: 'var(--text-primary)' }}>Relationship Balance</h3>
                 <div className="w-full h-[250px]">
                   <ResponsiveContainer width="100%" height="100%">
                     <RadarChart cx="50%" cy="50%" outerRadius="70%" data={radarData}>
-                      <PolarGrid stroke={theme === 'dark' ? '#334155' : '#e2e8f0'} />
+                      <PolarGrid stroke={gridColor} />
                       <PolarAngleAxis dataKey="subject" tick={{ fill: '#64748b', fontSize: 12, fontWeight: 600 }} />
                       <Radar name="Score" dataKey="A" stroke="#10b981" fill="#10b981" fillOpacity={0.4} />
                     </RadarChart>
@@ -479,12 +539,12 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
                 </div>
               </div>
 
-              <div className="premium-card p-6">
-                <h3 className="font-extrabold text-slate-800 dark:text-slate-200 mb-6">Historical Trend</h3>
+              <div className="premium-card p-6" style={{ backgroundColor: 'var(--bg-secondary)' }}>
+                <h3 className="font-extrabold mb-6 text-sm" style={{ color: 'var(--text-primary)' }}>Historical Trend</h3>
                 <div className="w-full h-[200px]">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={chartData}>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={theme === 'dark' ? '#334155' : '#f1f5f9'} />
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={gridColor} />
                       <XAxis
                         dataKey="date"
                         axisLine={false}
@@ -492,12 +552,15 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
                         tick={{ fill: '#94a3b8', fontSize: 12 }}
                         dy={10}
                       />
-                      <YAxis
-                        hide
-                        domain={[0, 100]}
-                      />
+                      <YAxis hide domain={[0, 100]} />
                       <RechartsTooltip
-                        contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
+                        contentStyle={{
+                          borderRadius: '12px',
+                          border: '1px solid var(--border-primary)',
+                          boxShadow: 'var(--card-shadow)',
+                          backgroundColor: 'var(--bg-secondary)',
+                          color: 'var(--text-primary)',
+                        }}
                         labelStyle={{ fontWeight: 'bold', color: '#64748b', marginBottom: '4px' }}
                       />
                       <Line
@@ -516,45 +579,64 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
           </div>
         )}
 
+        {/* Previous Entries */}
         {healthRecords.length > 1 && (
-          <div className="premium-card p-8 sm:p-10 mt-8">
-            <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white mb-8 flex items-center gap-3">
-              <Activity className="text-slate-400" size={24} /> Previous Entries
+          <div className="premium-card p-8 sm:p-10 mt-8" style={{ backgroundColor: 'var(--bg-secondary)' }}>
+            <h2 className="text-xl font-extrabold mb-8 flex items-center gap-3" style={{ color: 'var(--text-primary)' }}>
+              <Activity size={20} style={{ color: 'var(--text-muted)' }} /> Previous Entries
             </h2>
             <div className="space-y-4">
               {healthRecords.slice(1).map((record) => (
-                <details key={record.id} className="group bg-secondary border border-slate-200 dark:border-slate-800 shadow-sm p-2 rounded-2xl transition hover:shadow-md outline-none">
+                <details
+                  key={record.id}
+                  className="group p-2 rounded-2xl border transition hover:shadow-md outline-none"
+                  style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-primary)' }}
+                >
                   <summary className="flex justify-between items-center p-3 cursor-pointer list-none outline-none">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold relative">
+                      <div
+                        className="w-10 h-10 rounded-full flex items-center justify-center relative"
+                        style={{ backgroundColor: 'var(--brand-emerald-light)', color: 'var(--brand-emerald)' }}
+                      >
                         <TrendingUp size={18} className="absolute transition-transform group-open:scale-0" />
                         <Minus size={18} className="absolute transition-transform scale-0 group-open:scale-100" />
                       </div>
                       <div>
-                        <p className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-0.5">
+                        <p className="text-xs font-bold uppercase tracking-widest mb-0.5" style={{ color: 'var(--text-muted)' }}>
                           {formatSafeDate(record, { year: 'numeric', month: 'short', day: 'numeric' })}
                         </p>
-                        <p className="text-sm font-bold text-slate-700 dark:text-slate-300">
+                        <p className="text-sm font-bold" style={{ color: 'var(--text-secondary)' }}>
                           {formatSafeDate(record, { hour: '2-digit', minute: '2-digit' })}
                         </p>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
-                      <p className="font-extrabold text-lg text-emerald-600 bg-emerald-50 px-3 py-1 rounded-lg border border-emerald-100 shadow-sm">{record.overall_score}%</p>
+                      <p
+                        className="font-extrabold text-lg px-3 py-1 rounded-lg border"
+                        style={{ color: 'var(--brand-emerald)', backgroundColor: 'var(--brand-emerald-light)', borderColor: 'rgba(16,185,129,0.15)' }}
+                      >
+                        {record.overall_score}%
+                      </p>
                     </div>
                   </summary>
-                  <div className="px-5 pb-5 pt-3 animate-fade-in border-t border-slate-200 mt-2">
+                  <div className="px-5 pb-5 pt-3 animate-fade-in border-t mt-2" style={{ borderColor: 'var(--border-primary)' }}>
                     <div className="grid md:grid-cols-[1fr,240px] gap-6">
                       <div className="space-y-4">
                         {record.journal_entry && (
                           <details className="group">
-                            <summary className="text-slate-500 hover:text-slate-700 cursor-pointer text-[10px] font-bold uppercase tracking-[0.15em] flex items-center gap-2 list-none outline-none mb-2">
+                            <summary
+                              className="cursor-pointer text-[10px] font-bold uppercase tracking-[0.15em] flex items-center gap-2 list-none outline-none mb-2"
+                              style={{ color: 'var(--text-muted)' }}
+                            >
                               <MessageSquareText size={12} />
                               View Original Entry
                               <Plus size={10} className="group-open:hidden" />
                               <Minus size={10} className="hidden group-open:block" />
                             </summary>
-                            <div className="bg-primary/50 p-4 rounded-xl border border-slate-100 dark:border-slate-800 text-sm text-slate-700 dark:text-slate-300 italic leading-relaxed animate-fade-in mb-4">
+                            <div
+                              className="p-4 rounded-xl border text-sm italic leading-relaxed animate-fade-in mb-4"
+                              style={{ backgroundColor: 'var(--bg-tertiary)', borderColor: 'var(--border-primary)', color: 'var(--text-secondary)' }}
+                            >
                               "{record.journal_entry}"
                             </div>
                           </details>
@@ -563,19 +645,27 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
                           const sol = parseReport(record.notes, record.improvements);
                           if (!sol) return null;
                           return (
-                            <div className="bg-emerald-50/50 dark:bg-emerald-900/10 p-5 rounded-xl border border-emerald-100 dark:border-emerald-900/30 shadow-sm transition hover:shadow-md space-y-4">
+                            <div
+                              className="p-5 rounded-xl border shadow-sm transition hover:shadow-md space-y-4"
+                              style={{ backgroundColor: 'var(--brand-emerald-light)', borderColor: 'rgba(16,185,129,0.15)' }}
+                            >
                               <div>
-                                <h4 className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest mb-2 flex items-center gap-1.5"><Sparkles size={14} /> Core Insight</h4>
-                                <p className="text-sm text-slate-700 dark:text-slate-300 font-medium leading-relaxed">{sol.insight}</p>
+                                <h4 className="text-xs font-bold uppercase tracking-widest mb-2 flex items-center gap-1.5" style={{ color: 'var(--brand-emerald)' }}>
+                                  <Sparkles size={14} /> Core Insight
+                                </h4>
+                                <p className="text-sm font-medium leading-relaxed" style={{ color: 'var(--text-primary)' }}>{sol.insight}</p>
                               </div>
                               
                               {sol.stepByStepActions.length > 0 && (
-                                <div className="pt-3 border-t border-emerald-200/50 dark:border-emerald-800/50">
-                                  <h5 className="text-[11px] font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-widest mb-3">Action Plan</h5>
+                                <div className="pt-3 border-t" style={{ borderColor: 'rgba(16,185,129,0.15)' }}>
+                                  <h5 className="text-[11px] font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--brand-emerald)' }}>Action Plan</h5>
                                   <ul className="space-y-3">
                                     {sol.stepByStepActions.map((action, i) => (
-                                      <li key={i} className="flex gap-3 text-emerald-900 dark:text-emerald-200 text-xs leading-relaxed">
-                                        <span className="font-bold bg-emerald-200 dark:bg-emerald-800 text-emerald-800 dark:text-emerald-100 w-5 h-5 rounded-full flex items-center justify-center shrink-0">{i + 1}</span> 
+                                      <li key={i} className="flex gap-3 text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                                        <span
+                                          className="font-bold w-5 h-5 rounded-full flex items-center justify-center shrink-0"
+                                          style={{ backgroundColor: 'var(--brand-emerald)', color: '#fff' }}
+                                        >{i + 1}</span> 
                                         <span>{action}</span>
                                       </li>
                                     ))}
@@ -586,15 +676,28 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
                           );
                         })()}
                         <div className="flex flex-wrap gap-2 pt-2">
-                          <span className="text-xs font-bold text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 px-3 py-1.5 rounded-lg shadow-sm">Emotional: {record.emotional_score}%</span>
-                          <span className="text-xs font-bold text-teal-700 dark:text-teal-300 bg-teal-50 dark:bg-teal-900/30 border border-teal-100 dark:border-teal-800 px-3 py-1.5 rounded-lg shadow-sm">Communication: {record.communication_score}%</span>
-                          <span className="text-xs font-bold text-rose-700 dark:text-rose-300 bg-rose-50 dark:bg-rose-900/30 border border-rose-100 dark:border-rose-800 px-3 py-1.5 rounded-lg shadow-sm">Intimacy: {record.intimacy_score}%</span>
-                          <span className="text-xs font-bold text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-900/30 border border-amber-100 dark:border-amber-800 px-3 py-1.5 rounded-lg shadow-sm">Conflict: {record.conflict_score}%</span>
+                          {[
+                            { label: 'Emotional', value: record.emotional_score, color: '#6366f1' },
+                            { label: 'Communication', value: record.communication_score, color: '#14b8a6' },
+                            { label: 'Intimacy', value: record.intimacy_score, color: '#f43f5e' },
+                            { label: 'Conflict', value: record.conflict_score, color: '#f59e0b' },
+                          ].map((m) => (
+                            <span
+                              key={m.label}
+                              className="text-xs font-bold px-3 py-1.5 rounded-lg border"
+                              style={{ color: m.color, backgroundColor: `${m.color}0d`, borderColor: `${m.color}25` }}
+                            >
+                              {m.label}: {m.value}%
+                            </span>
+                          ))}
                         </div>
                       </div>
 
-                      <div className="h-[200px] bg-secondary rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm p-2 flex flex-col items-center justify-center">
-                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Balance Map</p>
+                      <div
+                        className="h-[200px] rounded-xl border p-2 flex flex-col items-center justify-center"
+                        style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-primary)' }}
+                      >
+                        <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--text-muted)' }}>Balance Map</p>
                         <ResponsiveContainer width="100%" height="100%">
                           <RadarChart cx="50%" cy="50%" outerRadius="65%" data={[
                             { subject: 'Emotional', A: record.emotional_score, fullMark: 100 },
@@ -602,7 +705,7 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
                             { subject: 'Intimacy', A: record.intimacy_score, fullMark: 100 },
                             { subject: 'Conflict', A: record.conflict_score, fullMark: 100 },
                           ]}>
-                            <PolarGrid stroke={theme === 'dark' ? '#334155' : '#e2e8f0'} />
+                            <PolarGrid stroke={gridColor} />
                             <PolarAngleAxis dataKey="subject" tick={{ fill: '#64748b', fontSize: 10, fontWeight: 700 }} />
                             <Radar name="Score" dataKey="A" stroke="#10b981" fill="#10b981" fillOpacity={0.4} />
                           </RadarChart>
@@ -616,20 +719,32 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
           </div>
         )}
 
+        {/* Empty State */}
         {healthRecords.length === 0 && (
-          <div className="premium-card p-12 text-center relative overflow-hidden bg-secondary">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-50 dark:bg-emerald-900/10 rounded-full blur-3xl opacity-60 -translate-y-1/2 translate-x-1/2"></div>
+          <div
+            className="premium-card p-12 text-center relative overflow-hidden"
+            style={{ backgroundColor: 'var(--bg-secondary)' }}
+          >
+            <div
+              className="absolute top-0 right-0 w-64 h-64 rounded-full blur-3xl opacity-20 -translate-y-1/2 translate-x-1/2 pointer-events-none"
+              style={{ backgroundColor: '#10b981' }}
+            />
             <div className="relative z-10 flex flex-col items-center">
-              <div className="w-24 h-24 bg-emerald-50 dark:bg-emerald-900/20 rounded-full flex items-center justify-center mb-6 shadow-inner border border-emerald-100 dark:border-emerald-800">
-                <Sparkles className="text-emerald-500" size={48} />
+              <div
+                className="w-20 h-20 rounded-2xl flex items-center justify-center mb-6 shadow-inner"
+                style={{ backgroundColor: 'var(--brand-emerald-light)', color: 'var(--brand-emerald)' }}
+              >
+                <Sparkles size={40} />
               </div>
-              <h3 className="text-2xl font-extrabold text-slate-900 dark:text-white mb-3 tracking-tight">Meet Your AI Coach</h3>
-              <p className="text-slate-600 dark:text-slate-400 mb-8 max-w-sm mx-auto font-medium text-lg leading-relaxed">
+              <h3 className="text-2xl font-extrabold mb-3 tracking-tight" style={{ color: 'var(--text-primary)' }}>
+                Meet Your AI Coach
+              </h3>
+              <p className="mb-8 max-w-sm mx-auto text-base leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
                 Log your first weekly reflection and let our AI provide deep relationship insights and exact metrics.
               </p>
               <button
                 onClick={() => setShowForm(true)}
-                className="bg-slate-900 dark:bg-emerald-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-slate-800 dark:hover:bg-emerald-700 transition shadow-md hover:-translate-y-0.5 inline-flex items-center gap-2"
+                className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-8 py-4 rounded-xl font-bold hover:opacity-90 transition shadow-md hover:-translate-y-0.5 inline-flex items-center gap-2 focus-ring"
               >
                 <Plus size={20} /> Create First Entry
               </button>

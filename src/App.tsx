@@ -1,24 +1,69 @@
 import { useEffect, useState } from 'react';
+import { Heart } from 'lucide-react';
+import { ThemeProvider } from './contexts/ThemeContext';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { Header } from './components/Header';
-import { Auth } from './components/Auth';
 import { Landing } from './pages/Landing';
+import { Auth } from './components/Auth';
 import { Dashboard } from './pages/Dashboard';
 import { CompatibilityQuiz } from './pages/CompatibilityQuiz';
-import { RedFlagChecker } from './pages/RedFlagChecker';
 import { HealthTracker } from './pages/HealthTracker';
+import { RedFlagChecker } from './pages/RedFlagChecker';
 import { PreMarriageAnalysis } from './pages/PreMarriageAnalysis';
-import { ThemeProvider } from './contexts/ThemeContext';
+import { ConflictResolution } from './pages/ConflictResolution';
+import { Services } from './pages/Services';
 
-type Page = 'home' | 'dashboard' | 'quiz' | 'red-flags' | 'health-tracker' | 'pre-marriage-analysis';
-type AppPage = Page | 'auth-before' | 'auth-after' | 'dashboard-before' | 'dashboard-after';
+// ── Page type ────────────────────────────────────────────────────────────────
+type AppPage =
+  | 'home'
+  | 'auth-before'
+  | 'auth-after'
+  | 'dashboard'
+  | 'dashboard-before'
+  | 'dashboard-after'
+  | 'quiz'
+  | 'red-flags'
+  | 'health-tracker'
+  | 'pre-marriage-analysis'
+  | 'conflict-resolution'
+  | 'services';
 
+// ── Global spinner ────────────────────────────────────────────────────────────
+function GlobalLoader() {
+  return (
+    <div
+      className="min-h-screen flex flex-col items-center justify-center gap-6 transition-colors duration-300"
+      style={{ backgroundColor: 'var(--bg-primary)' }}
+    >
+      {/* Animated logo mark */}
+      <div className="relative">
+        <div className="w-16 h-16 rounded-[18px] bg-gradient-to-br from-rose-500 to-rose-600 flex items-center justify-center shadow-xl shadow-rose-500/30 animate-pulse">
+          <Heart className="text-white" size={28} fill="currentColor" />
+        </div>
+        {/* Spinning ring */}
+        <div className="absolute -inset-2 rounded-[24px] border-2 border-rose-400/20 border-t-rose-500 animate-spin" />
+      </div>
+      <p
+        className="text-sm font-semibold tracking-wide"
+        style={{ color: 'var(--text-muted)' }}
+      >
+        Loading MarriageWise…
+      </p>
+    </div>
+  );
+}
+
+// ── Inner app (needs auth context) ───────────────────────────────────────────
 function AppContent() {
+  const { user, profile, loading } = useAuth();
   const [currentPage, setCurrentPage] = useState<AppPage>('home');
-  const { loading, profile, user } = useAuth();
 
-  const getDashboardPage = (): AppPage =>
-    profile?.relationship_status === 'married' ? 'dashboard-after' : 'dashboard-before';
+  const getDashboardPage = (): AppPage => {
+    if (!profile) return 'dashboard';
+    return profile.relationship_status === 'married'
+      ? 'dashboard-after'
+      : 'dashboard-before';
+  };
 
   const handleNavigate = (page: string) => {
     if (page === 'home' && user) {
@@ -27,13 +72,14 @@ function AppContent() {
       return;
     }
 
-    if (page === 'dashboard' && user) {
-      setCurrentPage(getDashboardPage());
-      window.scrollTo(0, 0);
-      return;
-    }
-
-    if (page === 'quiz' || page === 'red-flags' || page === 'health-tracker' || page === 'dashboard' || page === 'pre-marriage-analysis') {
+    if (
+      page === 'quiz' ||
+      page === 'red-flags' ||
+      page === 'health-tracker' ||
+      page === 'dashboard' ||
+      page === 'pre-marriage-analysis' ||
+      page === 'conflict-resolution'
+    ) {
       if (!user) {
         setCurrentPage(page === 'health-tracker' ? 'auth-after' : 'auth-before');
         return;
@@ -43,6 +89,7 @@ function AppContent() {
     window.scrollTo(0, 0);
   };
 
+  // ── Auth guard: redirect unauthenticated users away from protected pages ──
   useEffect(() => {
     const isProtectedPage =
       currentPage === 'dashboard' ||
@@ -51,7 +98,8 @@ function AppContent() {
       currentPage === 'quiz' ||
       currentPage === 'red-flags' ||
       currentPage === 'health-tracker' ||
-      currentPage === 'pre-marriage-analysis';
+      currentPage === 'pre-marriage-analysis' ||
+      currentPage === 'conflict-resolution';
 
     if (!user && isProtectedPage) {
       setCurrentPage('home');
@@ -64,19 +112,13 @@ function AppContent() {
 
   const handleAuthClick = () => setCurrentPage('auth-before');
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center transition-colors duration-300">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-slate-400">Loading...</p>
-        </div>
-      </div>
-    );
-  }
+  if (loading) return <GlobalLoader />;
 
   return (
-    <div className="min-h-screen font-sans flex flex-col transition-colors duration-300" style={{ backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
+    <div
+      className="min-h-screen font-sans flex flex-col transition-colors duration-300"
+      style={{ backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}
+    >
       <Header
         onAuthClick={handleAuthClick}
         onNavigate={handleNavigate}
@@ -84,10 +126,16 @@ function AppContent() {
       />
 
       <main className="flex-grow animate-fade-in">
+        {/* Public pages */}
         {currentPage === 'home' && !user && (
           <Landing onNavigate={handleNavigate} />
         )}
 
+        {currentPage === 'services' && (
+          <Services onAuthClick={handleAuthClick} onNavigate={handleNavigate} />
+        )}
+
+        {/* Auth flows */}
         {currentPage === 'auth-before' && (
           <Auth
             mode="before"
@@ -104,8 +152,12 @@ function AppContent() {
           />
         )}
 
+        {/* Dashboards */}
         {currentPage === 'dashboard' && user && (
-          <Dashboard onNavigate={handleNavigate} mode={profile?.relationship_status === 'married' ? 'after' : 'before'} />
+          <Dashboard
+            onNavigate={handleNavigate}
+            mode={profile?.relationship_status === 'married' ? 'after' : 'before'}
+          />
         )}
 
         {currentPage === 'dashboard-before' && user && (
@@ -116,6 +168,7 @@ function AppContent() {
           <Dashboard onNavigate={handleNavigate} mode="after" />
         )}
 
+        {/* Feature pages */}
         {currentPage === 'quiz' && user && (
           <CompatibilityQuiz onNavigate={handleNavigate} />
         )}
@@ -131,11 +184,16 @@ function AppContent() {
         {currentPage === 'pre-marriage-analysis' && user && (
           <PreMarriageAnalysis onNavigate={handleNavigate} />
         )}
+
+        {currentPage === 'conflict-resolution' && user && (
+          <ConflictResolution onNavigate={handleNavigate} />
+        )}
       </main>
     </div>
   );
 }
 
+// ── Root App ─────────────────────────────────────────────────────────────────
 function App() {
   return (
     <ThemeProvider>

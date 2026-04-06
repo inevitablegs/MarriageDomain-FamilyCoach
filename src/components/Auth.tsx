@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { ArrowLeft, HeartHandshake, Users, AlertCircle } from 'lucide-react';
+import { ArrowLeft, HeartHandshake, Users, AlertCircle, Eye, EyeOff } from 'lucide-react';
 
 type AuthProps = {
   mode: 'before' | 'after';
@@ -13,22 +13,29 @@ export function Auth({ mode, onBack, onSuccess }: AuthProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { signIn, signOut, signUp } = useAuth();
 
   const isAfterMarriage = mode === 'after';
 
-  const themeConfig = {
-    gradientText: isAfterMarriage ? 'from-emerald-600 to-teal-500' : 'from-indigo-600 to-blue-500',
-    gradientBg: isAfterMarriage ? 'from-emerald-600 to-teal-600' : 'from-indigo-600 to-blue-600',
-    gradientHover: isAfterMarriage ? 'hover:from-emerald-700 hover:to-teal-700' : 'hover:from-indigo-700 hover:to-blue-700',
-    ringColor: isAfterMarriage ? 'focus:ring-emerald-500' : 'focus:ring-indigo-500',
+  const theme = {
+    gradient: isAfterMarriage
+      ? 'from-emerald-600 via-emerald-600 to-teal-600'
+      : 'from-indigo-600 via-indigo-600 to-blue-600',
+    ringClass: isAfterMarriage ? 'focus:ring-emerald-500' : 'focus:ring-indigo-500',
+    accentColor: isAfterMarriage ? '#10b981' : '#6366f1',
     title: isAfterMarriage ? 'After Marriage Journey' : 'Before Marriage Journey',
     subtitle: isAfterMarriage
       ? 'Connect, rebuild, and track your relationship health securely.'
       : 'Analyze compatibility and uncover red flags before committing.',
-    icon: isAfterMarriage ? <Users size={28} className="text-white" /> : <HeartHandshake size={28} className="text-white" />
+    icon: isAfterMarriage
+      ? <Users size={26} className="text-white" />
+      : <HeartHandshake size={26} className="text-white" />,
+    testimonial: isAfterMarriage
+      ? '"We finally have a shared language for our relationship." — Priya & Rohan'
+      : '"MarriageWise gave us the clarity we needed." — Ananya, Pune',
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -46,14 +53,19 @@ export function Auth({ mode, onBack, onSuccess }: AuthProps) {
         if (error) throw error;
 
         const relationshipStatus = signedInProfile?.relationship_status;
-        const beforeMarriageAllowed = relationshipStatus === 'single' || relationshipStatus === 'engaged';
+        const beforeMarriageAllowed =
+          relationshipStatus === 'single' || relationshipStatus === 'engaged';
         const afterMarriageAllowed = relationshipStatus === 'married';
 
-        if ((mode === 'before' && !beforeMarriageAllowed) || (mode === 'after' && !afterMarriageAllowed)) {
+        if (
+          (mode === 'before' && !beforeMarriageAllowed) ||
+          (mode === 'after' && !afterMarriageAllowed)
+        ) {
           await signOut();
-          const msg = mode === 'before'
-            ? 'This account is a couple account. Please use After Marriage login.'
-            : 'This account is an individual account. Please use Before Marriage login.';
+          const msg =
+            mode === 'before'
+              ? 'This account is a couple account. Please use After Marriage login.'
+              : 'This account is an individual account. Please use Before Marriage login.';
           setError(msg);
           setLoading(false);
           return;
@@ -68,130 +80,212 @@ export function Auth({ mode, onBack, onSuccess }: AuthProps) {
   };
 
   return (
-    <div className="min-h-[calc(100vh-80px)] flex items-center justify-center bg-primary transition-colors duration-300 relative overflow-hidden p-4 sm:p-6 lg:p-8">
-      {/* Decorative Blur Backgrounds */}
-      <div className={`absolute top-0 right-0 h-[500px] w-[500px] rounded-full blur-[120px] opacity-20 ${isAfterMarriage ? 'bg-emerald-500' : 'bg-indigo-500'}`} />
-      <div className={`absolute bottom-0 left-0 h-[500px] w-[500px] rounded-full blur-[120px] opacity-20 ${isAfterMarriage ? 'bg-teal-500' : 'bg-blue-500'}`} />
+    <div
+      className="min-h-[calc(100vh-68px)] flex items-center justify-center relative overflow-hidden p-4 sm:p-6 lg:p-8 transition-colors duration-300"
+      style={{ backgroundColor: 'var(--bg-primary)' }}
+    >
+      {/* Ambient blobs */}
+      <div
+        className="absolute top-0 right-0 h-[500px] w-[500px] rounded-full blur-[120px] opacity-20 pointer-events-none"
+        style={{ backgroundColor: isAfterMarriage ? '#10b981' : '#6366f1' }}
+      />
+      <div
+        className="absolute bottom-0 left-0 h-[500px] w-[500px] rounded-full blur-[120px] opacity-20 pointer-events-none"
+        style={{ backgroundColor: isAfterMarriage ? '#14b8a6' : '#3b82f6' }}
+      />
 
       <div className="w-full max-w-5xl animate-rise-in relative z-10">
-        <div className="premium-card grid overflow-hidden lg:grid-cols-[1fr,1.2fr] min-h-[600px]">
+        <div
+          className="premium-card overflow-hidden grid lg:grid-cols-[1fr,1.25fr]"
+          style={{ minHeight: 580 }}
+        >
 
-          {/* Left / Top Side: Graphic Banner */}
-          <div className={`relative flex flex-col justify-between p-10 bg-gradient-to-br ${themeConfig.gradientBg}`}>
-            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay"></div>
-
-            <div className="relative z-10">
+          {/* ── Left panel ── */}
+          <div
+            className={`relative flex flex-col justify-between p-9 sm:p-12 bg-gradient-to-br ${theme.gradient} noise-overlay`}
+          >
+            {/* Back button */}
+            <div>
               <button
                 onClick={onBack}
-                className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold text-white backdrop-blur hover:bg-white/20 transition-all"
+                className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold text-white backdrop-blur hover:bg-white/20 transition-all focus-ring"
               >
-                <ArrowLeft size={16} /> Back
+                <ArrowLeft size={15} /> Back
               </button>
             </div>
 
-            <div className="relative z-10 mt-12 lg:mt-0">
-              <div className="inline-flex h-16 w-16 shadow-lg items-center justify-center rounded-2xl bg-white/20 backdrop-blur-md border border-white/20 mb-6">
-                {themeConfig.icon}
+            {/* Content */}
+            <div className="mt-10 lg:mt-0">
+              <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-white/20 backdrop-blur border border-white/20 mb-6 shadow-lg">
+                {theme.icon}
               </div>
-              <h2 className="text-3xl font-extrabold text-white sm:text-4xl leading-tight">
-                {themeConfig.title}
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-white leading-tight tracking-tight">
+                {theme.title}
               </h2>
-              <p className="mt-4 text-white/90 text-lg leading-relaxed max-w-sm">
-                {themeConfig.subtitle}
+              <p className="mt-4 text-white/85 text-base leading-relaxed max-w-xs">
+                {theme.subtitle}
               </p>
+
+              {/* Trust signal */}
+              <div className="mt-8 rounded-2xl bg-white/10 border border-white/15 px-5 py-4 text-sm text-white/80 font-medium italic leading-relaxed hidden lg:block">
+                {theme.testimonial}
+              </div>
             </div>
 
-            <div className="hidden lg:block relative z-10 mt-12 pt-8 border-t border-white/20">
-              <p className="text-sm font-medium text-white/70 italic">
-                {isAfterMarriage ? "Start rebuilding your connection today." : "Make your most important decision with clarity."}
-              </p>
+            {/* Decorative dots */}
+            <div className="hidden lg:flex items-center gap-2 mt-8">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className={`rounded-full bg-white ${i === 1 ? 'w-6 h-2' : 'w-2 h-2 opacity-40'}`} />
+              ))}
             </div>
           </div>
 
-          {/* Right / Bottom Side: Auth Form */}
-          <div className="p-8 sm:p-12 lg:p-16 flex flex-col justify-center bg-secondary transition-colors duration-300">
-            <div className="mb-10">
-              <h3 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
-                {isSignUp ? 'Create Account' : 'Welcome Back'}
+          {/* ── Right panel / Form ── */}
+          <div
+            className="p-8 sm:p-12 lg:p-14 flex flex-col justify-center transition-colors duration-300"
+            style={{ backgroundColor: 'var(--bg-secondary)' }}
+          >
+            {/* Heading */}
+            <div className="mb-8">
+              <h3
+                className="text-2xl sm:text-3xl font-extrabold tracking-tight"
+                style={{ color: 'var(--text-primary)' }}
+              >
+                {isSignUp ? 'Create your account' : 'Welcome back'}
               </h3>
-              <p className="mt-2 text-slate-500 dark:text-slate-400 font-medium">
+              <p className="mt-1.5 text-sm" style={{ color: 'var(--text-secondary)' }}>
                 {isSignUp
                   ? 'Enter your details to get started.'
                   : 'Sign in to your account to continue.'}
               </p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-5">
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Full Name (sign-up only) */}
               {isSignUp && (
                 <div>
-                  <label className="mb-1.5 block text-sm font-bold text-slate-700 dark:text-slate-300">
+                  <label
+                    htmlFor="fullName"
+                    className="block text-sm font-semibold mb-1.5"
+                    style={{ color: 'var(--text-primary)' }}
+                  >
                     Full Name
                   </label>
                   <input
+                    id="fullName"
                     type="text"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    placeholder="John Doe"
-                    style={{ backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}
-                    className={`w-full rounded-xl border border-slate-200 dark:border-slate-700 px-4 py-3.5 placeholder:text-slate-400 dark:placeholder:text-slate-500 outline-none transition-all focus:border-transparent focus:ring-2 ${themeConfig.ringColor}`}
+                    placeholder="Riya Sharma"
+                    className="input-base"
                     required
+                    autoComplete="name"
                   />
                 </div>
               )}
 
+              {/* Email */}
               <div>
-                <label className="mb-1.5 block text-sm font-bold text-slate-700 dark:text-slate-300">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-semibold mb-1.5"
+                  style={{ color: 'var(--text-primary)' }}
+                >
                   Email Address
                 </label>
                 <input
+                  id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@example.com"
-                  style={{ backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}
-                  className={`w-full rounded-xl border border-slate-200 dark:border-slate-700 px-4 py-3.5 placeholder:text-slate-400 dark:placeholder:text-slate-500 outline-none transition-all focus:border-transparent focus:ring-2 ${themeConfig.ringColor}`}
+                  className="input-base"
                   required
+                  autoComplete="email"
                 />
               </div>
 
+              {/* Password */}
               <div>
-                <label className="mb-1.5 block text-sm font-bold text-slate-700 dark:text-slate-300">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-semibold mb-1.5"
+                  style={{ color: 'var(--text-primary)' }}
+                >
                   Password
                 </label>
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  style={{ backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}
-                  className={`w-full rounded-xl border border-slate-200 dark:border-slate-700 px-4 py-3.5 placeholder:text-slate-400 dark:placeholder:text-slate-500 outline-none transition-all focus:border-transparent focus:ring-2 ${themeConfig.ringColor}`}
-                  required
-                  minLength={6}
-                />
+                <div className="relative">
+                  <input
+                    id="password"
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="input-base pr-11"
+                    required
+                    minLength={6}
+                    autoComplete={isSignUp ? 'new-password' : 'current-password'}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-lg transition-colors focus-ring"
+                    style={{ color: 'var(--text-muted)' }}
+                    tabIndex={-1}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
+                  </button>
+                </div>
               </div>
 
+              {/* Error */}
               {error && (
-                <div className="flex items-start gap-3 rounded-xl bg-rose-50 dark:bg-rose-900/20 border border-rose-100 dark:border-rose-900/30 p-4 animate-fade-in">
-                  <AlertCircle size={20} className="text-rose-500 flex-shrink-0 mt-0.5" />
-                  <p className="text-sm font-medium text-rose-700 dark:text-rose-300">{error}</p>
+                <div
+                  className="flex items-start gap-3 rounded-xl px-4 py-3.5 border text-sm animate-fade-in"
+                  style={{
+                    backgroundColor: '#fff1f2',
+                    borderColor: '#fecdd3',
+                    color: '#be123c',
+                  }}
+                >
+                  <AlertCircle size={17} className="shrink-0 mt-0.5" />
+                  <p className="font-medium">{error}</p>
                 </div>
               )}
 
+              {/* Submit */}
               <button
                 type="submit"
                 disabled={loading}
-                className={`mt-2 w-full rounded-xl bg-gradient-to-r ${themeConfig.gradientBg} ${themeConfig.gradientHover} px-4 py-4 font-bold text-white shadow-md transition-all disabled:opacity-70 disabled:cursor-not-allowed hover:-translate-y-0.5 hover:shadow-lg`}
+                className={`w-full mt-2 py-4 rounded-xl font-bold text-white transition-all hover:-translate-y-0.5 shadow-md disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0 focus-ring bg-gradient-to-r ${theme.gradient}`}
+                style={{ boxShadow: `0 4px 14px 0 ${theme.accentColor}40` }}
               >
-                {loading ? 'Processing...' : isSignUp ? 'Sign Up' : 'Sign In'}
+                {loading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <span className="w-4 h-4 rounded-full border-2 border-white/40 border-t-white animate-spin" />
+                    Processing…
+                  </span>
+                ) : (
+                  isSignUp ? 'Create Account' : 'Sign In'
+                )}
               </button>
             </form>
 
-            <div className="mt-8 text-center border-t border-slate-100 dark:border-slate-800 pt-8">
-              <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
+            {/* Toggle sign-in / sign-up */}
+            <div
+              className="mt-8 pt-6 border-t text-center"
+              style={{ borderColor: 'var(--border-primary)' }}
+            >
+              <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
                 {isSignUp ? 'Already have an account?' : "Don't have an account?"}{' '}
                 <button
-                  onClick={() => setIsSignUp(!isSignUp)}
-                  className={`font-bold transition-colors bg-clip-text text-transparent bg-gradient-to-r ${themeConfig.gradientText} hover:opacity-80`}
+                  onClick={() => {
+                    setIsSignUp(!isSignUp);
+                    setError('');
+                  }}
+                  className="font-bold transition-colors hover:opacity-80 focus-ring rounded"
+                  style={{ color: theme.accentColor }}
                 >
                   {isSignUp ? 'Log in instead' : 'Create an account'}
                 </button>

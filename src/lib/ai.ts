@@ -117,7 +117,7 @@ ${JSON.stringify(userDataRaw, null, 2)}`;
 
   try {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -212,7 +212,7 @@ ${JSON.stringify(userProfile, null, 2)}`;
 
   try {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -300,7 +300,7 @@ export async function generateRelationshipAnalysisWithGemini(
 
   try {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -351,7 +351,7 @@ export async function scoreOneLineSimilarityWithGemini(
 
   try {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -418,7 +418,7 @@ Recent Incident: ${incidentText}`;
 
   try {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -455,6 +455,127 @@ Recent Incident: ${incidentText}`;
     return null;
   } catch (error) {
     console.error("Failed to analyze pre-marriage behavior:", error);
+    return null;
+  }
+}
+
+// ============================================================
+// 6. analyzeConflictWithGemini – Conflict Resolution AI
+// ============================================================
+
+export type ConflictResolutionReport = {
+  conflictType: string;
+  severityLevel: 'critical' | 'moderate' | 'mild';
+  rootCauseAnalysis: string;
+  partnerARole: string;
+  partnerBRole: string;
+  deEscalationScript: string[];
+  repairTriggers: string[];
+  weeklyActionPlan: { week: number; goal: string; actions: string[] }[];
+  warningSignals: string[];
+  insight: string;
+};
+
+export async function analyzeConflictWithGemini(
+  whatHappened: string,
+  userReaction: string,
+  partnerReaction: string,
+  trigger: string,
+  frequency: string,
+  intensity: string
+): Promise<ConflictResolutionReport | null> {
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+  if (!apiKey) return null;
+
+  const systemPrompt = `You are an elite, Gottman-informed couples conflict resolution therapist.
+
+Your task is to dissect a specific relationship conflict and produce a highly structured, clinical resolution plan. You are not generic. You pinpoint exact behaviors and provide word-for-word scripts.
+
+Output a JSON object matching this EXACT structure:
+{
+  "conflictType": "string (e.g., Power Struggle, Emotional Withdrawal, Core Value Clash)",
+  "severityLevel": "critical" | "moderate" | "mild",
+  "rootCauseAnalysis": "string (2-3 clinical sentences explaining the underlying unmet needs)",
+  "partnerARole": "string (What the user is doing in the dynamic)",
+  "partnerBRole": "string (What the partner is doing in the dynamic)",
+  "deEscalationScript": ["string (exact phrase to say mid-argument)"],
+  "repairTriggers": ["string (things to say/do AFTER the fight to reconnect)"],
+  "weeklyActionPlan": [
+    { "week": 1, "goal": "string", "actions": ["string"] },
+    { "week": 2, "goal": "string", "actions": ["string"] },
+    { "week": 3, "goal": "string", "actions": ["string"] },
+    { "week": 4, "goal": "string", "actions": ["string"] }
+  ],
+  "warningSignals": ["string (signs that require professional therapy)"],
+  "insight": "string (one-line clinical takeaway)"
+}
+
+Guidelines:
+- Analyze the user's vs partner's reaction to diagnose the 'dance' (e.g., pursue-withdraw).
+- "deEscalationScript" must be 4-5 exact, copy-paste phrases using "I" statements.
+- Keep arrays to max 5 items. The weeklyActionPlan MUST have exactly 4 weeks.`;
+
+  const userPrompt = `Analyze the following conflict scenario:
+1. Trigger: ${trigger}
+2. What Happened: ${whatHappened}
+3. User's Reaction: ${userReaction}
+4. Partner's Reaction: ${partnerReaction}
+5. Frequency: ${frequency}
+6. Emotional Intensity: ${intensity}`;
+
+  try {
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          systemInstruction: { parts: [{ text: systemPrompt }] },
+          contents: [{ parts: [{ text: userPrompt }] }],
+          generationConfig: {
+            temperature: 0.3,
+            responseMimeType: "application/json",
+          },
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      console.error('Gemini API Error:', await response.text());
+      return null;
+    }
+
+    const data = await response.json();
+    let text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (text) {
+      try {
+        text = text.replace(/```json/gi, '').replace(/```/gi, '').trim();
+        const startIdx = text.indexOf('{');
+        const endIdx = text.lastIndexOf('}') + 1;
+        if (startIdx >= 0 && endIdx > startIdx) {
+          text = text.substring(startIdx, endIdx);
+        }
+        const parsed = JSON.parse(text);
+        return {
+          conflictType: parsed.conflictType || 'Communication Breakdown',
+          severityLevel: parsed.severityLevel || 'moderate',
+          rootCauseAnalysis: parsed.rootCauseAnalysis || 'Unable to determine root cause.',
+          partnerARole: parsed.partnerARole || 'Reaction pattern not clearly stated.',
+          partnerBRole: parsed.partnerBRole || 'Reaction pattern not clearly stated.',
+          deEscalationScript: Array.isArray(parsed.deEscalationScript) ? parsed.deEscalationScript.slice(0, 5) : [],
+          repairTriggers: Array.isArray(parsed.repairTriggers) ? parsed.repairTriggers.slice(0, 5) : [],
+          weeklyActionPlan: Array.isArray(parsed.weeklyActionPlan) ? parsed.weeklyActionPlan.slice(0, 4) : [],
+          warningSignals: Array.isArray(parsed.warningSignals) ? parsed.warningSignals.slice(0, 5) : [],
+          insight: parsed.insight || 'Focus on active listening and pause before reacting.',
+        } as ConflictResolutionReport;
+      } catch (e) {
+        console.error("JSON parse failed in analyzeConflict. Raw text:", text, "Error:", e);
+        return null;
+      }
+    }
+    return null;
+  } catch (error) {
+    console.error("Failed to analyze conflict:", error);
     return null;
   }
 }

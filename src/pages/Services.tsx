@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { CheckCircle, Lock } from 'lucide-react';
+import { CheckCircle, Lock, Sparkles, ArrowRight } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 type ServicesProps = {
@@ -76,6 +76,7 @@ export function Services({ onAuthClick, onNavigate }: ServicesProps) {
         'Family integration guidance',
         'Lifetime resource access',
       ],
+      featured: true,
     },
     {
       name: 'Decision Confidence Score',
@@ -143,6 +144,7 @@ export function Services({ onAuthClick, onNavigate }: ServicesProps) {
         'Customized recovery roadmap',
         '3-month follow-up',
       ],
+      featured: true,
     },
     {
       name: 'Premium Couple Coaching',
@@ -163,87 +165,187 @@ export function Services({ onAuthClick, onNavigate }: ServicesProps) {
   const services = selectedCategory === 'pre_marriage' ? preMarriageServices : postMarriageServices;
 
   return (
-    <div className="min-h-screen bg-gray-50 py-16">
+    <div className="min-h-screen py-16 sm:py-24 transition-colors duration-300" style={{ backgroundColor: 'var(--bg-primary)' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Our Services</h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+
+        {/* Header */}
+        <div className="text-center mb-14 animate-rise-in">
+          <p className="text-xs font-bold uppercase tracking-[0.18em] mb-3" style={{ color: 'var(--brand-indigo)' }}>
+            Coaching Plans
+          </p>
+          <h1 className="font-display text-4xl sm:text-5xl tracking-tight mb-4" style={{ color: 'var(--text-primary)' }}>
+            Our Services
+          </h1>
+          <p className="text-lg max-w-2xl mx-auto" style={{ color: 'var(--text-secondary)' }}>
             Choose the right support for your relationship journey
           </p>
         </div>
 
-        <div className="flex justify-center mb-12">
-          <div className="inline-flex rounded-lg border border-gray-300 p-1 bg-white">
-            <button
+        {/* Toggle */}
+        <div className="flex justify-center mb-12 animate-fade-in">
+          <div
+            className="inline-flex rounded-2xl p-1.5 border"
+            style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--bg-secondary)' }}
+          >
+            <TabButton
+              label="Before Marriage"
+              active={selectedCategory === 'pre_marriage'}
               onClick={() => setSelectedCategory('pre_marriage')}
-              className={`px-6 py-2 rounded-lg font-semibold transition ${
-                selectedCategory === 'pre_marriage'
-                  ? 'bg-blue-600 text-white'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-            >
-              Before Marriage
-            </button>
-            <button
+              activeColor="from-indigo-600 to-blue-600"
+            />
+            <TabButton
+              label="After Marriage"
+              active={selectedCategory === 'post_marriage'}
               onClick={() => setSelectedCategory('post_marriage')}
-              className={`px-6 py-2 rounded-lg font-semibold transition ${
-                selectedCategory === 'post_marriage'
-                  ? 'bg-blue-600 text-white'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-            >
-              After Marriage
-            </button>
+              activeColor="from-emerald-600 to-teal-600"
+            />
           </div>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {services.map((service, index) => (
-            <div
-              key={index}
-              className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition p-8 flex flex-col"
-            >
-              <div className="flex items-center justify-between mb-4">
-                {service.isFree ? (
-                  <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-semibold">
-                    FREE
-                  </span>
-                ) : (
-                  <span className="text-3xl font-bold text-gray-900">
-                    ₹{service.price.toLocaleString()}
-                  </span>
-                )}
-              </div>
-
-              <h3 className="text-xl font-bold text-gray-800 mb-2">{service.name}</h3>
-              <p className="text-gray-600 mb-6 flex-grow">{service.description}</p>
-
-              <ul className="space-y-3 mb-8">
-                {service.features.map((feature, i) => (
-                  <li key={i} className="flex items-start space-x-2">
-                    <CheckCircle size={20} className="text-green-500 mt-0.5 flex-shrink-0" />
-                    <span className="text-sm text-gray-700">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <button
-                onClick={() => {
-                  if (user) {
-                    onNavigate('dashboard');
-                  } else {
-                    onAuthClick();
-                  }
-                }}
-                className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition flex items-center justify-center space-x-2"
+        {/* Cards */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 animate-rise-in">
+          {services.map((service, index) => {
+            const isFeatured = (service as any).featured === true;
+            return (
+              <div
+                key={index}
+                className={`premium-card flex flex-col relative overflow-hidden transition-all hover:-translate-y-1 ${
+                  isFeatured ? 'ring-2' : ''
+                }`}
+                style={{ padding: '2rem', ...(isFeatured ? { '--tw-ring-color': 'var(--brand-indigo)' } as React.CSSProperties : {}) }}
               >
-                {!user && !service.isFree && <Lock size={18} />}
-                <span>{service.isFree ? 'Get Started' : user ? 'Book Now' : 'Sign In to Book'}</span>
-              </button>
-            </div>
-          ))}
+                {/* Featured badge */}
+                {isFeatured && (
+                  <div className="absolute top-0 right-6">
+                    <div className="bg-gradient-to-r from-indigo-600 to-blue-600 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-b-xl shadow-md flex items-center gap-1">
+                      <Sparkles size={10} /> Popular
+                    </div>
+                  </div>
+                )}
+
+                {/* Price / Free badge */}
+                <div className="mb-4">
+                  {service.isFree ? (
+                    <span
+                      className="badge"
+                      style={{ backgroundColor: 'var(--brand-emerald-light)', color: 'var(--brand-emerald)' }}
+                    >
+                      Free Forever
+                    </span>
+                  ) : (
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-xs font-bold" style={{ color: 'var(--text-muted)' }}>₹</span>
+                      <span className="text-3xl font-extrabold tracking-tight" style={{ color: 'var(--text-primary)' }}>
+                        {service.price.toLocaleString()}
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Title & description */}
+                <h3 className="text-lg font-bold mb-1.5" style={{ color: 'var(--text-primary)' }}>
+                  {service.name}
+                </h3>
+                <p className="text-sm leading-relaxed flex-grow mb-6" style={{ color: 'var(--text-secondary)' }}>
+                  {service.description}
+                </p>
+
+                {/* Feature list */}
+                <ul className="space-y-2.5 mb-8">
+                  {service.features.map((feature, i) => (
+                    <li key={i} className="flex items-start gap-2.5">
+                      <CheckCircle
+                        size={16}
+                        className="shrink-0 mt-0.5"
+                        style={{ color: 'var(--brand-emerald)' }}
+                      />
+                      <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                        {feature}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+
+                {/* CTA */}
+                <button
+                  onClick={() => {
+                    if (user) {
+                      onNavigate('dashboard');
+                    } else {
+                      onAuthClick();
+                    }
+                  }}
+                  className={`w-full py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all hover:-translate-y-0.5 focus-ring ${
+                    isFeatured
+                      ? 'bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white shadow-md'
+                      : 'text-white'
+                  }`}
+                  style={
+                    !isFeatured
+                      ? {
+                          backgroundColor: 'var(--bg-tertiary)',
+                          color: 'var(--text-primary)',
+                          border: '1px solid var(--border-primary)',
+                        }
+                      : undefined
+                  }
+                >
+                  {!user && !service.isFree && <Lock size={15} />}
+                  <span>
+                    {service.isFree
+                      ? 'Get Started'
+                      : user
+                      ? 'Book Now'
+                      : 'Sign In to Book'}
+                  </span>
+                  <ArrowRight size={15} />
+                </button>
+              </div>
+            );
+          })}
         </div>
+
+        {/* Bottom CTA */}
+        <div className="mt-20 text-center">
+          <p className="text-base mb-4" style={{ color: 'var(--text-secondary)' }}>
+            Not sure which plan is right for you?
+          </p>
+          <button
+            onClick={() => (user ? onNavigate('dashboard') : onAuthClick())}
+            className="inline-flex items-center gap-2 border font-semibold px-6 py-3 rounded-full transition-all hover:-translate-y-0.5 focus-ring"
+            style={{ borderColor: 'var(--border-primary)', color: 'var(--text-primary)', backgroundColor: 'var(--bg-secondary)' }}
+          >
+            Start with a free assessment <ArrowRight size={16} />
+          </button>
+        </div>
+
       </div>
     </div>
+  );
+}
+
+function TabButton({
+  label,
+  active,
+  onClick,
+  activeColor,
+}: {
+  label: string;
+  active: boolean;
+  onClick: () => void;
+  activeColor: string;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={`px-5 py-2.5 rounded-xl text-sm font-bold transition-all focus-ring ${
+        active
+          ? `bg-gradient-to-r ${activeColor} text-white shadow-md`
+          : ''
+      }`}
+      style={!active ? { color: 'var(--text-secondary)' } : undefined}
+    >
+      {label}
+    </button>
   );
 }

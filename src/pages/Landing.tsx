@@ -1,14 +1,14 @@
 import {
   ArrowRight,
   CheckCircle2,
-  CircleDot,
   Compass,
   HeartHandshake,
   ShieldAlert,
   Sparkles,
   Target,
   Heart,
-  ChevronRight
+  Brain,
+  TrendingUp,
 } from 'lucide-react';
 
 type LandingProps = {
@@ -16,181 +16,245 @@ type LandingProps = {
 };
 
 export function Landing({ onNavigate }: LandingProps) {
-  const problemPoints = [
-    'Wrong partner choices',
-    'Unresolved conflicts',
-    'Emotional disconnect',
-    'Financial stress',
-    'Family pressure',
+  const stats = [
+    { value: '50+', label: 'Assessment Questions' },
+    { value: 'AI', label: 'Powered Analysis' },
+    { value: '2', label: 'Journeys: Before & After' },
   ];
 
-  const solutionPoints = [
-    'Structured compatibility assessment',
-    'Real-life scenario testing',
-    'Conflict resolution frameworks',
-    'Emotional and financial alignment tools',
+  const features = [
+    {
+      icon: <Brain size={22} />,
+      title: 'Compatibility Deep Scan',
+      desc: 'Scientifically structured questions reveal real alignment across values, lifestyle, finances, and goals.',
+      color: 'var(--brand-indigo)',
+      bg: 'var(--brand-indigo-light)',
+    },
+    {
+      icon: <ShieldAlert size={22} />,
+      title: 'Red Flag Intelligence',
+      desc: 'Detect high-severity behavioral risks before you commit. Protect your future with data-backed clarity.',
+      color: '#f43f5e',
+      bg: '#fff1f2',
+    },
+    {
+      icon: <TrendingUp size={22} />,
+      title: 'Relationship Health Tracker',
+      desc: 'Weekly AI reflections analyze your journal to track emotional, communication, and intimacy trends.',
+      color: 'var(--brand-emerald)',
+      bg: 'var(--brand-emerald-light)',
+    },
+    {
+      icon: <Sparkles size={22} />,
+      title: 'Couple Assessment Sessions',
+      desc: 'Private shared sessions generate a joint report only after both partners independently answer the same questions.',
+      color: '#8b5cf6',
+      bg: '#f5f3ff',
+    },
+  ];
+
+  const steps = [
+    {
+      num: '1',
+      title: 'Answer Smart Questions',
+      desc: 'Structured prompts reveal true compatibility, values alignment, and risk areas.',
+      palette: 'from-indigo-500 to-blue-500',
+    },
+    {
+      num: '2',
+      title: 'Get Your Compatibility Score',
+      desc: 'Instant AI report with strengths, gaps, and critical red flags — no fluff.',
+      palette: 'from-violet-500 to-indigo-500',
+    },
+    {
+      num: '3',
+      title: 'Follow Your Action Plan',
+      desc: 'Clear structured steps to decide confidently or rebuild your relationship.',
+      palette: 'from-sky-500 to-cyan-500',
+    },
   ];
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-primary font-sans text-slate-800 dark:text-slate-200 transition-colors duration-300">
-      {/* Abstract Background Elements */}
-      <div className="absolute top-0 -left-64 h-[500px] w-[500px] rounded-full bg-indigo-200/40 dark:bg-indigo-900/20 blur-[100px] opacity-70" />
-      <div className="absolute top-40 -right-64 h-[600px] w-[600px] rounded-full bg-blue-200/40 dark:bg-blue-900/20 blur-[120px] opacity-60" />
-      <div className="absolute -bottom-64 left-1/2 h-[700px] w-[700px] -translate-x-1/2 rounded-full bg-rose-100/40 dark:bg-rose-900/10 blur-[150px] opacity-50" />
+    <div
+      className="relative min-h-screen overflow-hidden transition-colors duration-300"
+      style={{ backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}
+    >
+      {/* Ambient background blobs */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
+        <div className="absolute -top-40 -left-40 h-[560px] w-[560px] rounded-full opacity-[0.22] blur-[110px]"
+          style={{ background: 'radial-gradient(circle, #818cf8, transparent)' }} />
+        <div className="absolute top-60 -right-40 h-[480px] w-[480px] rounded-full opacity-[0.16] blur-[110px]"
+          style={{ background: 'radial-gradient(circle, #6ee7b7, transparent)' }} />
+        <div className="absolute bottom-0 left-1/3 h-[300px] w-[300px] rounded-full opacity-[0.12] blur-[90px]"
+          style={{ background: 'radial-gradient(circle, #fb7185, transparent)' }} />
+      </div>
 
-      <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
 
-        {/* HERO SECTION */}
-        <section className="animate-rise-in relative flex flex-col items-center justify-center text-center">
-          <div className="inline-flex items-center gap-2 rounded-full border border-indigo-200/50 dark:border-indigo-800/50 bg-indigo-50/50 dark:bg-indigo-900/20 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-indigo-700 dark:text-indigo-300 shadow-sm backdrop-blur-sm">
-            <Sparkles size={14} className="text-indigo-500" />
-            Relationship Clarity System
+        {/* ── HERO ── */}
+        <section className="text-center max-w-3xl mx-auto animate-rise-in">
+          <div className="inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-bold uppercase tracking-widest mb-8 animate-fade-in delay-75"
+            style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--bg-secondary)', color: 'var(--brand-indigo)' }}>
+            <Heart size={12} fill="currentColor" className="text-rose-500" />
+            AI-Powered Relationship Intelligence
           </div>
 
-          <h1 className="mt-8 max-w-5xl text-5xl font-extrabold leading-[1.1] tracking-tight text-slate-900 dark:text-white sm:text-6xl lg:text-7xl">
-            Before You Marry... or Before It Breaks <br className="hidden lg:block" />
-            <span className="bg-gradient-to-r from-indigo-600 via-blue-600 to-sky-500 bg-clip-text text-transparent">Get It Right.</span>
+          <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl leading-[1.08] tracking-tight mb-6 animate-rise-in delay-150">
+            Clarity before <span className="gradient-text-indigo italic">commitment.</span>
+            <br />
+            Connection after <span className="gradient-text-emerald italic">marriage.</span>
           </h1>
 
-          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-slate-600 dark:text-slate-400 sm:text-xl">
-            A structured relationship coaching system to choose the right partner or fix relationship problems with real, data-driven step-by-step guidance.
+          <p className="text-lg sm:text-xl leading-relaxed max-w-2xl mx-auto mb-10 animate-fade-in delay-225"
+            style={{ color: 'var(--text-secondary)' }}>
+            MarriageWise uses structured assessments and AI analysis to help you make the most important relationship decisions of your life — with data-backed clarity.
           </p>
 
-          <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center justify-center w-full max-w-md sm:max-w-none">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in delay-300">
             <button
               onClick={() => onNavigate('auth-before')}
-              className="group flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-indigo-600 to-blue-600 px-8 py-4 text-base font-bold text-white shadow-lg shadow-indigo-200 transition-all hover:scale-105 hover:from-indigo-700 hover:to-blue-700 sm:w-auto"
+              className="flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white px-8 py-3.5 rounded-full font-bold shadow-lg shadow-indigo-500/25 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-indigo-500/30 focus-ring"
             >
-              Start Compatibility Check
-              <ChevronRight size={18} className="transition-transform group-hover:translate-x-1" />
+              Before Marriage Journey <ArrowRight size={18} />
             </button>
             <button
               onClick={() => onNavigate('auth-after')}
-              className="flex w-full items-center justify-center rounded-full border border-slate-200 dark:border-slate-800 bg-secondary/70 px-8 py-4 text-base font-bold text-slate-800 dark:text-slate-200 shadow-sm transition-all hover:bg-secondary hover:shadow-md sm:w-auto"
+              className="flex items-center gap-2 border font-bold px-8 py-3.5 rounded-full transition-all hover:-translate-y-0.5 focus-ring"
+              style={{ borderColor: 'var(--border-primary)', color: 'var(--text-secondary)', backgroundColor: 'var(--bg-secondary)' }}
             >
-              Fix My Relationship
+              After Marriage Journey
             </button>
           </div>
-
-          <p className="mt-6 text-sm font-medium text-slate-500 dark:text-slate-400 flex items-center gap-2 justify-center">
-            <HeartHandshake size={14} className="text-slate-400 dark:text-slate-500" /> Trusted by thousands of couples & individuals
-          </p>
         </section>
 
-        {/* METRICS / STATS BENTO */}
-        <section className="animate-rise-in mx-auto mt-24 max-w-5xl rounded-[2.5rem] premium-card p-2">
-          <div className="grid overflow-hidden rounded-[2rem] sm:grid-cols-2 lg:grid-cols-3 bg-primary/50">
-            <div className="p-10 border-b sm:border-b-0 sm:border-r border-slate-200/60 dark:border-slate-800/60 text-center">
-              <div className="text-4xl font-extrabold text-indigo-600 dark:text-indigo-400">85%</div>
-              <div className="mt-2 text-sm font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wide">Clarity within 1 Week</div>
-            </div>
-            <div className="p-10 border-b lg:border-b-0 lg:border-r border-slate-200/60 dark:border-slate-800/60 text-center">
-              <div className="text-4xl font-extrabold text-blue-600 dark:text-blue-400">3x</div>
-              <div className="mt-2 text-sm font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wide">Fewer Major Conflicts</div>
-            </div>
-            <div className="p-10 text-center sm:col-span-2 lg:col-span-1">
-              <div className="text-4xl font-extrabold text-sky-500 dark:text-sky-400">100%</div>
-              <div className="mt-2 text-sm font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wide">Private & Secure</div>
-            </div>
+        {/* ── STATS ── */}
+        <section className="mt-20 animate-rise-in delay-400">
+          <div className="grid grid-cols-3 gap-6 max-w-2xl mx-auto">
+            {stats.map((s) => (
+              <div key={s.label} className="text-center">
+                <p className="text-3xl sm:text-4xl font-extrabold tracking-tight gradient-text-indigo">{s.value}</p>
+                <p className="text-xs font-semibold uppercase tracking-wider mt-1" style={{ color: 'var(--text-muted)' }}>{s.label}</p>
+              </div>
+            ))}
           </div>
         </section>
 
-        {/* PROBLEM SECTION */}
-        <section className="animate-rise-in mt-32 grid gap-10 lg:grid-cols-2 lg:items-center">
-          <div>
-            <div className="inline-flex items-center gap-2 text-rose-600 font-bold uppercase tracking-wider text-xs mb-4">
-              <ShieldAlert size={16} /> Avoid Silent Failures
-            </div>
-            <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white sm:text-4xl leading-tight">
-              Most Relationships Don't Fail Suddenly. They Fail Silently.
-            </h2>
-            <p className="mt-6 text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
-              We are never taught how to systematically choose or manage a relationship. We rely on feelings and blind luck until things break down.
-            </p>
-            <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {problemPoints.map((item) => (
-                <div key={item} className="flex items-center gap-3">
-                  <div className="flex-shrink-0 h-8 w-8 rounded-full bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center">
-                    <CircleDot size={14} className="text-rose-600 dark:text-rose-400" />
-                  </div>
-                  <span className="font-semibold text-slate-700 dark:text-slate-300">{item}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="glass-effect rounded-3xl p-8 sm:p-12 relative overflow-hidden">
-            <div className="absolute top-0 right-0 p-32 bg-amber-100/50 dark:bg-amber-900/20 rounded-full blur-3xl -z-10 translate-x-1/2 -translate-y-1/2"></div>
-            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">We Give You a System - Not Just Advice.</h3>
-            <ul className="space-y-4">
-              {solutionPoints.map((item) => (
-                <li key={item} className="flex items-start gap-4 bg-secondary/60 p-4 rounded-xl border border-secondary transition-colors">
-                  <CheckCircle2 size={24} className="text-indigo-500 flex-shrink-0" />
-                  <span className="font-semibold text-slate-800 dark:text-slate-200">{item}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
-
-        {/* HOW IT WORKS */}
+        {/* ── FEATURES ── */}
         <section className="mt-32">
-          <div className="text-center max-w-2xl mx-auto">
-            <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white">Simple. Structured. Effective.</h2>
-            <p className="mt-4 text-slate-600 dark:text-slate-400 text-lg">Your path to relationship clarity takes just three steps.</p>
+          <div className="text-center max-w-2xl mx-auto mb-14">
+            <p className="text-xs font-bold uppercase tracking-[0.18em] mb-3" style={{ color: 'var(--brand-indigo)' }}>What MarriageWise offers</p>
+            <h2 className="font-display text-4xl sm:text-5xl tracking-tight">
+              Everything you need to decide wisely
+            </h2>
           </div>
-          <div className="mt-14 grid gap-6 md:grid-cols-3">
-            {[
-              ['1', 'Answer Smart Questions', 'Scientifically designed prompts to reveal real compatibility and potential risk areas.', 'bg-indigo-50 text-indigo-600 ring-indigo-100'],
-              ['2', 'Get Your Compatibility Score', 'See your actionable strengths, gaps, and any critical red flags immediately.', 'bg-blue-50 text-blue-600 ring-blue-100'],
-              ['3', 'Follow Action Plan', 'Receive clear, structured steps to confidently decide on or improve your relationship.', 'bg-sky-50 text-sky-600 ring-sky-100'],
-            ].map(([num, title, desc, colorClass]) => (
-              <article key={title} className="premium-card p-8 group overflow-hidden relative">
-                <div className={`absolute top-0 right-0 p-24 rounded-full blur-3xl -z-10 translate-x-1/2 -translate-y-1/2 transition-opacity opacity-50 group-hover:opacity-100 ${colorClass.split(' ')[0]}`}></div>
-                <div className={`mb-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl text-xl font-bold ring-4 shadow-sm ${colorClass}`}>
-                  {num}
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {features.map((f) => (
+              <div
+                key={f.title}
+                className="premium-card p-6 group transition-all hover:-translate-y-1"
+              >
+                <div className="w-11 h-11 rounded-2xl flex items-center justify-center mb-5 transition-transform group-hover:scale-110"
+                  style={{ backgroundColor: f.bg, color: f.color }}>
+                  {f.icon}
                 </div>
-                <h3 className="text-xl font-extrabold text-slate-900 dark:text-white">{title}</h3>
-                <p className="mt-3 text-slate-600 dark:text-slate-400 leading-relaxed">{desc}</p>
+                <h3 className="font-bold text-base mb-2">{f.title}</h3>
+                <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{f.desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ── HOW IT WORKS ── */}
+        <section className="mt-32">
+          <div className="text-center max-w-2xl mx-auto mb-14">
+            <p className="text-xs font-bold uppercase tracking-[0.18em] mb-3" style={{ color: 'var(--brand-emerald)' }}>How it works</p>
+            <h2 className="font-display text-4xl sm:text-5xl tracking-tight">Simple. Structured. Effective.</h2>
+            <p className="mt-4 text-lg" style={{ color: 'var(--text-secondary)' }}>Your path to relationship clarity takes just three steps.</p>
+          </div>
+
+          <div className="grid gap-5 md:grid-cols-3">
+            {steps.map((step) => (
+              <article key={step.title} className="premium-card p-7 relative overflow-hidden group hover:-translate-y-1 transition-all">
+                <div className={`absolute -top-8 -right-8 w-32 h-32 rounded-full blur-2xl opacity-15 group-hover:opacity-30 transition-opacity bg-gradient-to-br ${step.palette}`} />
+                <div className={`inline-flex items-center justify-center w-12 h-12 rounded-2xl text-xl font-black text-white shadow-md mb-5 bg-gradient-to-br ${step.palette}`}>
+                  {step.num}
+                </div>
+                <h3 className="text-lg font-bold mb-2">{step.title}</h3>
+                <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{step.desc}</p>
               </article>
             ))}
           </div>
         </section>
 
-        {/* TWO JOURNEYS (BEFORE/AFTER) */}
-        <section className="mt-32 grid gap-8 lg:grid-cols-2">
-          <article className="premium-card p-10 relative overflow-hidden group border-2 border-transparent hover:border-indigo-100 transition-colors">
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 to-blue-500"></div>
-            <p className="text-sm font-bold uppercase tracking-widest text-indigo-600 dark:text-indigo-400">Before Marriage</p>
-            <h3 className="mt-3 text-3xl font-extrabold text-slate-900 dark:text-white">Confused about your partner?</h3>
-            <p className="mt-4 text-slate-600 dark:text-slate-400 leading-relaxed text-lg">Stop guessing. Get deep insights before making the biggest commitment of your life.</p>
-            <ul className="mt-8 space-y-4 text-slate-700 dark:text-slate-300 font-medium">
-              <li className="flex items-center gap-3"><span className="p-1 bg-indigo-50 dark:bg-indigo-900/30 rounded-full"><CheckCircle2 size={18} className="text-indigo-600 dark:text-indigo-400" /></span> Compatibility Deep Scan</li>
-              <li className="flex items-center gap-3"><span className="p-1 bg-indigo-50 dark:bg-indigo-900/30 rounded-full"><CheckCircle2 size={18} className="text-indigo-600 dark:text-indigo-400" /></span> Red Flag Intelligence</li>
-              <li className="flex items-center gap-3"><span className="p-1 bg-indigo-50 dark:bg-indigo-900/30 rounded-full"><CheckCircle2 size={18} className="text-indigo-600 dark:text-indigo-400" /></span> Make Confident Decisions</li>
+        {/* ── TWO JOURNEYS ── */}
+        <section className="mt-32 grid gap-6 lg:grid-cols-2">
+          {/* Before Marriage */}
+          <article className="premium-card p-8 sm:p-10 relative overflow-hidden group hover:-translate-y-1 transition-all">
+            <div className="absolute top-0 left-0 w-full h-1 rounded-t-[1.25rem] bg-gradient-to-r from-indigo-500 to-blue-500" />
+            <div className="absolute -bottom-16 -right-16 w-48 h-48 rounded-full blur-3xl opacity-10 transition-opacity group-hover:opacity-20"
+              style={{ backgroundColor: '#818cf8' }} />
+
+            <p className="badge mb-4" style={{ backgroundColor: 'var(--brand-indigo-light)', color: 'var(--brand-indigo)' }}>
+              Before Marriage
+            </p>
+            <h3 className="font-display text-3xl sm:text-4xl leading-tight mb-3">
+              Confused about your partner?
+            </h3>
+            <p className="text-base leading-relaxed mb-8" style={{ color: 'var(--text-secondary)' }}>
+              Stop guessing. Get deep insights before making the biggest commitment of your life.
+            </p>
+            <ul className="space-y-3 mb-8">
+              {['Compatibility Deep Scan', 'Red Flag Intelligence', 'Make Confident Decisions'].map((item) => (
+                <li key={item} className="flex items-center gap-3 text-sm font-medium">
+                  <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0"
+                    style={{ backgroundColor: 'var(--brand-indigo-light)' }}>
+                    <CheckCircle2 size={14} style={{ color: 'var(--brand-indigo)' }} />
+                  </div>
+                  {item}
+                </li>
+              ))}
             </ul>
             <button
               onClick={() => onNavigate('auth-before')}
-              className="mt-10 flex items-center justify-between w-full rounded-2xl bg-slate-900 hover:bg-slate-800 px-6 py-4 font-bold text-white transition-colors"
+              className="flex items-center justify-between w-full rounded-2xl px-6 py-4 font-bold text-white transition-all hover:opacity-90 shadow-md focus-ring"
+              style={{ background: 'linear-gradient(135deg, #4f46e5, #2563eb)' }}
             >
               <span>Start Before Marriage Journey</span>
               <ArrowRight size={20} />
             </button>
           </article>
 
-          <article className="premium-card p-10 relative overflow-hidden group border-2 border-transparent hover:border-emerald-100 transition-colors">
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 to-teal-500"></div>
-            <p className="text-sm font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">After Marriage</p>
-            <h3 className="mt-3 text-3xl font-extrabold text-slate-900 dark:text-white">Facing issues in your relationship?</h3>
-            <p className="mt-4 text-slate-600 dark:text-slate-400 leading-relaxed text-lg">Repair and rebuild together with structured assessment sessions and health tracking.</p>
-            <ul className="mt-8 space-y-4 text-slate-700 dark:text-slate-300 font-medium">
-              <li className="flex items-center gap-3"><span className="p-1 bg-emerald-50 dark:bg-emerald-900/30 rounded-full"><CheckCircle2 size={18} className="text-emerald-600 dark:text-emerald-400" /></span> Couple Assessment Sessions</li>
-              <li className="flex items-center gap-3"><span className="p-1 bg-emerald-50 dark:bg-emerald-900/30 rounded-full"><CheckCircle2 size={18} className="text-emerald-600 dark:text-emerald-400" /></span> Conflict Risk Monitor</li>
-              <li className="flex items-center gap-3"><span className="p-1 bg-emerald-50 dark:bg-emerald-900/30 rounded-full"><CheckCircle2 size={18} className="text-emerald-600 dark:text-emerald-400" /></span> Rebuild Connection</li>
+          {/* After Marriage */}
+          <article className="premium-card p-8 sm:p-10 relative overflow-hidden group hover:-translate-y-1 transition-all">
+            <div className="absolute top-0 left-0 w-full h-1 rounded-t-[1.25rem] bg-gradient-to-r from-emerald-500 to-teal-500" />
+            <div className="absolute -bottom-16 -right-16 w-48 h-48 rounded-full blur-3xl opacity-10 transition-opacity group-hover:opacity-20"
+              style={{ backgroundColor: '#6ee7b7' }} />
+
+            <p className="badge mb-4" style={{ backgroundColor: 'var(--brand-emerald-light)', color: 'var(--brand-emerald)' }}>
+              After Marriage
+            </p>
+            <h3 className="font-display text-3xl sm:text-4xl leading-tight mb-3">
+              Facing issues in your relationship?
+            </h3>
+            <p className="text-base leading-relaxed mb-8" style={{ color: 'var(--text-secondary)' }}>
+              Repair and rebuild together with structured assessment sessions and weekly health tracking.
+            </p>
+            <ul className="space-y-3 mb-8">
+              {['Couple Assessment Sessions', 'Conflict Risk Monitor', 'Rebuild Connection'].map((item) => (
+                <li key={item} className="flex items-center gap-3 text-sm font-medium">
+                  <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0"
+                    style={{ backgroundColor: 'var(--brand-emerald-light)' }}>
+                    <CheckCircle2 size={14} style={{ color: 'var(--brand-emerald)' }} />
+                  </div>
+                  {item}
+                </li>
+              ))}
             </ul>
             <button
               onClick={() => onNavigate('auth-after')}
-              className="mt-10 flex items-center justify-between w-full rounded-2xl bg-emerald-600 hover:bg-emerald-700 px-6 py-4 font-bold text-white transition-colors"
+              className="flex items-center justify-between w-full rounded-2xl px-6 py-4 font-bold text-white transition-all hover:opacity-90 shadow-md focus-ring"
+              style={{ background: 'linear-gradient(135deg, #059669, #0d9488)' }}
             >
               <span>Start Joint Journey</span>
               <ArrowRight size={20} />
@@ -198,36 +262,58 @@ export function Landing({ onNavigate }: LandingProps) {
           </article>
         </section>
 
-        {/* CTA BANNER */}
-        <section className="mt-32 rounded-[3rem] bg-gradient-to-br from-slate-900 to-slate-800 p-12 text-center text-white shadow-2xl shadow-indigo-900/20 relative overflow-hidden">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-500/30 via-transparent to-transparent"></div>
+        {/* ── CTA BANNER ── */}
+        <section className="mt-32 noise-overlay relative overflow-hidden rounded-[2.5rem] p-12 sm:p-16 text-center text-white shadow-2xl"
+          style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%)' }}>
+          <div className="absolute inset-0 pointer-events-none" style={{
+            background: 'radial-gradient(ellipse 80% 50% at 50% 0%, rgba(99,102,241,0.3) 0%, transparent 70%)'
+          }} />
           <div className="relative z-10">
-            <Heart className="mx-auto text-rose-500 mb-6" size={48} fill="currentColor" />
-            <h2 className="text-4xl font-extrabold tracking-tight sm:text-5xl max-w-2xl mx-auto">Don't Wait Until It's Too Late</h2>
-            <p className="mt-6 text-xl text-slate-300 max-w-xl mx-auto leading-relaxed">
-              One wrong decision can cost years. <br /> One right decision can change your life.
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-rose-500/20 border border-rose-500/30 mb-6">
+              <Heart className="text-rose-400" size={32} fill="currentColor" />
+            </div>
+            <h2 className="font-display text-4xl sm:text-5xl tracking-tight max-w-2xl mx-auto mb-4">
+              Don't wait until it's too late
+            </h2>
+            <p className="text-lg text-slate-300 max-w-xl mx-auto leading-relaxed mb-10">
+              One wrong decision can cost years. One right decision can change your life.
             </p>
-            <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <button
                 onClick={() => onNavigate('auth-before')}
-                className="w-full sm:w-auto rounded-full bg-white dark:bg-slate-100 px-8 py-4 font-bold text-slate-900 transition-transform hover:scale-105 shadow-xl"
+                className="w-full sm:w-auto flex items-center justify-center gap-2 bg-white text-slate-900 px-8 py-4 rounded-full font-bold shadow-xl transition-all hover:scale-105 focus-ring"
               >
-                Start Compatibility Check
+                Start Compatibility Check <ArrowRight size={18} />
+              </button>
+              <button
+                onClick={() => onNavigate('auth-after')}
+                className="w-full sm:w-auto border border-white/20 text-white px-8 py-4 rounded-full font-semibold transition-all hover:bg-white/10 focus-ring"
+              >
+                After Marriage Journey
               </button>
             </div>
           </div>
         </section>
 
-        {/* FOOTER */}
-        <footer className="mt-20 border-t border-slate-200/60 pt-8 pb-4 text-center">
-          <div className="flex flex-wrap items-center justify-center gap-4 text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-6">
-            <span className="flex items-center gap-1.5"><HeartHandshake size={14} /> Pre + Post Marriage System</span>
-            <span className="hidden sm:inline text-slate-300 dark:text-slate-700">•</span>
-            <span className="flex items-center gap-1.5"><Compass size={14} /> Structured Guidance</span>
-            <span className="hidden sm:inline text-slate-300 dark:text-slate-700">•</span>
-            <span className="flex items-center gap-1.5"><Target size={14} /> Data-Driven Clarity</span>
+        {/* ── FOOTER ── */}
+        <footer className="mt-20 border-t pt-10 pb-6" style={{ borderColor: 'var(--border-primary)' }}>
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div className="flex items-center gap-2">
+              <div className="bg-gradient-to-br from-rose-500 to-rose-600 p-1.5 rounded-[8px]">
+                <Heart className="text-white" size={14} fill="currentColor" />
+              </div>
+              <span className="font-extrabold text-sm">MarriageWise</span>
+            </div>
+            <div className="flex flex-wrap items-center justify-center gap-5 text-xs font-semibold uppercase tracking-wider"
+              style={{ color: 'var(--text-muted)' }}>
+              <span className="flex items-center gap-1.5"><HeartHandshake size={13} /> Pre + Post Marriage</span>
+              <span className="flex items-center gap-1.5"><Compass size={13} /> Structured Guidance</span>
+              <span className="flex items-center gap-1.5"><Target size={13} /> Data-Driven Clarity</span>
+            </div>
+            <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+              © {new Date().getFullYear()} MarriageWise
+            </p>
           </div>
-          <p className="text-sm text-slate-500 dark:text-slate-600">© {new Date().getFullYear()} MarriageWise. Built for better relationship decisions.</p>
         </footer>
 
       </div>

@@ -30,105 +30,170 @@ export function AIRecommendations({ assessmentData, redFlagData, healthData }: A
 
   if (loading) {
     return (
-      <div className="bg-gradient-to-br from-indigo-50 to-indigo-100/50 dark:from-slate-900 dark:to-slate-800 rounded-2xl p-6 border border-indigo-200 dark:border-slate-800">
-        <div className="flex items-center space-x-3 mb-6">
-          <Brain className="text-indigo-600 dark:text-indigo-400 animate-pulse" size={24} />
-          <h3 className="text-xl font-bold text-slate-800 dark:text-white">AI-Powered Clinical Solution</h3>
+      <div
+        className="rounded-2xl p-6 border animate-fade-in"
+        style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-primary)' }}
+      >
+        <div className="flex items-center gap-3 mb-6">
+          <Brain size={20} className="text-indigo-500 animate-pulse" />
+          <h3 className="text-lg font-bold" style={{ color: 'var(--text-primary)' }}>
+            AI-Powered Clinical Solution
+          </h3>
         </div>
-        <div className="animate-pulse space-y-4">
-          <div className="h-20 bg-indigo-200/50 dark:bg-slate-700/50 rounded-xl w-full"></div>
-          <div className="h-6 bg-indigo-200/50 dark:bg-slate-700/50 rounded md:w-3/4"></div>
-          <div className="h-6 bg-indigo-200/50 dark:bg-slate-700/50 rounded md:w-2/3"></div>
+        <div className="space-y-3">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="skeleton h-5 rounded-lg" style={{ width: `${[100, 75, 65][i - 1]}%` }} />
+          ))}
         </div>
       </div>
     );
   }
 
-  if (!report) {
-    return null;
-  }
+  if (!report) return null;
 
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 md:p-8 border-2 border-indigo-100 dark:border-indigo-900/50 shadow-sm">
-      <div className="flex items-center space-x-3 mb-6 border-b border-slate-100 dark:border-slate-800 pb-4">
-        <Sparkles className="text-indigo-600 dark:text-indigo-400" size={28} />
-        <h3 className="text-2xl font-black text-slate-800 dark:text-white">AI Solution Report</h3>
+    <div
+      className="rounded-2xl border overflow-hidden"
+      style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-primary)' }}
+    >
+      {/* Header */}
+      <div
+        className="flex items-center gap-3 px-6 py-5 border-b"
+        style={{ borderColor: 'var(--border-primary)' }}
+      >
+        <div
+          className="w-9 h-9 rounded-xl flex items-center justify-center"
+          style={{ backgroundColor: 'var(--brand-indigo-light)', color: 'var(--brand-indigo)' }}
+        >
+          <Sparkles size={18} />
+        </div>
+        <h3 className="text-lg font-extrabold" style={{ color: 'var(--text-primary)' }}>
+          AI Solution Report
+        </h3>
       </div>
 
-      <div className="space-y-8">
-        {/* Insight */}
-        <div className="bg-indigo-50 dark:bg-indigo-900/20 p-5 rounded-xl border border-indigo-100 dark:border-indigo-800/50 flex gap-4">
-          <Brain className="text-indigo-600 dark:text-indigo-400 shrink-0 mt-1" size={24} />
+      <div className="p-6 space-y-6">
+        {/* Core Insight */}
+        <div
+          className="rounded-xl p-5 border flex gap-4"
+          style={{ backgroundColor: 'var(--brand-indigo-light)', borderColor: 'rgba(99,102,241,0.15)' }}
+        >
+          <Brain size={20} className="shrink-0 mt-0.5 text-indigo-500" />
           <div>
-            <h4 className="text-sm font-bold text-indigo-900 dark:text-indigo-300 uppercase tracking-wider mb-2">Core Insight</h4>
-            <p className="text-slate-800 dark:text-slate-200 font-medium leading-relaxed">{report.insight}</p>
+            <p className="text-[11px] font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--brand-indigo)' }}>
+              Core Insight
+            </p>
+            <p className="text-sm font-medium leading-relaxed" style={{ color: 'var(--text-primary)' }}>
+              {report.insight}
+            </p>
           </div>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8">
-          {/* Main Problems */}
-          <div>
-            <h4 className="flex items-center gap-2 font-bold text-slate-800 dark:text-white mb-4 text-lg">
-              <Activity className="text-rose-500" size={20} /> Identified Issues
-            </h4>
-            <ul className="space-y-3">
-              {report.mainProblems.map((prob, idx) => (
-                <li key={idx} className="flex items-start gap-3 text-slate-600 dark:text-slate-300 leading-snug">
-                  <span className="w-1.5 h-1.5 rounded-full bg-rose-500 mt-2 shrink-0"></span>
-                  {prob}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Precautions */}
-          <div>
-            <h4 className="flex items-center gap-2 font-bold text-slate-800 dark:text-white mb-4 text-lg">
-              <ShieldAlert className="text-amber-500" size={20} /> Future Precautions
-            </h4>
-            <ul className="space-y-3">
-              {report.futurePrecautions.map((prec, idx) => (
-                <li key={idx} className="flex items-start gap-3 text-slate-600 dark:text-slate-300 leading-snug">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-2 shrink-0"></span>
-                  {prec}
-                </li>
-              ))}
-            </ul>
-          </div>
+        {/* Problems + Precautions */}
+        <div className="grid md:grid-cols-2 gap-5">
+          <ReportSection
+            icon={<Activity size={16} className="text-rose-500" />}
+            title="Identified Issues"
+            items={report.mainProblems}
+            dotColor="#f43f5e"
+          />
+          <ReportSection
+            icon={<ShieldAlert size={16} className="text-amber-500" />}
+            title="Future Precautions"
+            items={report.futurePrecautions}
+            dotColor="#f59e0b"
+          />
         </div>
 
         {/* Step-by-Step Actions */}
-        <div className="bg-slate-50 dark:bg-slate-800/50 p-6 rounded-xl border border-slate-100 dark:border-slate-800">
-          <h4 className="flex items-center gap-2 font-bold text-slate-800 dark:text-white mb-5 text-lg">
-            <Target className="text-emerald-500" size={20} /> Step-by-Step Actions
-          </h4>
-          <ul className="space-y-4">
+        <div
+          className="rounded-xl p-5 border"
+          style={{ backgroundColor: 'var(--bg-tertiary)', borderColor: 'var(--border-primary)' }}
+        >
+          <div className="flex items-center gap-2 mb-4">
+            <Target size={16} className="text-emerald-500" />
+            <h4 className="text-sm font-bold" style={{ color: 'var(--text-primary)' }}>
+              Step-by-Step Actions
+            </h4>
+          </div>
+          <ol className="space-y-3">
             {report.stepByStepActions.map((action, idx) => (
-              <li key={idx} className="flex items-start gap-4">
-                <span className="bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 w-7 h-7 rounded-full flex items-center justify-center font-bold text-sm shrink-0">
+              <li key={idx} className="flex items-start gap-3">
+                <span
+                  className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
+                  style={{ backgroundColor: 'var(--brand-emerald-light)', color: 'var(--brand-emerald)' }}
+                >
                   {idx + 1}
                 </span>
-                <span className="text-slate-700 dark:text-slate-200 mt-0.5 leading-relaxed">{action}</span>
+                <span className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                  {action}
+                </span>
               </li>
             ))}
-          </ul>
+          </ol>
         </div>
 
-        {/* Recommended Priority Actions */}
+        {/* Recommended Actions */}
         <div>
-          <h4 className="flex items-center gap-2 font-bold text-slate-800 dark:text-white mb-4 text-lg">
-            <ArrowRight className="text-blue-500" size={20} /> Professional Recommendations
-          </h4>
-          <ul className="space-y-3">
+          <div className="flex items-center gap-2 mb-3">
+            <ArrowRight size={15} className="text-blue-500" />
+            <h4 className="text-sm font-bold" style={{ color: 'var(--text-primary)' }}>
+              Professional Recommendations
+            </h4>
+          </div>
+          <ul className="space-y-2">
             {report.recommendedActions.map((rec, idx) => (
-              <li key={idx} className="bg-blue-50 dark:bg-blue-900/20 text-blue-900 dark:text-blue-200 p-3 rounded-lg border border-blue-100 dark:border-blue-800/50 font-medium">
+              <li
+                key={idx}
+                className="text-sm font-medium rounded-xl px-4 py-3 border"
+                style={{
+                  backgroundColor: 'rgba(59,130,246,0.06)',
+                  borderColor: 'rgba(59,130,246,0.15)',
+                  color: 'var(--text-primary)',
+                }}
+              >
                 {rec}
               </li>
             ))}
           </ul>
         </div>
-
       </div>
+    </div>
+  );
+}
+
+function ReportSection({
+  icon,
+  title,
+  items,
+  dotColor,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  items: string[];
+  dotColor: string;
+}) {
+  return (
+    <div>
+      <div className="flex items-center gap-2 mb-3">
+        {icon}
+        <h4 className="text-sm font-bold" style={{ color: 'var(--text-primary)' }}>
+          {title}
+        </h4>
+      </div>
+      <ul className="space-y-2.5">
+        {items.map((item, idx) => (
+          <li key={idx} className="flex items-start gap-2.5">
+            <span
+              className="w-1.5 h-1.5 rounded-full shrink-0 mt-1.5"
+              style={{ backgroundColor: dotColor }}
+            />
+            <span className="text-sm leading-snug" style={{ color: 'var(--text-secondary)' }}>
+              {item}
+            </span>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

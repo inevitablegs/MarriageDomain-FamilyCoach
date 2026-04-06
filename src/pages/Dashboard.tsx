@@ -27,7 +27,7 @@ type ServiceItem = {
   description: string;
   bullets: string[];
   cta: string;
-  targetPage: 'quiz' | 'red-flags' | 'health-tracker' | 'pre-marriage-analysis';
+  targetPage: 'quiz' | 'red-flags' | 'health-tracker' | 'pre-marriage-analysis' | 'conflict-resolution';
 };
 
 const beforeMarriageServices: ServiceItem[] = [
@@ -72,7 +72,7 @@ const afterMarriageServices: ServiceItem[] = [
     description: 'Build practical conflict resolution habits as a couple.',
     bullets: ['De-escalation patterns', 'Repair communication', 'Guided steps'],
     cta: 'Start Conflict Program',
-    targetPage: 'red-flags',
+    targetPage: 'conflict-resolution',
   },
   {
     name: 'Emotional Intimacy Rebuild',
@@ -141,10 +141,18 @@ export function Dashboard({ mode, onNavigate }: DashboardProps) {
 
   if (authLoading || loading || !profile) {
     return (
-      <div className="min-h-[calc(100vh-80px)] bg-primary flex items-center justify-center">
-        <div className="text-center animate-pulse">
-          <div className="rounded-full h-12 w-12 border-4 border-indigo-200 dark:border-indigo-900/30 border-t-indigo-600 animate-spin mx-auto mb-4"></div>
-          <p className="text-slate-600 dark:text-slate-400 font-medium tracking-wide">Loading workspace...</p>
+      <div
+        className="min-h-[calc(100vh-68px)] flex items-center justify-center"
+        style={{ backgroundColor: 'var(--bg-primary)' }}
+      >
+        <div className="text-center">
+          <div
+            className="h-10 w-10 rounded-full border-4 border-t-transparent animate-spin mx-auto mb-4"
+            style={{ borderColor: 'rgba(99,102,241,0.2)', borderTopColor: '#6366f1' }}
+          />
+          <p className="text-sm font-semibold" style={{ color: 'var(--text-muted)' }}>
+            Loading workspace…
+          </p>
         </div>
       </div>
     );
@@ -190,51 +198,59 @@ function BeforeMarriageDashboard({ onNavigate, profileName, assessments, redFlag
   const highRisk = redFlags.filter((entry) => entry.severity === 'high').length;
 
   return (
-    <div className="min-h-[calc(100vh-80px)] py-10 transition-colors duration-300">
+    <div
+      className="min-h-[calc(100vh-68px)] py-10 transition-colors duration-300"
+      style={{ backgroundColor: 'var(--bg-primary)' }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
-        <section className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-r from-indigo-700 to-blue-600 px-8 py-12 shadow-2xl shadow-indigo-900/20 sm:px-12">
-          <div className="absolute top-0 right-0 h-64 w-64 bg-white/10 blur-[80px] rounded-full translate-x-1/2 -translate-y-1/2"></div>
+        {/* Hero banner */}
+        <section className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-r from-indigo-700 to-blue-600 px-8 py-12 shadow-2xl shadow-indigo-900/20 sm:px-12 noise-overlay">
+          <div className="absolute top-0 right-0 h-64 w-64 bg-white/10 blur-[80px] rounded-full translate-x-1/2 -translate-y-1/2 pointer-events-none" />
           <div className="relative z-10">
             <div className="inline-flex items-center rounded-full bg-white/20 backdrop-blur-md px-3 py-1 text-xs font-bold uppercase tracking-widest text-white border border-white/30 shadow-sm">
               Before Marriage Dashboard
             </div>
-            <h1 className="mt-6 text-4xl sm:text-5xl font-extrabold text-white tracking-tight">Welcome, {profileName}</h1>
+            <h1 className="mt-6 text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
+              Welcome, {profileName}
+            </h1>
             <p className="mt-4 text-indigo-100 text-lg max-w-xl leading-relaxed">
               Decide with clarity. Use the assessments below to gain data-backed insights on compatibility and potential red flags.
             </p>
           </div>
         </section>
 
-        <section className="grid sm:grid-cols-3 gap-6">
-          <MetricCard theme="indigo" icon={<ClipboardList size={24} />} label="Assessments" value={String(assessments.length)} helper="Completed reports" />
-          <MetricCard theme="blue" icon={<TrendingUp size={24} />} label="Latest Compatibility" value={latestAssessment ? `${latestAssessment.total_score}%` : 'N/A'} helper="Most recent score" />
-          <MetricCard theme="rose" icon={<ShieldAlert size={24} />} label="High Risk Flags" value={String(highRisk)} helper="Needs careful review" />
+        {/* Metrics */}
+        <section className="grid sm:grid-cols-3 gap-5">
+          <MetricCard theme="indigo" icon={<ClipboardList size={22} />} label="Assessments" value={String(assessments.length)} helper="Completed reports" />
+          <MetricCard theme="blue" icon={<TrendingUp size={22} />} label="Latest Compatibility" value={latestAssessment ? `${latestAssessment.total_score}%` : 'N/A'} helper="Most recent score" />
+          <MetricCard theme="rose" icon={<ShieldAlert size={22} />} label="High Risk Flags" value={String(highRisk)} helper="Needs careful review" />
         </section>
 
+        {/* Main grid */}
         <div className="grid lg:grid-cols-[1fr,300px] gap-8">
-          <section className="premium-card p-8 bg-secondary/80 backdrop-blur-sm">
-            <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white mb-6 flex items-center gap-3">
-              <Sparkles className="text-indigo-500" size={24} />
+          <section
+            className="premium-card p-8"
+            style={{ backgroundColor: 'var(--bg-secondary)' }}
+          >
+            <h2 className="text-2xl font-extrabold mb-6 flex items-center gap-3" style={{ color: 'var(--text-primary)' }}>
+              <Sparkles className="text-indigo-500" size={22} />
               Recommended Resources
             </h2>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-2 gap-5">
+            <div className="grid sm:grid-cols-2 gap-5">
               {beforeMarriageServices.map((service) => (
                 <ServiceCard key={service.name} service={service} onNavigate={onNavigate} color="indigo" />
               ))}
             </div>
           </section>
 
-          <section className="premium-card p-8 bg-gradient-to-b from-secondary to-bg-primary flex flex-col">
-            <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-6">Quick Actions</h2>
-            <div className="flex flex-col gap-4 flex-grow">
-              <ActionButton onClick={() => onNavigate('quiz')} label="Start Compatibility Assessment" theme="indigo" />
-              <ActionButton onClick={() => onNavigate('pre-marriage-analysis')} label="Run Deep Behavior Analysis" variant="secondary" theme="indigo" />
-            </div>
-            <div className="mt-8 rounded-2xl bg-indigo-50 border border-indigo-100 p-5">
-              <p className="text-xs font-bold text-indigo-800 uppercase tracking-wide">Next Step</p>
-              <p className="text-sm text-indigo-700 font-medium mt-1">Consistency is key. Try running an assessment every week for trend tracking.</p>
-            </div>
-          </section>
+          <QuickActionsPanel
+            theme="indigo"
+            tip="Consistency is key. Try running an assessment every week for trend tracking."
+            actions={[
+              { label: 'Start Compatibility Assessment', onClick: () => onNavigate('quiz'), variant: 'primary' },
+              { label: 'Run Deep Behavior Analysis', onClick: () => onNavigate('pre-marriage-analysis'), variant: 'secondary' },
+            ]}
+          />
         </div>
       </div>
     </div>
@@ -259,11 +275,11 @@ function AfterMarriageDashboard({
   const alignmentScore = jointReport?.overall_compatibility_percent;
 
   const alignmentHelper = useMemo(() => {
-    if (!jointReport?.category_scores) return "Most recent joint score";
+    if (!jointReport?.category_scores) return 'Most recent joint score';
     const categories = Object.entries(jointReport.category_scores)
       .map(([cat, score]) => `${cat}: ${score}%`)
       .join(' | ');
-    return categories || "Most recent joint score";
+    return categories || 'Most recent joint score';
   }, [jointReport]);
 
   const healthLabel = useMemo(() => {
@@ -274,83 +290,155 @@ function AfterMarriageDashboard({
   }, [latestHealth]);
 
   return (
-    <div className="min-h-[calc(100vh-80px)] py-10 transition-colors duration-300" style={{ backgroundColor: 'var(--bg-primary)' }}>
+    <div
+      className="min-h-[calc(100vh-68px)] py-10 transition-colors duration-300"
+      style={{ backgroundColor: 'var(--bg-primary)' }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
-        <section className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-r from-emerald-700 to-teal-600 px-8 py-12 shadow-2xl shadow-emerald-900/20 sm:px-12">
-          <div className="absolute top-0 right-0 h-64 w-64 bg-white/10 blur-[80px] rounded-full translate-x-1/2 -translate-y-1/2"></div>
+        {/* Hero banner */}
+        <section className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-r from-emerald-700 to-teal-600 px-8 py-12 shadow-2xl shadow-emerald-900/20 sm:px-12 noise-overlay">
+          <div className="absolute top-0 right-0 h-64 w-64 bg-white/10 blur-[80px] rounded-full translate-x-1/2 -translate-y-1/2 pointer-events-none" />
           <div className="relative z-10">
             <div className="inline-flex items-center rounded-full bg-white/20 backdrop-blur-md px-3 py-1 text-xs font-bold uppercase tracking-widest text-white border border-white/30 shadow-sm">
-              <Users size={14} className="mr-1.5 inline-block" />
-              After Marriage Dashboard
+              <Users size={13} className="mr-1.5" /> After Marriage Dashboard
             </div>
-            <h1 className="mt-6 text-4xl sm:text-5xl font-extrabold text-white tracking-tight">Welcome, {profileName}</h1>
+            <h1 className="mt-6 text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
+              Welcome, {profileName}
+            </h1>
             <p className="mt-4 text-emerald-100 text-lg max-w-xl leading-relaxed">
               Joint-account workflow for couples to repair communication, reduce conflict, and rebuild connection.
             </p>
           </div>
         </section>
 
+        {/* Partner connection alert */}
         {!hasPartnerConnected && (
-          <section className="animate-rise-in rounded-[2rem] border-l-8 border-l-amber-500 bg-amber-50/80 dark:bg-amber-900/20 p-6 sm:p-8 shadow-sm backdrop-blur border border-r-amber-100 dark:border-r-amber-900/30 border-y-amber-100 dark:border-y-amber-900/30 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+          <section
+            className="animate-rise-in rounded-[2rem] border-l-4 border-l-amber-500 p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6"
+            style={{ backgroundColor: 'rgba(245,158,11,0.07)', border: '1px solid rgba(245,158,11,0.2)', borderLeft: '4px solid #f59e0b' }}
+          >
             <div>
-              <h2 className="text-xl font-extrabold text-amber-900 dark:text-amber-200 flex items-center gap-3"><Link2 size={22} className="text-amber-600" /> Joint Account Required</h2>
-              <p className="text-amber-800 dark:text-amber-300 font-medium mt-2 max-w-2xl">
+              <h2 className="text-lg font-extrabold flex items-center gap-3 mb-2" style={{ color: '#92400e' }}>
+                <Link2 size={20} className="text-amber-600" /> Joint Account Required
+              </h2>
+              <p className="text-sm font-medium max-w-2xl" style={{ color: '#78350f' }}>
                 Couples dashboard features require an active partner connection. Open Couple Assessment to invite your partner or link accounts.
               </p>
             </div>
             <button
               onClick={() => onNavigate('quiz')}
-              className="flex-shrink-0 inline-flex items-center justify-center gap-2 rounded-xl bg-amber-500 px-6 py-3.5 font-bold text-amber-950 hover:bg-amber-400 transition-colors shadow-md"
+              className="flex-shrink-0 inline-flex items-center justify-center gap-2 rounded-xl bg-amber-500 px-6 py-3 font-bold text-amber-950 hover:bg-amber-400 transition-colors shadow-md focus-ring"
             >
-              Connect Partner <ArrowRight size={18} />
+              Connect Partner <ArrowRight size={16} />
             </button>
           </section>
         )}
 
-        <section className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          <MetricCard theme="teal" icon={<Users size={24} />} label="Joint Status" value={hasPartnerConnected ? 'Connected' : 'Pending'} helper="Partner linked" />
+        {/* Metrics */}
+        <section className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <MetricCard theme="teal" icon={<Users size={22} />} label="Joint Status" value={hasPartnerConnected ? 'Connected' : 'Pending'} helper="Partner linked" />
           <MetricCard
             theme="rose"
-            icon={<Heart size={24} />}
+            icon={<Heart size={22} />}
             label="Couples Alignment"
             value={alignmentScore ? `${alignmentScore}%` : (latestAssessment ? `${latestAssessment.total_score}%` : 'N/A')}
             helper={alignmentHelper}
           />
-          <MetricCard theme="red" icon={<AlertTriangle size={24} />} label="High Risk Flags" value={String(highRisk)} helper="Urgent issues" />
-          <MetricCard theme="emerald" icon={<MessageCircleHeart size={24} />} label="Relationship Health" value={healthLabel} helper={latestHealth ? `Overall ${latestHealth.overall_score}%` : 'Track it now'} />
+          <MetricCard theme="red" icon={<AlertTriangle size={22} />} label="High Risk Flags" value={String(highRisk)} helper="Urgent issues" />
+          <MetricCard theme="emerald" icon={<MessageCircleHeart size={22} />} label="Relationship Health" value={healthLabel} helper={latestHealth ? `Overall ${latestHealth.overall_score}%` : 'Track it now'} />
         </section>
 
+        {/* Main grid */}
         <div className="grid lg:grid-cols-[1fr,300px] gap-8">
-          <section className="premium-card p-8 bg-secondary/80 backdrop-blur-sm">
-            <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white mb-6 flex items-center gap-3">
-              <Handshake className="text-emerald-500" size={24} />
+          <section
+            className="premium-card p-8"
+            style={{ backgroundColor: 'var(--bg-secondary)' }}
+          >
+            <h2 className="text-2xl font-extrabold mb-6 flex items-center gap-3" style={{ color: 'var(--text-primary)' }}>
+              <Handshake className="text-emerald-500" size={22} />
               Couple Services
             </h2>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-5">
+            <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-5">
               {afterMarriageServices.map((service) => (
-                <ServiceCard key={service.name} service={service} onNavigate={onNavigate} disabled={!hasPartnerConnected && service.targetPage !== 'quiz'} color="emerald" />
+                <ServiceCard
+                  key={service.name}
+                  service={service}
+                  onNavigate={onNavigate}
+                  disabled={!hasPartnerConnected && service.targetPage !== 'quiz'}
+                  color="emerald"
+                />
               ))}
             </div>
           </section>
 
-          <section className="premium-card p-8 bg-gradient-to-b from-secondary to-bg-primary flex flex-col">
-            <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-6">Action Center</h2>
-            <div className="flex flex-col gap-4 flex-grow">
-              <ActionButton onClick={() => onNavigate('quiz')} label="Open Couple Assessment" theme="emerald" />
-              <ActionButton onClick={() => onNavigate('health-tracker')} label="Track Relationship Health" variant="secondary" theme="emerald" disabled={!hasPartnerConnected} />
-              <ActionButton onClick={() => onNavigate('red-flags')} label="Check Conflict Risks" variant="secondary" disabled={!hasPartnerConnected} theme="emerald" />
-            </div>
-            <div className="mt-8 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-900/30 p-5">
-              <p className="text-xs font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wide">Tip</p>
-              <p className="text-sm text-emerald-700 dark:text-emerald-400 font-medium mt-1">Review the Relationship Health once a week together with your partner.</p>
-            </div>
-          </section>
+          <QuickActionsPanel
+            theme="emerald"
+            tip="Review the Relationship Health once a week together with your partner."
+            actions={[
+              { label: 'Open Couple Assessment', onClick: () => onNavigate('quiz'), variant: 'primary' },
+              { label: 'Track Relationship Health', onClick: () => onNavigate('health-tracker'), variant: 'secondary', disabled: !hasPartnerConnected },
+              { label: 'Start Conflict Program', onClick: () => onNavigate('conflict-resolution'), variant: 'secondary', disabled: !hasPartnerConnected },
+            ]}
+          />
         </div>
       </div>
     </div>
   );
 }
 
+// ── Quick Actions Panel ───────────────────────────────────────────────────────
+type ActionDef = {
+  label: string;
+  onClick: () => void;
+  variant?: 'primary' | 'secondary';
+  disabled?: boolean;
+};
+
+function QuickActionsPanel({ theme, tip, actions }: {
+  theme: 'indigo' | 'emerald';
+  tip: string;
+  actions: ActionDef[];
+}) {
+  const accentColor = theme === 'indigo' ? '#6366f1' : '#10b981';
+  const accentLight = theme === 'indigo' ? 'rgba(99,102,241,0.08)' : 'rgba(16,185,129,0.08)';
+  const accentBorder = theme === 'indigo' ? 'rgba(99,102,241,0.2)' : 'rgba(16,185,129,0.2)';
+
+  return (
+    <section
+      className="premium-card p-8 flex flex-col"
+      style={{ backgroundColor: 'var(--bg-secondary)' }}
+    >
+      <h2 className="text-lg font-bold mb-5" style={{ color: 'var(--text-primary)' }}>
+        Quick Actions
+      </h2>
+      <div className="flex flex-col gap-3 flex-grow">
+        {actions.map((a) => (
+          <ActionButton
+            key={a.label}
+            onClick={a.onClick}
+            label={a.label}
+            variant={a.variant}
+            disabled={a.disabled}
+            theme={theme}
+          />
+        ))}
+      </div>
+      <div
+        className="mt-8 rounded-2xl px-5 py-4 border"
+        style={{ backgroundColor: accentLight, borderColor: accentBorder }}
+      >
+        <p className="text-[11px] font-bold uppercase tracking-widest mb-1" style={{ color: accentColor }}>
+          Next Step
+        </p>
+        <p className="text-xs font-medium leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+          {tip}
+        </p>
+      </div>
+    </section>
+  );
+}
+
+// ── ServiceCard ──────────────────────────────────────────────────────────────
 type ServiceCardProps = {
   service: ServiceItem;
   onNavigate: (page: string) => void;
@@ -360,55 +448,80 @@ type ServiceCardProps = {
 
 function ServiceCard({ service, onNavigate, disabled = false, color }: ServiceCardProps) {
   const isPremium = service.priceLabel === 'PREMIUM';
-  const colorMap = {
+
+  const colorTokens = {
     indigo: {
-      tag: 'text-indigo-700 bg-indigo-50 dark:bg-indigo-900/30 border-indigo-200 dark:border-indigo-800',
-      icon: 'text-indigo-500',
-      btn: 'bg-indigo-600 hover:bg-indigo-700',
-      hover: 'hover:border-indigo-200 dark:hover:border-indigo-700 hover:shadow-indigo-900/5',
-      premium: 'text-amber-700 bg-amber-50 dark:bg-amber-900/30 border-amber-200 dark:border-amber-800'
+      badgeBg: 'rgba(99,102,241,0.1)',
+      badgeColor: '#6366f1',
+      premiumBg: 'rgba(245,158,11,0.1)',
+      premiumColor: '#d97706',
+      checkColor: '#6366f1',
+      btnBg: '#4f46e5',
+      btnBgHover: '#4338ca',
     },
     emerald: {
-      tag: 'text-emerald-700 bg-emerald-50 dark:bg-emerald-900/30 border-emerald-200 dark:border-emerald-800',
-      icon: 'text-emerald-500',
-      btn: 'bg-emerald-600 hover:bg-emerald-700',
-      hover: 'hover:border-emerald-200 dark:hover:border-emerald-700 hover:shadow-emerald-900/5',
-      premium: 'text-amber-700 bg-amber-50 dark:bg-amber-900/30 border-amber-200 dark:border-amber-800'
-    }
+      badgeBg: 'rgba(16,185,129,0.1)',
+      badgeColor: '#10b981',
+      premiumBg: 'rgba(245,158,11,0.1)',
+      premiumColor: '#d97706',
+      checkColor: '#10b981',
+      btnBg: '#059669',
+      btnBgHover: '#047857',
+    },
   };
 
-  const theme = colorMap[color];
+  const t = colorTokens[color];
 
   return (
-    <article className={`premium-card p-6 flex flex-col transition-all duration-300 ${disabled ? 'opacity-60 bg-slate-50' : `bg-white ${theme.hover} hover:-translate-y-1`}`}>
+    <article
+      className={`premium-card p-6 flex flex-col transition-all duration-200 ${disabled ? 'opacity-60' : 'hover:-translate-y-1'}`}
+      style={{ backgroundColor: disabled ? 'var(--bg-tertiary)' : 'var(--bg-secondary)' }}
+    >
       <div>
-        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-bold uppercase tracking-wider border mb-4 ${isPremium ? theme.premium : theme.tag}`}>
+        <span
+          className="badge mb-4"
+          style={{
+            backgroundColor: isPremium ? t.premiumBg : t.badgeBg,
+            color: isPremium ? t.premiumColor : t.badgeColor,
+          }}
+        >
           {service.priceLabel}
         </span>
-        <h3 className="text-xl font-extrabold text-slate-900 dark:text-white leading-tight">{service.name}</h3>
-        <p className="text-sm text-slate-600 dark:text-slate-400 font-medium mt-2 line-clamp-2">{service.description}</p>
-        <ul className="mt-5 space-y-2 mb-6">
+        <h3 className="text-base font-extrabold leading-tight mb-1.5" style={{ color: 'var(--text-primary)' }}>
+          {service.name}
+        </h3>
+        <p className="text-sm mb-4 line-clamp-2" style={{ color: 'var(--text-secondary)' }}>
+          {service.description}
+        </p>
+        <ul className="space-y-2 mb-5">
           {service.bullets.map((bullet) => (
-            <li key={bullet} className="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-start gap-2.5">
-              <CheckCircle2 size={16} className={`${theme.icon} flex-shrink-0 mt-0.5`} />
-              <span>{bullet}</span>
+            <li key={bullet} className="flex items-start gap-2 text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
+              <CheckCircle2 size={15} className="shrink-0 mt-0.5" style={{ color: t.checkColor }} />
+              {bullet}
             </li>
           ))}
         </ul>
       </div>
-      <div className="mt-auto pt-4 border-t border-slate-100">
+      <div
+        className="mt-auto pt-4 border-t"
+        style={{ borderColor: 'var(--border-primary)' }}
+      >
         <button
           onClick={() => onNavigate(service.targetPage)}
           disabled={disabled}
-          className={`w-full inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-bold text-white transition-all shadow-sm ${theme.btn} disabled:opacity-50 disabled:cursor-not-allowed`}
+          className="w-full inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-bold text-white transition-all hover:-translate-y-0.5 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 focus-ring"
+          style={{ backgroundColor: t.btnBg }}
+          onMouseEnter={(e) => !disabled && ((e.currentTarget as HTMLButtonElement).style.backgroundColor = t.btnBgHover)}
+          onMouseLeave={(e) => !disabled && ((e.currentTarget as HTMLButtonElement).style.backgroundColor = t.btnBg)}
         >
-          {service.cta} <ArrowRight size={16} />
+          {service.cta} <ArrowRight size={15} />
         </button>
       </div>
     </article>
   );
 }
 
+// ── ActionButton ─────────────────────────────────────────────────────────────
 type ActionButtonProps = {
   onClick: () => void;
   label: string;
@@ -419,23 +532,35 @@ type ActionButtonProps = {
 
 function ActionButton({ onClick, label, variant = 'primary', disabled = false, theme }: ActionButtonProps) {
   const isPrimary = variant === 'primary';
-  const colorMap = {
-    indigo: isPrimary ? 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-sm border-transparent' : 'bg-secondary text-slate-800 dark:text-slate-200 border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-indigo-200 shadow-sm',
-    emerald: isPrimary ? 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm border-transparent' : 'bg-secondary text-slate-800 dark:text-slate-200 border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-emerald-200 shadow-sm',
-  };
+  const primaryBg = theme === 'indigo' ? '#4f46e5' : '#059669';
+  const primaryHover = theme === 'indigo' ? '#4338ca' : '#047857';
 
   return (
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`rounded-xl px-5 py-3.5 text-sm w-full font-bold transition-all border ${colorMap[theme]} disabled:opacity-50 disabled:cursor-not-allowed text-left flex items-center justify-between group`}
+      className="rounded-xl px-5 py-3.5 text-sm w-full font-bold transition-all border text-left flex items-center justify-between group disabled:opacity-50 disabled:cursor-not-allowed focus-ring"
+      style={
+        isPrimary
+          ? { backgroundColor: primaryBg, borderColor: 'transparent', color: '#fff' }
+          : { backgroundColor: 'var(--bg-tertiary)', borderColor: 'var(--border-primary)', color: 'var(--text-primary)' }
+      }
+      onMouseEnter={(e) => {
+        if (disabled) return;
+        if (isPrimary) (e.currentTarget as HTMLButtonElement).style.backgroundColor = primaryHover;
+      }}
+      onMouseLeave={(e) => {
+        if (disabled) return;
+        if (isPrimary) (e.currentTarget as HTMLButtonElement).style.backgroundColor = primaryBg;
+      }}
     >
       <span>{label}</span>
-      <ArrowRight size={16} className={`transition-transform ${!disabled && 'group-hover:translate-x-1'} opacity-60`} />
+      <ArrowRight size={15} className={`transition-transform opacity-60 ${!disabled ? 'group-hover:translate-x-1' : ''}`} />
     </button>
   );
 }
 
+// ── MetricCard ────────────────────────────────────────────────────────────────
 type MetricCardProps = {
   icon: ReactNode;
   label: string;
@@ -444,26 +569,46 @@ type MetricCardProps = {
   theme: 'indigo' | 'emerald' | 'rose' | 'blue' | 'teal' | 'red';
 };
 
+const metricThemeMap: Record<string, { bg: string; color: string }> = {
+  indigo: { bg: 'rgba(99,102,241,0.1)', color: '#6366f1' },
+  emerald: { bg: 'rgba(16,185,129,0.1)', color: '#10b981' },
+  rose: { bg: 'rgba(244,63,94,0.1)', color: '#f43f5e' },
+  blue: { bg: 'rgba(59,130,246,0.1)', color: '#3b82f6' },
+  teal: { bg: 'rgba(20,184,166,0.1)', color: '#14b8a6' },
+  red: { bg: 'rgba(239,68,68,0.1)', color: '#ef4444' },
+};
+
 function MetricCard({ icon, label, value, helper, theme }: MetricCardProps) {
-  const colorMap = {
-    indigo: 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400',
-    emerald: 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400',
-    rose: 'bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400',
-    blue: 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400',
-    teal: 'bg-teal-50 dark:bg-teal-900/30 text-teal-600 dark:text-teal-400',
-    red: 'bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400',
-  };
+  const t = metricThemeMap[theme] ?? metricThemeMap.indigo;
 
   return (
-    <article className="premium-card p-6 relative overflow-hidden group">
-      <div className={`absolute top-0 right-0 w-24 h-24 blur-2xl rounded-full opacity-20 -z-10 translate-x-1/2 -translate-y-1/2 transition-opacity group-hover:opacity-40 ${colorMap[theme].split(' ')[0]}`}></div>
+    <article
+      className="premium-card p-6 relative overflow-hidden group"
+      style={{ backgroundColor: 'var(--bg-secondary)' }}
+    >
+      {/* Glow blob */}
+      <div
+        className="absolute top-0 right-0 w-24 h-24 blur-2xl rounded-full opacity-20 -z-10 translate-x-1/2 -translate-y-1/2 transition-opacity group-hover:opacity-40 pointer-events-none"
+        style={{ backgroundColor: t.color }}
+      />
       <div className="flex items-start justify-between mb-4">
-        <div className={`rounded-2xl p-3 shadow-inner ${colorMap[theme]}`}>{icon}</div>
+        <div
+          className="rounded-2xl p-3 shadow-inner"
+          style={{ backgroundColor: t.bg, color: t.color }}
+        >
+          {icon}
+        </div>
       </div>
       <div>
-        <p className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">{value}</p>
-        <p className="text-sm font-bold text-slate-500 dark:text-slate-400 mt-1 uppercase tracking-wide">{label}</p>
-        <p className="text-xs font-semibold text-slate-400 dark:text-slate-500 mt-2">{helper}</p>
+        <p className="text-3xl font-extrabold tracking-tight" style={{ color: 'var(--text-primary)' }}>
+          {value}
+        </p>
+        <p className="text-xs font-bold uppercase tracking-wide mt-1" style={{ color: 'var(--text-secondary)' }}>
+          {label}
+        </p>
+        <p className="text-xs font-semibold mt-1.5" style={{ color: 'var(--text-muted)' }}>
+          {helper}
+        </p>
       </div>
     </article>
   );

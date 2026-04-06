@@ -29,6 +29,7 @@ type LocalDatabase = {
   couple_assessment_sessions: CoupleAssessmentSession[];
   couple_assessment_submissions: CoupleAssessmentSubmission[];
   discussion_sessions: Array<Record<string, unknown>>;
+  conflict_resolution_sessions: ConflictResolutionSession[];
   bookings: Booking[];
 };
 
@@ -77,6 +78,7 @@ function defaultDb(): LocalDatabase {
     couple_assessment_sessions: [],
     couple_assessment_submissions: [],
     discussion_sessions: [],
+    conflict_resolution_sessions: [],
     bookings: [],
   };
 }
@@ -614,4 +616,13 @@ export type CoupleAssessmentSubmission = {
   user_id: string;
   responses: Record<string, string | string[]>;
   submitted_at: string;
+};
+
+export type ConflictResolutionSession = {
+  id: string;
+  user_id: string;
+  conflict_type: string;
+  severity_level: 'critical' | 'moderate' | 'mild';
+  report: Record<string, unknown>; // Will hold the AI ConflictResolutionReport JSON
+  created_at: string;
 };
