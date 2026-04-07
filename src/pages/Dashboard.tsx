@@ -27,7 +27,7 @@ type ServiceItem = {
   description: string;
   bullets: string[];
   cta: string;
-  targetPage: 'quiz' | 'red-flags' | 'health-tracker' | 'pre-marriage-analysis' | 'conflict-resolution';
+  targetPage: 'quiz' | 'red-flags' | 'health-tracker' | 'pre-marriage-analysis' | 'conflict-resolution' | 'couple-pulse-check';
 };
 
 const beforeMarriageServices: ServiceItem[] = [
@@ -81,6 +81,14 @@ const afterMarriageServices: ServiceItem[] = [
     bullets: ['Connection exercises', 'Trust rebuilding', 'Improvement plan'],
     cta: 'Begin Journey',
     targetPage: 'health-tracker',
+  },
+  {
+    name: 'Couple Pulse',
+    priceLabel: 'PREMIUM',
+    description: 'Weekly dual-partner pulse assessment across connection, responsibility and trust.',
+    bullets: ['Both partners participate', 'AI-powered scoring', 'Actionable weekly plan'],
+    cta: 'Start Pulse Check',
+    targetPage: 'couple-pulse-check',
   },
 ];
 
@@ -378,6 +386,7 @@ function AfterMarriageDashboard({
               { label: 'Open Couple Assessment', onClick: () => onNavigate('quiz'), variant: 'primary' },
               { label: 'Track Relationship Health', onClick: () => onNavigate('health-tracker'), variant: 'secondary', disabled: !hasPartnerConnected },
               { label: 'Start Conflict Program', onClick: () => onNavigate('conflict-resolution'), variant: 'secondary', disabled: !hasPartnerConnected },
+              { label: 'Start Couple Pulse', onClick: () => onNavigate('couple-pulse-check'), variant: 'secondary', disabled: !hasPartnerConnected },
             ]}
           />
         </div>

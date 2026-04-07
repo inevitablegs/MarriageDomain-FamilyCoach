@@ -104,7 +104,7 @@ Guidelines:
 - All content must be directly derived from the provided data.
 - If high‑severity red flags exist (high_severity > 0), at least one future precaution MUST advise professional intervention or pausing major decisions.
 - Step‑by‑step actions must be daily or weekly behavioral changes, not vague advice.
-- Keep language professional, empathetic, and precise.`;
+- Keep language VERY SIMPLE, easy to understand, and empathetic. Do NOT use complex psychological jargon or big words. Explain things like you are talking to a normal person.`;
 
   const userDataRaw = {
     ...(assessmentData && { compatibilityAssessment: assessmentData }),
@@ -200,7 +200,7 @@ Your objective: Write a highly personalized, professional, and insightful introd
 
 Guidelines:
 1. Narrative Flow: Rather than dryly stating facts, weave their status into an encouraging or cautionary narrative. 
-2. Tone: Highly empathetic, authoritative, and sophisticated. Use the tone of a premium, exclusive relationship counselor.
+2. Tone: Highly empathetic, clear, and very easy to understand. Do NOT use complex words or academic psychology jargon. Speak plainly and simply like a caring friend.
 3. Action-Oriented Context: 
    - If they have no assessments, warmly guide them to begin self-discovery.
    - If they have red flags, introduce a tone of serious reflection without causing panic, emphasizing the need for professional clarity before further commitment.
@@ -259,7 +259,7 @@ Rules:
 - Every claim must be backed by the provided scores, risk flags, mismatches, or text answers.
 - If a serious mismatch or high risk is present, the future precautions must include "Consider postponing major life decisions" or "Seek couples therapy".
 - Step‑by‑step actions must be concrete and measurable (e.g., "Every evening, each partner shares one appreciation and one concern").
-- Maximum 5 items per array. Keep language professional and concise.`;
+- Maximum 5 items per array. Keep language VERY SIMPLE, easy to understand, and avoid complex psychological words.`;
 
 const buildRelationshipUserPrompt = (input: GeminiRelationshipInput): string => {
   const categoryLines = Object.entries(input.categoryScores)
@@ -410,7 +410,8 @@ Output a JSON object with this structure:
 Guidelines:
 - Be critical and objective. If redFlagPercentage > 60, at least one future precaution MUST explicitly advise professional evaluation before engagement/marriage.
 - Step‑by‑step actions must be concrete behaviors the user can practice (e.g., "Set a boundary by stating: When you raise your voice, I will leave the room").
-- Keep each array to max 5 items.`;
+- Keep each array to max 5 items.
+- Keep language VERY SIMPLE, easy to understand, and avoid complex psychological words. Explain like you're talking to a friend.`;
 
   const userPrompt = `Analyze the following inputs:
 General Behavior: ${behaviorText}
@@ -513,7 +514,8 @@ Output a JSON object matching this EXACT structure:
 Guidelines:
 - Analyze the user's vs partner's reaction to diagnose the 'dance' (e.g., pursue-withdraw).
 - "deEscalationScript" must be 4-5 exact, copy-paste phrases using "I" statements.
-- Keep arrays to max 5 items. The weeklyActionPlan MUST have exactly 4 weeks.`;
+- Keep arrays to max 5 items. The weeklyActionPlan MUST have exactly 4 weeks.
+- Use VERY SIMPLE English. Do not use complex psychological terms, jargon, or academic words. Explain the conflict like you're talking to a friend.`;
 
   const userPrompt = `Analyze the following conflict scenario:
 1. Trigger: ${trigger}
@@ -576,6 +578,173 @@ Guidelines:
     return null;
   } catch (error) {
     console.error("Failed to analyze conflict:", error);
+    return null;
+  }
+}
+
+// ============================================================
+// 7. analyzePulseCheckWithGemini – Couple Pulse Check AI
+// ============================================================
+
+export type PulseCheckReport = {
+  connection_score: number;
+  responsibility_balance: {
+    partner_a_percent: number;
+    partner_b_percent: number;
+    imbalance_detected: boolean;
+  };
+  trust_score: number;
+  overall_pulse: number;
+  top_issues: string[];
+  positive_behaviors: string[];
+  weekly_actions: string[];
+  insight: string;
+};
+
+export type PulsePartnerResponses = {
+  connection_rating: number;
+  valued_action: string;
+  intentional_time: boolean;
+  tasks_handled: string;
+  workload_fair: boolean;
+  workload_explanation: string;
+  insecurity_triggers: string;
+  boundaries_crossed: boolean;
+  boundaries_explanation: string;
+  hidden_anything: boolean;
+};
+
+export async function analyzePulseCheckWithGemini(
+  partnerAName: string,
+  partnerBName: string,
+  partnerAResponses: PulsePartnerResponses,
+  partnerBResponses: PulsePartnerResponses
+): Promise<PulseCheckReport | null> {
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+  if (!apiKey) return null;
+
+  const systemPrompt = `You are an elite couples therapist conducting a weekly relationship pulse assessment.
+
+You will receive structured responses from BOTH partners across three pillars: Connection, Responsibility, and Trust.
+
+Analyze all data and produce a JSON report with this EXACT structure:
+{
+  "connection_score": number (0-100, based on ratings + time spent + feeling valued),
+  "responsibility_balance": {
+    "partner_a_percent": number (0-100, estimated contribution),
+    "partner_b_percent": number (0-100, estimated contribution),
+    "imbalance_detected": boolean (true if difference > 20%)
+  },
+  "trust_score": number (0-100, based on honesty + security + boundary respect),
+  "overall_pulse": number (0-100, weighted average of all three pillars),
+  "top_issues": ["string", "string", "string"] (max 3, most critical problems found),
+  "positive_behaviors": ["string", "string"] (max 3, things going well),
+  "weekly_actions": ["string", "string", "string"] (2-3 specific, actionable things for next week),
+  "insight": "string (one powerful sentence summarizing the couple's current pulse)"
+}
+
+Guidelines:
+- Cross-reference both partners' answers. Look for DISCREPANCIES between what each partner says — those reveal the real issues.
+- If one partner says the workload is fair and the other doesn't, that IS an issue.
+- If one partner hid something (hidden_anything = true), this MUST affect the trust score and appear in top_issues.
+- If boundaries were crossed, trust_score should drop significantly.
+- Connection rating is a 1-10 scale from each partner. Convert to 0-100 for scoring.
+- Be direct, not generic. Reference specific answers.
+- Keep language VERY SIMPLE. Explain like talking to a friend.
+- Return ONLY the JSON object, nothing else.`;
+
+  const userPrompt = `Analyze the following weekly pulse check data from both partners:
+
+### ${partnerAName} (Partner A) Responses:
+
+**CONNECTION:**
+- Connection rating this week: ${partnerAResponses.connection_rating}/10
+- What partner did that made them feel valued: "${partnerAResponses.valued_action}"
+- Spent intentional time together: ${partnerAResponses.intentional_time ? 'Yes' : 'No'}
+
+**RESPONSIBILITY:**
+- Tasks handled this week: "${partnerAResponses.tasks_handled}"
+- Feels workload is fair: ${partnerAResponses.workload_fair ? 'Yes' : 'No'}
+- Explanation: "${partnerAResponses.workload_explanation}"
+
+**TRUST:**
+- Felt insecure or doubtful about: "${partnerAResponses.insecurity_triggers}"
+- Boundaries crossed: ${partnerAResponses.boundaries_crossed ? 'Yes' : 'No'} — "${partnerAResponses.boundaries_explanation}"
+- Hid anything important: ${partnerAResponses.hidden_anything ? 'Yes' : 'No'}
+
+---
+
+### ${partnerBName} (Partner B) Responses:
+
+**CONNECTION:**
+- Connection rating this week: ${partnerBResponses.connection_rating}/10
+- What partner did that made them feel valued: "${partnerBResponses.valued_action}"
+- Spent intentional time together: ${partnerBResponses.intentional_time ? 'Yes' : 'No'}
+
+**RESPONSIBILITY:**
+- Tasks handled this week: "${partnerBResponses.tasks_handled}"
+- Feels workload is fair: ${partnerBResponses.workload_fair ? 'Yes' : 'No'}
+- Explanation: "${partnerBResponses.workload_explanation}"
+
+**TRUST:**
+- Felt insecure or doubtful about: "${partnerBResponses.insecurity_triggers}"
+- Boundaries crossed: ${partnerBResponses.boundaries_crossed ? 'Yes' : 'No'} — "${partnerBResponses.boundaries_explanation}"
+- Hid anything important: ${partnerBResponses.hidden_anything ? 'Yes' : 'No'}
+
+---
+
+Generate the pulse check report JSON now.`;
+
+  try {
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          systemInstruction: { parts: [{ text: systemPrompt }] },
+          contents: [{ parts: [{ text: userPrompt }] }],
+          generationConfig: {
+            temperature: 0.3,
+            responseMimeType: "application/json",
+          },
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      console.error('Gemini API Error:', await response.text());
+      return null;
+    }
+
+    const data = await response.json();
+    let text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (text) {
+      text = text.replace(/```json/gi, '').replace(/```/gi, '').trim();
+      const startIdx = text.indexOf('{');
+      const endIdx = text.lastIndexOf('}') + 1;
+      if (startIdx >= 0 && endIdx > startIdx) {
+        text = text.substring(startIdx, endIdx);
+      }
+      const parsed = JSON.parse(text);
+      return {
+        connection_score: Math.max(0, Math.min(100, parsed.connection_score ?? 50)),
+        responsibility_balance: {
+          partner_a_percent: Math.max(0, Math.min(100, parsed.responsibility_balance?.partner_a_percent ?? 50)),
+          partner_b_percent: Math.max(0, Math.min(100, parsed.responsibility_balance?.partner_b_percent ?? 50)),
+          imbalance_detected: parsed.responsibility_balance?.imbalance_detected ?? false,
+        },
+        trust_score: Math.max(0, Math.min(100, parsed.trust_score ?? 50)),
+        overall_pulse: Math.max(0, Math.min(100, parsed.overall_pulse ?? 50)),
+        top_issues: Array.isArray(parsed.top_issues) ? parsed.top_issues.slice(0, 3) : [],
+        positive_behaviors: Array.isArray(parsed.positive_behaviors) ? parsed.positive_behaviors.slice(0, 3) : [],
+        weekly_actions: Array.isArray(parsed.weekly_actions) ? parsed.weekly_actions.slice(0, 3) : [],
+        insight: parsed.insight || 'Review your relationship dynamic together this week.',
+      } as PulseCheckReport;
+    }
+    return null;
+  } catch (error) {
+    console.error("Failed to analyze pulse check:", error);
     return null;
   }
 }

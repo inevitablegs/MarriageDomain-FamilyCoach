@@ -49,7 +49,7 @@ export function Header({ onAuthClick, onNavigate, currentPage }: HeaderProps) {
               {user && (
                 <NavPill
                   label="Dashboard"
-                  active={isActive(['dashboard', 'dashboard-before', 'dashboard-after', 'quiz', 'health-tracker', 'red-flags', 'pre-marriage-analysis'])}
+                  active={isActive(['dashboard', 'dashboard-before', 'dashboard-after', 'quiz', 'health-tracker', 'red-flags', 'pre-marriage-analysis', 'couple-pulse-check'])}
                   onClick={() => onNavigate('dashboard')}
                   activeClass="bg-[var(--brand-indigo)] text-white"
                   icon={<LayoutDashboard size={14} />}

@@ -11,6 +11,7 @@ import { HealthTracker } from './pages/HealthTracker';
 import { RedFlagChecker } from './pages/RedFlagChecker';
 import { PreMarriageAnalysis } from './pages/PreMarriageAnalysis';
 import { ConflictResolution } from './pages/ConflictResolution';
+import { CouplePulseCheck } from './pages/CouplePulseCheck';
 import { Services } from './pages/Services';
 
 // ── Page type ────────────────────────────────────────────────────────────────
@@ -26,6 +27,7 @@ type AppPage =
   | 'health-tracker'
   | 'pre-marriage-analysis'
   | 'conflict-resolution'
+  | 'couple-pulse-check'
   | 'services';
 
 // ── Global spinner ────────────────────────────────────────────────────────────
@@ -78,7 +80,8 @@ function AppContent() {
       page === 'health-tracker' ||
       page === 'dashboard' ||
       page === 'pre-marriage-analysis' ||
-      page === 'conflict-resolution'
+      page === 'conflict-resolution' ||
+      page === 'couple-pulse-check'
     ) {
       if (!user) {
         setCurrentPage(page === 'health-tracker' ? 'auth-after' : 'auth-before');
@@ -99,7 +102,8 @@ function AppContent() {
       currentPage === 'red-flags' ||
       currentPage === 'health-tracker' ||
       currentPage === 'pre-marriage-analysis' ||
-      currentPage === 'conflict-resolution';
+      currentPage === 'conflict-resolution' ||
+      currentPage === 'couple-pulse-check';
 
     if (!user && isProtectedPage) {
       setCurrentPage('home');
@@ -187,6 +191,10 @@ function AppContent() {
 
         {currentPage === 'conflict-resolution' && user && (
           <ConflictResolution onNavigate={handleNavigate} />
+        )}
+
+        {currentPage === 'couple-pulse-check' && user && (
+          <CouplePulseCheck onNavigate={handleNavigate} />
         )}
       </main>
     </div>
