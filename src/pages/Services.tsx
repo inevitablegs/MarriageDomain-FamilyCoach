@@ -119,19 +119,6 @@ export function Services({ onAuthClick, onNavigate }: ServicesProps) {
       ],
     },
     {
-      name: 'Emotional Intimacy Rebuild',
-      price: 3999,
-      isFree: false,
-      description: 'Reconnect and deepen your emotional bond',
-      features: [
-        '6-week intensive program',
-        'Vulnerability exercises',
-        'Trust rebuilding activities',
-        'Intimacy coaching',
-        'Couple homework assignments',
-      ],
-    },
-    {
       name: 'Crisis Recovery Plan',
       price: 7999,
       isFree: false,

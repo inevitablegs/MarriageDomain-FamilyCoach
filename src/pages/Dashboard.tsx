@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useMemo, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { CompatibilityAssessment, RedFlag, RelationshipHealth, supabase, CoupleAssessmentSession } from '../lib/supabase';
+import { CompatibilityAssessment, RedFlag, RelationshipHealth, supabase, CoupleAssessmentSession, PulseCheckSession } from '../lib/supabase';
 import {
   AlertTriangle,
   ArrowRight,
@@ -75,14 +75,6 @@ const afterMarriageServices: ServiceItem[] = [
     targetPage: 'conflict-resolution',
   },
   {
-    name: 'Emotional Intimacy Rebuild',
-    priceLabel: 'PREMIUM',
-    description: 'Rebuild trust, emotional closeness, and communication.',
-    bullets: ['Connection exercises', 'Trust rebuilding', 'Improvement plan'],
-    cta: 'Begin Journey',
-    targetPage: 'health-tracker',
-  },
-  {
     name: 'Couple Pulse',
     priceLabel: 'PREMIUM',
     description: 'Weekly dual-partner pulse assessment across connection, responsibility and trust.',
@@ -98,6 +90,7 @@ export function Dashboard({ mode, onNavigate }: DashboardProps) {
   const [redFlags, setRedFlags] = useState<RedFlag[]>([]);
   const [healthRecords, setHealthRecords] = useState<RelationshipHealth[]>([]);
   const [jointSessions, setJointSessions] = useState<CoupleAssessmentSession[]>([]);
+  const [pulseSessions, setPulseSessions] = useState<PulseCheckSession[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -105,7 +98,7 @@ export function Dashboard({ mode, onNavigate }: DashboardProps) {
 
     const loadData = async () => {
       try {
-        const [assessmentsData, redFlagsData, healthData, jointData] = await Promise.all([
+        const [assessmentsData, redFlagsData, healthData, jointData, pulseData] = await Promise.all([
           supabase
             .from('compatibility_assessments')
             .select('*')
@@ -131,12 +124,18 @@ export function Dashboard({ mode, onNavigate }: DashboardProps) {
             .eq('status', 'completed')
             .order('completed_at', { ascending: false })
             .limit(1),
+          supabase
+            .from('pulse_check_sessions')
+            .select('*')
+            .or(`initiator_id.eq.${profile.id},partner_id.eq.${profile.id}`)
+            .order('created_at', { ascending: false }),
         ]);
 
         if (assessmentsData.data) setAssessments(assessmentsData.data);
         if (redFlagsData.data) setRedFlags(redFlagsData.data);
         if (healthData.data) setHealthRecords(healthData.data);
         if (jointData && jointData.data) setJointSessions(jointData.data as CoupleAssessmentSession[]);
+        if (pulseData.data) setPulseSessions(pulseData.data as PulseCheckSession[]);
       } catch (error) {
         console.error('Error loading dashboard data:', error);
       } finally {
@@ -177,6 +176,8 @@ export function Dashboard({ mode, onNavigate }: DashboardProps) {
       redFlags={redFlags}
       healthRecords={healthRecords}
       jointSessions={jointSessions}
+      pulseSessions={pulseSessions}
+      profileId={profile.id}
     />
   ) : (
     <BeforeMarriageDashboard
@@ -199,6 +200,8 @@ type CoupleDataProps = CommonDataProps & {
   hasPartnerConnected: boolean;
   healthRecords: RelationshipHealth[];
   jointSessions: CoupleAssessmentSession[];
+  pulseSessions: PulseCheckSession[];
+  profileId: string;
 };
 
 function BeforeMarriageDashboard({ onNavigate, profileName, assessments, redFlags }: CommonDataProps) {
@@ -273,11 +276,29 @@ function AfterMarriageDashboard({
   healthRecords,
   hasPartnerConnected,
   jointSessions,
+  pulseSessions,
+  profileId,
 }: CoupleDataProps) {
   const latestJointSession = jointSessions[0];
   const latestAssessment = assessments[0];
   const latestHealth = healthRecords[0];
   const highRisk = redFlags.filter((entry) => entry.severity === 'high').length;
+
+  const pendingPulse = pulseSessions.find((s) => s.status === 'pending_partner' && s.partner_id === profileId);
+  const completedPulses = pulseSessions.filter((s) => s.status === 'completed');
+  const latestCompletedPulse = completedPulses[0];
+
+  const partnerInsights = useMemo(() => {
+    if (!latestCompletedPulse) return null;
+    const isInitiator = latestCompletedPulse.initiator_id === profileId;
+    const pResponses = (isInitiator ? latestCompletedPulse.partner_responses : latestCompletedPulse.initiator_responses) as Record<string, any> | null;
+    if (!pResponses) return null;
+    return {
+      gratitude: pResponses.gratitude_message,
+      wish: pResponses.wish_partner_knew,
+      improvement: pResponses.improvement_suggestion,
+    };
+  }, [latestCompletedPulse, profileId]);
 
   const jointReport = latestJointSession?.report as any;
   const alignmentScore = jointReport?.overall_compatibility_percent;
@@ -339,6 +360,65 @@ function AfterMarriageDashboard({
             >
               Connect Partner <ArrowRight size={16} />
             </button>
+          </section>
+        )}
+
+        {/* Pending Pulse Alert */}
+        {hasPartnerConnected && pendingPulse && (
+          <section
+            className="animate-rise-in rounded-[2rem] p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6"
+            style={{ backgroundColor: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)' }}
+          >
+            <div>
+              <h2 className="text-xl font-extrabold flex items-center gap-3 mb-2" style={{ color: '#064e3b' }}>
+                <Heart size={24} className="text-emerald-600 animate-pulse" /> Action Needed: Partner's Pulse Check
+              </h2>
+              <p className="text-sm font-medium max-w-2xl" style={{ color: '#064e3b' }}>
+                Your partner has completed their half of the weekly Couple Pulse Check. It's your turn to respond so you can both see the results!
+              </p>
+            </div>
+            <button
+              onClick={() => onNavigate('couple-pulse-check')}
+              className="flex-shrink-0 inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-6 py-3 font-bold text-white hover:bg-emerald-500 transition-colors shadow-lg focus-ring shrink-0"
+            >
+              Respond to Pulse <ArrowRight size={16} />
+            </button>
+          </section>
+        )}
+
+        {/* Partner Insights Widget */}
+        {partnerInsights && (
+          <section className="premium-card p-8 bg-gradient-to-br from-indigo-50 to-pink-50 border-indigo-100/50">
+            <h2 className="text-2xl font-extrabold mb-6 flex items-center gap-3 text-indigo-900">
+              <MessageCircleHeart className="text-pink-500" size={24} /> Partner Insights
+            </h2>
+            <p className="text-sm text-indigo-800/70 mb-6 font-medium">Direct quotes from your partner's latest Pulse Check</p>
+            <div className="grid md:grid-cols-3 gap-5">
+              <div className="bg-white/80 backdrop-blur-sm p-5 rounded-2xl border border-indigo-100 shadow-sm">
+                <h3 className="text-xs font-bold uppercase tracking-widest text-indigo-400 mb-3 flex items-center gap-2">
+                  <Heart size={14} className="text-pink-400" /> Gratitude
+                </h3>
+                <p className="text-sm font-medium text-indigo-900 italic leading-relaxed">
+                  "{partnerInsights.gratitude || 'No specific gratitude recorded this week.'}"
+                </p>
+              </div>
+              <div className="bg-white/80 backdrop-blur-sm p-5 rounded-2xl border border-indigo-100 shadow-sm">
+                <h3 className="text-xs font-bold uppercase tracking-widest text-indigo-400 mb-3 flex items-center gap-2">
+                  <Sparkles size={14} className="text-indigo-400" /> What they wish you knew
+                </h3>
+                <p className="text-sm font-medium text-indigo-900 italic leading-relaxed">
+                  "{partnerInsights.wish || 'Communication felt clear this week.'}"
+                </p>
+              </div>
+              <div className="bg-white/80 backdrop-blur-sm p-5 rounded-2xl border border-indigo-100 shadow-sm">
+                <h3 className="text-xs font-bold uppercase tracking-widest text-indigo-400 mb-3 flex items-center gap-2">
+                  <TrendingUp size={14} className="text-emerald-400" /> Room for Growth
+                </h3>
+                <p className="text-sm font-medium text-indigo-900 italic leading-relaxed">
+                  "{partnerInsights.improvement || 'Nothing specific right now.'}"
+                </p>
+              </div>
+            </div>
           </section>
         )}
 

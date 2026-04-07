@@ -1,19 +1,19 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import {
   Heart, ArrowRight, ArrowLeft, Users, Scale, Shield, Sparkles, Loader2,
-  AlertTriangle, CheckCircle2, Zap, RotateCcw, Flame, TrendingUp, MessageCircleHeart, Copy,
+  AlertTriangle, CheckCircle2, Zap, RotateCcw, Flame, TrendingUp, MessageCircleHeart, Clock
 } from 'lucide-react';
 import {
   runCouplePulsePipeline, PulseCheckReport, PulsePartnerResponses, PulseProgressCallback,
 } from '../lib/ai';
-import { supabase } from '../lib/supabase';
+import { PulseCheckSession, supabase, Profile } from '../lib/supabase';
 
 type Props = { onNavigate: (page: string) => void };
 
-type Stage = 'setup'|'a-connection'|'a-responsibility'|'a-trust'|'a-intimacy'|'a-growth'|'handoff'|'b-connection'|'b-responsibility'|'b-trust'|'b-intimacy'|'b-growth'|'analyzing'|'results';
+type Stage = 'setup' | 'connection' | 'responsibility' | 'trust' | 'intimacy' | 'growth' | 'analyzing' | 'results';
 
-const STAGES: Stage[] = ['setup','a-connection','a-responsibility','a-trust','a-intimacy','a-growth','handoff','b-connection','b-responsibility','b-trust','b-intimacy','b-growth','analyzing','results'];
+const STAGES: Stage[] = ['setup', 'connection', 'responsibility', 'trust', 'intimacy', 'growth', 'analyzing', 'results'];
 
 const empty = (): PulsePartnerResponses => ({
   connection_rating: 5, valued_action: '', intentional_time: false, emotional_highlight: '',
@@ -29,73 +29,148 @@ const statusLabel = (s: string) => s === 'strong' ? '💚 Strong' : s === 'stabl
 export function CouplePulseCheck({ onNavigate }: Props) {
   const { profile } = useAuth();
   const [stage, setStage] = useState<Stage>('setup');
-  const [aName, setAName] = useState('');
-  const [bName, setBName] = useState('');
-  const [a, setA] = useState<PulsePartnerResponses>(empty());
-  const [b, setB] = useState<PulsePartnerResponses>(empty());
+  const [responses, setResponses] = useState<PulsePartnerResponses>(empty());
+  
+  // Data state
+  const [sessions, setSessions] = useState<PulseCheckSession[]>([]);
+  const [partnerProfile, setPartnerProfile] = useState<Profile | null>(null);
   const [report, setReport] = useState<PulseCheckReport | null>(null);
+  const [loading, setLoading] = useState(true);
+  
+  // UI state
   const [error, setError] = useState('');
-  const [phase, setPhase] = useState('');
   const [phaseDetail, setPhaseDetail] = useState('');
-  const [copied, setCopied] = useState(false);
+
+  // Derived state
+  const pendingPulse = sessions.find(s => s.status === 'pending_partner');
+  const myPendingPulse = pendingPulse?.initiator_id === profile?.id;
+  const partnerPendingPulse = pendingPulse?.partner_id === profile?.id;
+  const history = sessions.filter(s => s.status === 'completed');
 
   const idx = STAGES.indexOf(stage);
-  const pct = Math.round((idx / (STAGES.length - 1)) * 100);
+  const pct = Math.round((idx / (STAGES.length - 2)) * 100); // Exclude analyzing/results from calculation
+
+  useEffect(() => {
+    if (!profile) return;
+    
+    const loadState = async () => {
+      try {
+        const { data: bData } = await supabase.from('pulse_check_sessions')
+          .select('*')
+          .or(`initiator_id.eq.${profile.id},partner_id.eq.${profile.id}`)
+          .order('created_at', { ascending: false });
+        
+        if (bData) setSessions(bData as PulseCheckSession[]);
+
+        if (profile.partner_id) {
+          const { data: pData } = await supabase.from('profiles').select('*').eq('id', profile.partner_id).single();
+          if (pData) setPartnerProfile(pData as Profile);
+        }
+      } catch (err) {
+        console.error('Error loading pulse sessions', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadState();
+  }, [profile]);
 
   const go = (s: Stage) => { setError(''); setStage(s); window.scrollTo(0, 0); };
   const next = () => { const i = STAGES.indexOf(stage); if (i < STAGES.length - 1) go(STAGES[i + 1]); };
   const prev = () => { const i = STAGES.indexOf(stage); if (i > 0) go(STAGES[i - 1]); };
 
-  const updA = (p: Partial<PulsePartnerResponses>) => setA(v => ({ ...v, ...p }));
-  const updB = (p: Partial<PulsePartnerResponses>) => setB(v => ({ ...v, ...p }));
+  const upd = (p: Partial<PulsePartnerResponses>) => setResponses(v => ({ ...v, ...p }));
+  const onProgress: PulseProgressCallback = (_ph, detail) => { setPhaseDetail(detail); };
 
-  const onProgress: PulseProgressCallback = (ph, detail) => { setPhase(ph); setPhaseDetail(detail); };
-
-  const runAnalysis = async () => {
+  const submitMyResponses = async () => {
+    if (!profile || !partnerProfile) return;
     go('analyzing');
+    setError('');
+
     try {
-      const result = await runCouplePulsePipeline(aName, bName, a, b, onProgress);
-      if (!result) throw new Error('Pipeline returned empty.');
-      setReport(result);
-      if (profile) {
-        await supabase.from('pulse_check_sessions').insert({
-          user_id: profile.id, partner_a_name: aName, partner_b_name: bName,
-          partner_a_responses: a as unknown as Record<string, unknown>,
-          partner_b_responses: b as unknown as Record<string, unknown>,
+      if (partnerPendingPulse && pendingPulse) {
+        // I am responding! Time to run AI pipeline.
+        onProgress('scoring', 'Loading partner responses and computing base scores...');
+        const initResp = pendingPulse.initiator_responses as PulsePartnerResponses;
+        const myResp = responses;
+
+        const result = await runCouplePulsePipeline(partnerProfile.full_name, profile.full_name, initResp, myResp, onProgress);
+        if (!result) throw new Error('Pipeline returned empty.');
+
+        await supabase.from('pulse_check_sessions').update({
+          partner_responses: myResp as unknown as Record<string, unknown>,
           report: result as unknown as Record<string, unknown>,
-        });
+          status: 'completed',
+          completed_at: new Date().toISOString()
+        }).eq('id', pendingPulse.id);
+
+        setReport(result);
+        go('results');
+      } else {
+        // I am starting a new session!
+        onProgress('saving', 'Saving your responses...');
+        const newSession = {
+          initiator_id: profile.id,
+          partner_id: profile.partner_id,
+          status: 'pending_partner' as const,
+          initiator_responses: responses as unknown as Record<string, unknown>,
+        };
+        
+        // Save to DB
+        await supabase.from('pulse_check_sessions').insert(newSession);
+        
+        // Update local state
+        const { data: newSessions } = await supabase.from('pulse_check_sessions')
+          .select('*')
+          .or(`initiator_id.eq.${profile.id},partner_id.eq.${profile.id}`)
+          .order('created_at', { ascending: false });
+        
+        if (newSessions) setSessions(newSessions as PulseCheckSession[]);
+        
+        go('setup'); // Will re-render into "myPendingPulse" view
       }
-      go('results');
     } catch (e: any) {
       console.error('Pulse failed:', e);
-      setError(e.message || 'Analysis failed.');
-      go('b-growth');
+      setError(e.message || 'Operation failed.');
+      go('growth');
     }
   };
 
-  const copyLoveNote = () => {
-    if (report?.love_note_suggestion) {
-      navigator.clipboard.writeText(report.love_note_suggestion);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  };
+  if (loading) return (
+    <div className="min-h-[calc(100vh-68px)] flex items-center justify-center">
+      <Loader2 size={32} className="animate-spin text-emerald-500" />
+    </div>
+  );
+
+  if (!profile?.partner_id) return (
+    <div className="min-h-[calc(100vh-68px)] flex items-center justify-center py-10 px-4">
+      <Card>
+        <div className="text-center space-y-3">
+          <AlertTriangle className="mx-auto text-amber-500 mb-2" size={48} />
+          <h2 className="text-2xl font-extrabold" style={{ color: 'var(--text-primary)' }}>Partner Connection Required</h2>
+          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>You cannot start a Couple Pulse check until you have connected your partner's account.</p>
+          <button onClick={() => onNavigate('dashboard')} className="mt-4 px-6 py-2 rounded-xl border border-emerald-500 text-emerald-600 font-bold hover:bg-emerald-50">Back to Dashboard</button>
+        </div>
+      </Card>
+    </div>
+  );
 
   // ── Render ──
   return (
     <div className="min-h-[calc(100vh-68px)] py-10 sm:py-14 transition-colors duration-300" style={{ backgroundColor: 'var(--bg-primary)' }}>
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 animate-rise-in">
 
-        {/* Progress */}
-        {stage !== 'results' && (
+        {/* Progress Tracker showing ONLY for active question stages */}
+        {stage !== 'setup' && stage !== 'analyzing' && stage !== 'results' && (
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight flex items-center gap-3" style={{ color: 'var(--text-primary)' }}>
                 <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/20">
                   <Heart className="text-white" size={20} fill="currentColor" />
                 </div>
-                Couple Pulse
+                Your Pulse
               </h1>
+              <span className="text-sm font-bold text-emerald-600">{partnerPendingPulse ? 'Responding directly' : 'Starting new session'}</span>
             </div>
             <div className="relative h-2 rounded-full overflow-hidden" style={{ backgroundColor: 'var(--bg-tertiary)' }}>
               <div className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 transition-all duration-500" style={{ width: `${pct}%` }} />
@@ -109,139 +184,146 @@ export function CouplePulseCheck({ onNavigate }: Props) {
           </div>
         )}
 
-        {/* SETUP */}
+        {/* SETUP / DASHBOARD */}
         {stage === 'setup' && (
-          <Card>
-            <div className="text-center space-y-3">
-              <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-xl shadow-emerald-500/25">
-                <Users className="text-white" size={32} />
+          <div className="space-y-6">
+            <Card>
+              <div className="text-center space-y-3">
+                <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-xl shadow-emerald-500/25">
+                  <Users className="text-white" size={32} />
+                </div>
+                <h2 className="text-2xl font-extrabold tracking-tight" style={{ color: 'var(--text-primary)' }}>Weekly Couple Pulse</h2>
+                <p className="text-sm max-w-md mx-auto leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                  A secure, private 5-pillar relationship check-in. Fill it out on your own device, and verify alignment together.
+                </p>
               </div>
-              <h2 className="text-2xl font-extrabold tracking-tight" style={{ color: 'var(--text-primary)' }}>Weekly Couple Pulse</h2>
-              <p className="text-sm max-w-md mx-auto leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                A deep, 5-pillar relationship check-in. Both partners answer privately, then AI cross-references your answers to reveal your true pulse.
-              </p>
-            </div>
-            <div className="grid sm:grid-cols-2 gap-5">
-              <div>
-                <Lbl>Partner A Name</Lbl>
-                <input type="text" value={aName} onChange={e => setAName(e.target.value)} className="input-base" placeholder="e.g., Priya" />
+
+              {myPendingPulse && (
+                <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6 text-center animate-fade-in">
+                  <Clock className="mx-auto text-amber-500 mb-3" size={32} />
+                  <h3 className="text-lg font-bold text-amber-900 mb-2">Waiting for {partnerProfile?.full_name}</h3>
+                  <p className="text-sm text-amber-800">You've successfully completed your part of the pulse check. Once your partner finishes their half, the results will appear here.</p>
+                </div>
+              )}
+
+              {partnerPendingPulse && (
+                <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-6 text-center animate-fade-in shadow-lg shadow-emerald-500/10">
+                  <AlertTriangle className="mx-auto text-emerald-600 mb-3" size={32} />
+                  <h3 className="text-lg font-bold text-emerald-900 mb-2">{partnerProfile?.full_name} is waiting for you!</h3>
+                  <p className="text-sm text-emerald-800 mb-5">Your partner has completed the pulse check. Answer your half to run the AI alignment report.</p>
+                  <button onClick={() => { setResponses(empty()); next(); }} className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:opacity-90 transition shadow-lg focus-ring">
+                    Respond Now <ArrowRight size={18} />
+                  </button>
+                </div>
+              )}
+
+              {!pendingPulse && (
+                <div className="space-y-6">
+                  <HowItWorks />
+                  <button onClick={() => { setResponses(empty()); next(); }} className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:opacity-90 transition shadow-lg shadow-emerald-500/20 hover:-translate-y-0.5 focus-ring">
+                    Start New Pulse Check <ArrowRight size={18} />
+                  </button>
+                </div>
+              )}
+            </Card>
+
+            {/* History Tracker */}
+            {history.length > 0 && (
+              <div className="premium-card p-6 sm:p-8" style={{ backgroundColor: 'var(--bg-secondary)' }}>
+                <h3 className="text-lg font-extrabold mb-4 flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
+                  <Clock size={20} className="text-indigo-500" /> Pulse History
+                </h3>
+                <div className="space-y-3">
+                  {history.map((s) => {
+                    const r = s.report as any;
+                    return (
+                      <div key={s.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl border border-indigo-100 bg-indigo-50/30 gap-4 transition hover:bg-indigo-50/50">
+                        <div>
+                          <div className="font-bold text-sm text-indigo-900 mb-1">
+                            {new Date(s.completed_at || s.created_at).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}
+                          </div>
+                          <div className="text-xs text-indigo-700/80">Alignment Score: {r?.alignment_score || 'N/A'}%</div>
+                        </div>
+                        <div className="flex gap-2">
+                          <span className="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-lg text-xs font-bold">Overall: {r?.overall_pulse || 'N/A'}%</span>
+                          <button onClick={() => { setReport(r); window.scrollTo(0,0); setStage('results'); }} className="px-3 py-1 bg-white border border-indigo-200 text-indigo-600 rounded-lg text-xs font-bold shadow-sm hover:shadow">View Report</button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
-              <div>
-                <Lbl>Partner B Name</Lbl>
-                <input type="text" value={bName} onChange={e => setBName(e.target.value)} className="input-base" placeholder="e.g., Raj" />
-              </div>
-            </div>
-            <HowItWorks />
-            <button onClick={() => { if (!aName.trim() || !bName.trim()) { setError('Please enter both names.'); return; } next(); }}
-              className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:opacity-90 transition shadow-lg shadow-emerald-500/20 hover:-translate-y-0.5 focus-ring">
-              Begin — {aName || 'Partner A'} Goes First <ArrowRight size={18} />
-            </button>
-          </Card>
+            )}
+          </div>
         )}
 
-        {/* CONNECTION */}
-        {(stage === 'a-connection' || stage === 'b-connection') && (() => {
-          const isA = stage === 'a-connection'; const r = isA ? a : b; const upd = isA ? updA : updB; const name = isA ? aName : bName;
-          return (
-            <StageWrap icon={<Heart className="text-white" size={24} fill="currentColor" />} title="Connection" subtitle="How connected did you feel this week?" name={name} gradient="bg-gradient-to-br from-rose-500 to-pink-600" onPrev={prev} onNext={() => { if (!r.valued_action.trim()) { setError('Please describe what made you feel valued.'); return; } next(); }}>
-              <Q>On a scale of 1–10, how connected did you feel this week?</Q>
-              <Slider value={r.connection_rating} onChange={v => upd({ connection_rating: v })} />
-              <Q>What did your partner do that made you feel truly valued?</Q>
-              <textarea value={r.valued_action} onChange={e => upd({ valued_action: e.target.value })} className="input-base min-h-[90px] resize-y" placeholder="Be specific — small things matter most..." />
-              <Q>What was your best emotional moment together this week?</Q>
-              <textarea value={r.emotional_highlight} onChange={e => upd({ emotional_highlight: e.target.value })} className="input-base min-h-[80px] resize-y" placeholder="A moment where you felt closest, happiest, or most loved..." />
-              <Q>Did you spend intentional quality time together?</Q>
-              <Toggle value={r.intentional_time} onChange={v => upd({ intentional_time: v })} />
-            </StageWrap>
-          );
-        })()}
+        {/* --- STAGE 1: CONNECTION --- */}
+        {stage === 'connection' && (
+          <StageWrap icon={<Heart className="text-white" size={24} fill="currentColor" />} title="Connection" subtitle="How connected did you feel this week?" gradient="bg-gradient-to-br from-rose-500 to-pink-600" onPrev={prev} onNext={() => { if (!responses.valued_action.trim()) { setError('Please describe what made you feel valued.'); return; } next(); }}>
+            <Q>On a scale of 1–10, how connected did you feel this week?</Q>
+            <Slider value={responses.connection_rating} onChange={v => upd({ connection_rating: v })} />
+            <Q>What did your partner do that made you feel truly valued?</Q>
+            <textarea value={responses.valued_action} onChange={e => upd({ valued_action: e.target.value })} className="input-base min-h-[90px] resize-y" placeholder="Be specific — small things matter most..." />
+            <Q>What was your best emotional moment together this week?</Q>
+            <textarea value={responses.emotional_highlight} onChange={e => upd({ emotional_highlight: e.target.value })} className="input-base min-h-[80px] resize-y" placeholder="A moment where you felt closest, happiest, or most loved..." />
+            <Q>Did you spend intentional quality time together?</Q>
+            <Toggle value={responses.intentional_time} onChange={v => upd({ intentional_time: v })} />
+          </StageWrap>
+        )}
 
-        {/* RESPONSIBILITY */}
-        {(stage === 'a-responsibility' || stage === 'b-responsibility') && (() => {
-          const isA = stage === 'a-responsibility'; const r = isA ? a : b; const upd = isA ? updA : updB; const name = isA ? aName : bName;
-          return (
-            <StageWrap icon={<Scale className="text-white" size={24} />} title="Responsibility Balance" subtitle="Reflect on how effort was shared." name={name} gradient="bg-gradient-to-br from-amber-500 to-orange-600" onPrev={prev} onNext={() => { if (!r.tasks_handled.trim()) { setError('Please list tasks you handled.'); return; } next(); }}>
-              <Q>List the tasks you handled this week (household, planning, emotional support…)</Q>
-              <textarea value={r.tasks_handled} onChange={e => upd({ tasks_handled: e.target.value })} className="input-base min-h-[90px] resize-y" placeholder="Cooking, kids, laundry, scheduling, emotional support..." />
-              <Q>Do you feel the workload was fair this week?</Q>
-              <Toggle value={r.workload_fair} onChange={v => upd({ workload_fair: v })} />
-              <Q>Why or why not?</Q>
-              <textarea value={r.workload_explanation} onChange={e => upd({ workload_explanation: e.target.value })} className="input-base min-h-[70px] resize-y" placeholder="Explain your feelings about the balance..." />
-              <Q>What do you appreciate about your partner's effort this week?</Q>
-              <textarea value={r.partner_effort_acknowledgment} onChange={e => upd({ partner_effort_acknowledgment: e.target.value })} className="input-base min-h-[70px] resize-y" placeholder="Acknowledge something your partner did, even if small..." />
-            </StageWrap>
-          );
-        })()}
+        {/* --- STAGE 2: RESPONSIBILITY --- */}
+        {stage === 'responsibility' && (
+          <StageWrap icon={<Scale className="text-white" size={24} />} title="Responsibility Balance" subtitle="Reflect on how effort was shared." gradient="bg-gradient-to-br from-amber-500 to-orange-600" onPrev={prev} onNext={() => { if (!responses.tasks_handled.trim()) { setError('Please list tasks you handled.'); return; } next(); }}>
+            <Q>List the tasks you handled this week (household, planning, emotional support…)</Q>
+            <textarea value={responses.tasks_handled} onChange={e => upd({ tasks_handled: e.target.value })} className="input-base min-h-[90px] resize-y" placeholder="Cooking, kids, laundry, scheduling, emotional support..." />
+            <Q>Do you feel the workload was fair this week?</Q>
+            <Toggle value={responses.workload_fair} onChange={v => upd({ workload_fair: v })} />
+            <Q>Why or why not?</Q>
+            <textarea value={responses.workload_explanation} onChange={e => upd({ workload_explanation: e.target.value })} className="input-base min-h-[70px] resize-y" placeholder="Explain your feelings about the balance..." />
+            <Q>What do you appreciate about your partner's effort this week?</Q>
+            <textarea value={responses.partner_effort_acknowledgment} onChange={e => upd({ partner_effort_acknowledgment: e.target.value })} className="input-base min-h-[70px] resize-y" placeholder="Acknowledge something your partner did, even if small..." />
+          </StageWrap>
+        )}
 
-        {/* TRUST */}
-        {(stage === 'a-trust' || stage === 'b-trust') && (() => {
-          const isA = stage === 'a-trust'; const r = isA ? a : b; const upd = isA ? updA : updB; const name = isA ? aName : bName;
-          return (
-            <StageWrap icon={<Shield className="text-white" size={24} />} title="Trust & Honesty" subtitle="Reflect on trust, boundaries, and openness." name={name} gradient="bg-gradient-to-br from-indigo-500 to-violet-600" onPrev={prev} onNext={next}>
-              <Q>Did anything this week make you feel insecure or doubtful?</Q>
-              <textarea value={r.insecurity_triggers} onChange={e => upd({ insecurity_triggers: e.target.value })} className="input-base min-h-[80px] resize-y" placeholder="Describe honestly, or type 'Nothing' if all good..." />
-              <Q>Were any boundaries crossed this week?</Q>
-              <Toggle value={r.boundaries_crossed} onChange={v => upd({ boundaries_crossed: v })} />
-              {r.boundaries_crossed && <textarea value={r.boundaries_explanation} onChange={e => upd({ boundaries_explanation: e.target.value })} className="input-base min-h-[70px] resize-y animate-fade-in" placeholder="What happened?" />}
-              <Q>Did you hide anything important from your partner?</Q>
-              <Toggle value={r.hidden_anything} onChange={v => upd({ hidden_anything: v })} />
-            </StageWrap>
-          );
-        })()}
+        {/* --- STAGE 3: TRUST --- */}
+        {stage === 'trust' && (
+          <StageWrap icon={<Shield className="text-white" size={24} />} title="Trust & Honesty" subtitle="Reflect on trust, boundaries, and openness." gradient="bg-gradient-to-br from-indigo-500 to-violet-600" onPrev={prev} onNext={next}>
+            <Q>Did anything this week make you feel insecure or doubtful?</Q>
+            <textarea value={responses.insecurity_triggers} onChange={e => upd({ insecurity_triggers: e.target.value })} className="input-base min-h-[80px] resize-y" placeholder="Describe honestly, or type 'Nothing' if all good..." />
+            <Q>Were any boundaries crossed this week?</Q>
+            <Toggle value={responses.boundaries_crossed} onChange={v => upd({ boundaries_crossed: v })} />
+            {responses.boundaries_crossed && <textarea value={responses.boundaries_explanation} onChange={e => upd({ boundaries_explanation: e.target.value })} className="input-base min-h-[70px] resize-y animate-fade-in" placeholder="What happened?" />}
+            <Q>Did you hide anything important from your partner?</Q>
+            <Toggle value={responses.hidden_anything} onChange={v => upd({ hidden_anything: v })} />
+          </StageWrap>
+        )}
 
-        {/* EMOTIONAL INTIMACY */}
-        {(stage === 'a-intimacy' || stage === 'b-intimacy') && (() => {
-          const isA = stage === 'a-intimacy'; const r = isA ? a : b; const upd = isA ? updA : updB; const name = isA ? aName : bName;
-          return (
-            <StageWrap icon={<Flame className="text-white" size={24} />} title="Emotional Intimacy" subtitle="How emotionally close did you feel?" name={name} gradient="bg-gradient-to-br from-pink-500 to-rose-600" onPrev={prev} onNext={next}>
-              <Q>On a scale of 1–10, how emotionally close did you feel this week?</Q>
-              <Slider value={r.intimacy_rating} onChange={v => upd({ intimacy_rating: v })} />
-              <Q>Did you share something vulnerable with your partner this week?</Q>
-              <Toggle value={r.vulnerability_shared} onChange={v => upd({ vulnerability_shared: v })} />
-              <Q>Did you feel truly heard when you spoke?</Q>
-              <Toggle value={r.felt_heard} onChange={v => upd({ felt_heard: v })} />
-              <Q>Complete this sentence: "I wish my partner knew…"</Q>
-              <textarea value={r.wish_partner_knew} onChange={e => upd({ wish_partner_knew: e.target.value })} className="input-base min-h-[80px] resize-y" placeholder="Something you've been holding inside..." />
-            </StageWrap>
-          );
-        })()}
+        {/* --- STAGE 4: EMOTIONAL INTIMACY --- */}
+        {stage === 'intimacy' && (
+          <StageWrap icon={<Flame className="text-white" size={24} />} title="Emotional Intimacy" subtitle="How emotionally close did you feel?" gradient="bg-gradient-to-br from-pink-500 to-rose-600" onPrev={prev} onNext={next}>
+            <Q>On a scale of 1–10, how emotionally close did you feel this week?</Q>
+            <Slider value={responses.intimacy_rating} onChange={v => upd({ intimacy_rating: v })} />
+            <Q>Did you share something vulnerable with your partner this week?</Q>
+            <Toggle value={responses.vulnerability_shared} onChange={v => upd({ vulnerability_shared: v })} />
+            <Q>Did you feel truly heard when you spoke?</Q>
+            <Toggle value={responses.felt_heard} onChange={v => upd({ felt_heard: v })} />
+            <Q>Complete this sentence: "I wish my partner knew…"</Q>
+            <textarea value={responses.wish_partner_knew} onChange={e => upd({ wish_partner_knew: e.target.value })} className="input-base min-h-[80px] resize-y" placeholder="Something you've been holding inside..." />
+          </StageWrap>
+        )}
 
-        {/* GROWTH & APPRECIATION */}
-        {(stage === 'a-growth' || stage === 'b-growth') && (() => {
-          const isA = stage === 'a-growth'; const r = isA ? a : b; const upd = isA ? updA : updB; const name = isA ? aName : bName;
-          return (
-            <StageWrap icon={<TrendingUp className="text-white" size={24} />} title="Growth & Appreciation" subtitle="Are you growing together?" name={name} gradient="bg-gradient-to-br from-emerald-500 to-teal-600" onPrev={prev} onNext={() => { if (isA) next(); else runAnalysis(); }} nextLabel={isA ? 'Continue' : '✨ Analyze Our Pulse'}>
-              <Q>Write a direct message of gratitude to your partner:</Q>
-              <textarea value={r.gratitude_message} onChange={e => upd({ gratitude_message: e.target.value })} className="input-base min-h-[80px] resize-y" placeholder="Dear [partner], I want you to know that..." />
-              <Q>What's one thing your partner could do better next week?</Q>
-              <textarea value={r.improvement_suggestion} onChange={e => upd({ improvement_suggestion: e.target.value })} className="input-base min-h-[70px] resize-y" placeholder="Be kind but honest — this helps you both grow..." />
-              <Q>Do you feel you're growing together as a couple?</Q>
-              <Toggle value={r.growing_together} onChange={v => upd({ growing_together: v })} />
-              <Q>What's one relationship goal for next week?</Q>
-              <textarea value={r.relationship_goal} onChange={e => upd({ relationship_goal: e.target.value })} className="input-base min-h-[70px] resize-y" placeholder="E.g., Have one distraction-free dinner together..." />
-            </StageWrap>
-          );
-        })()}
-
-        {/* HANDOFF */}
-        {stage === 'handoff' && (
-          <Card>
-            <div className="text-center space-y-6 relative">
-              <div className="w-20 h-20 mx-auto rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-xl shadow-emerald-500/25 animate-pulse">
-                <RotateCcw className="text-white" size={36} />
-              </div>
-              <h2 className="text-3xl font-extrabold tracking-tight" style={{ color: 'var(--text-primary)' }}>Time to Switch!</h2>
-              <p className="text-lg" style={{ color: 'var(--text-secondary)' }}>
-                <b style={{ color: 'var(--brand-emerald)' }}>{aName}</b> is done. Please hand the device to <b style={{ color: 'var(--brand-emerald)' }}>{bName}</b>.
-              </p>
-              <div className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold border" style={{ backgroundColor: 'rgba(245,158,11,0.08)', borderColor: 'rgba(245,158,11,0.2)', color: '#d97706' }}>
-                <Shield size={16} /> {aName}'s answers are private
-              </div>
-              <button onClick={next} className="w-full max-w-sm mx-auto bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:opacity-90 transition shadow-lg hover:-translate-y-0.5 focus-ring">
-                I'm {bName} — Let's Begin <ArrowRight size={18} />
-              </button>
-            </div>
-          </Card>
+        {/* --- STAGE 5: GROWTH & APPRECIATION --- */}
+        {stage === 'growth' && (
+          <StageWrap icon={<TrendingUp className="text-white" size={24} />} title="Growth & Appreciation" subtitle="Are you growing together?" gradient="bg-gradient-to-br from-emerald-500 to-teal-600" onPrev={prev} onNext={submitMyResponses} nextLabel={partnerPendingPulse ? '✨ Submit & Analyze' : 'Send to Partner'}>
+            <Q>Write a direct message of gratitude to your partner:</Q>
+            <textarea value={responses.gratitude_message} onChange={e => upd({ gratitude_message: e.target.value })} className="input-base min-h-[80px] resize-y" placeholder="Dear [partner], I want you to know that..." />
+            <Q>What's one thing your partner could do better next week?</Q>
+            <textarea value={responses.improvement_suggestion} onChange={e => upd({ improvement_suggestion: e.target.value })} className="input-base min-h-[70px] resize-y" placeholder="Be kind but honest — this helps you both grow..." />
+            <Q>Do you feel you're growing together as a couple?</Q>
+            <Toggle value={responses.growing_together} onChange={v => upd({ growing_together: v })} />
+            <Q>What's one relationship goal for next week?</Q>
+            <textarea value={responses.relationship_goal} onChange={e => upd({ relationship_goal: e.target.value })} className="input-base min-h-[70px] resize-y" placeholder="E.g., Have one distraction-free dinner together..." />
+          </StageWrap>
         )}
 
         {/* ANALYZING */}
@@ -252,16 +334,13 @@ export function CouplePulseCheck({ onNavigate }: Props) {
                 <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-xl"><Sparkles className="text-white" size={36} /></div>
                 <div className="absolute -inset-3 rounded-[28px] border-2 border-emerald-400/20 border-t-emerald-500 animate-spin" />
               </div>
-              <h2 className="text-2xl font-extrabold" style={{ color: 'var(--text-primary)' }}>Analyzing Your Pulse</h2>
+              <h2 className="text-2xl font-extrabold" style={{ color: 'var(--text-primary)' }}>{partnerPendingPulse ? 'Analyzing Pulse Check' : 'Saving Your Answers'}</h2>
               <div className="space-y-2">
-                {['scoring', 'similarity', 'narrative'].map(p => (
-                  <div key={p} className="flex items-center gap-3 justify-center text-sm font-medium" style={{ color: phase === p ? 'var(--brand-emerald)' : 'var(--text-muted)' }}>
-                    {phase === p ? <Loader2 size={16} className="animate-spin" /> : (STAGES.indexOf(stage) > 0 ? <CheckCircle2 size={16} /> : <div className="w-4 h-4 rounded-full border-2" style={{ borderColor: 'var(--border-primary)' }} />)}
-                    {p === 'scoring' ? 'Computing local scores' : p === 'similarity' ? 'AI answer comparison' : 'Generating narrative'}
-                  </div>
-                ))}
+                <div className="flex items-center gap-3 justify-center text-sm font-medium" style={{ color: 'var(--brand-emerald)' }}>
+                  <Loader2 size={16} className="animate-spin" />
+                  {phaseDetail || 'Synchronizing with partner data...'}
+                </div>
               </div>
-              <p className="text-xs animate-pulse" style={{ color: 'var(--text-muted)' }}>{phaseDetail}</p>
             </div>
           </Card>
         )}
@@ -278,7 +357,7 @@ export function CouplePulseCheck({ onNavigate }: Props) {
                     <div className="w-11 h-11 rounded-2xl bg-white/15 backdrop-blur-sm flex items-center justify-center"><Heart className="text-emerald-300" size={22} fill="currentColor" /></div>
                     <div>
                       <h1 className="text-2xl sm:text-3xl font-extrabold">Couple Pulse Report</h1>
-                      <p className="text-emerald-200/80 text-sm">{aName} & {bName}</p>
+                      <p className="text-emerald-200/80 text-sm">{profile?.full_name} & {partnerProfile?.full_name}</p>
                     </div>
                   </div>
                   <div className="text-center sm:text-right">
@@ -336,12 +415,12 @@ export function CouplePulseCheck({ onNavigate }: Props) {
                 {report.responsibility_balance.imbalance_detected && <span className="text-[10px] font-bold px-2 py-0.5 rounded-md ml-2" style={{ backgroundColor: 'rgba(244,63,94,0.1)', color: '#f43f5e' }}>⚠ Imbalance</span>}
               </h3>
               <div className="flex items-center gap-3">
-                <span className="text-xs font-bold w-20 text-right" style={{ color: 'var(--text-primary)' }}>{aName}</span>
+                <span className="text-xs font-bold w-20 text-right truncate" style={{ color: 'var(--text-primary)' }}>{myPendingPulse ? profile?.full_name : partnerProfile?.full_name}</span>
                 <div className="flex-1 flex h-7 rounded-full overflow-hidden border" style={{ borderColor: 'var(--border-primary)' }}>
                   <div className="h-full flex items-center justify-center text-xs font-bold text-white transition-all duration-700" style={{ width: `${report.responsibility_balance.partner_a_percent}%`, backgroundColor: '#10b981' }}>{report.responsibility_balance.partner_a_percent}%</div>
                   <div className="h-full flex items-center justify-center text-xs font-bold text-white transition-all duration-700" style={{ width: `${report.responsibility_balance.partner_b_percent}%`, backgroundColor: '#6366f1' }}>{report.responsibility_balance.partner_b_percent}%</div>
                 </div>
-                <span className="text-xs font-bold w-20" style={{ color: 'var(--text-primary)' }}>{bName}</span>
+                <span className="text-xs font-bold w-20 truncate" style={{ color: 'var(--text-primary)' }}>{myPendingPulse ? partnerProfile?.full_name : profile?.full_name}</span>
               </div>
             </div>
 
@@ -425,28 +504,10 @@ export function CouplePulseCheck({ onNavigate }: Props) {
               </div>
             )}
 
-            {/* Love Note */}
-            {report.love_note_suggestion && (
-              <div className="premium-card p-6 border-l-4" style={{ backgroundColor: 'var(--bg-secondary)', borderLeftColor: '#ec4899' }}>
-                <h3 className="text-sm font-extrabold mb-2 flex items-center gap-2" style={{ color: '#ec4899' }}>
-                  <MessageCircleHeart size={16} />Suggested Love Note
-                </h3>
-                <p className="text-sm italic leading-relaxed mb-3" style={{ color: 'var(--text-secondary)' }}>"{report.love_note_suggestion}"</p>
-                <button onClick={copyLoveNote} className="text-xs font-bold flex items-center gap-1.5 px-3 py-1.5 rounded-lg border transition hover:opacity-80" style={{ borderColor: 'rgba(236,72,153,0.3)', color: '#ec4899', backgroundColor: 'rgba(236,72,153,0.05)' }}>
-                  <Copy size={12} />{copied ? 'Copied!' : 'Copy to clipboard'}
-                </button>
-              </div>
-            )}
-
             {/* Actions */}
-            <div className="flex flex-col sm:flex-row gap-3">
-              <button onClick={() => { setA(empty()); setB(empty()); setReport(null); setError(''); go('setup'); }}
-                className="flex-1 py-3.5 rounded-xl font-bold border transition-all hover:-translate-y-0.5 focus-ring flex items-center justify-center gap-2"
-                style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-primary)', color: 'var(--text-primary)' }}>
-                <RotateCcw size={16} /> New Pulse Check
-              </button>
-              <button onClick={() => onNavigate('dashboard')}
-                className="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 hover:opacity-90 transition shadow-md hover:-translate-y-0.5 focus-ring">
+            <div className="flex justify-center mt-8">
+              <button onClick={() => { setReport(null); go('setup'); }}
+                className="w-full sm:w-auto bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-8 py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 hover:opacity-90 transition shadow-md hover:-translate-y-0.5 focus-ring">
                 Back to Dashboard <ArrowRight size={16} />
               </button>
             </div>
@@ -461,10 +522,6 @@ export function CouplePulseCheck({ onNavigate }: Props) {
 
 function Card({ children }: { children: React.ReactNode }) {
   return <div className="premium-card p-8 sm:p-10 space-y-6 animate-rise-in" style={{ backgroundColor: 'var(--bg-secondary)' }}>{children}</div>;
-}
-
-function Lbl({ children }: { children: React.ReactNode }) {
-  return <label className="block text-xs font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--text-muted)' }}>{children}</label>;
 }
 
 function Q({ children }: { children: React.ReactNode }) {
@@ -493,8 +550,8 @@ function Slider({ value, onChange }: { value: number; onChange: (v: number) => v
   );
 }
 
-function StageWrap({ icon, title, subtitle, name, gradient, children, onPrev, onNext, nextLabel = 'Continue' }: {
-  icon: React.ReactNode; title: string; subtitle: string; name: string; gradient: string;
+function StageWrap({ icon, title, subtitle, gradient, children, onPrev, onNext, nextLabel = 'Continue' }: {
+  icon: React.ReactNode; title: string; subtitle: string; gradient: string;
   children: React.ReactNode; onPrev: () => void; onNext: () => void; nextLabel?: string;
 }) {
   return (
@@ -502,7 +559,6 @@ function StageWrap({ icon, title, subtitle, name, gradient, children, onPrev, on
       <div className="flex items-center gap-4">
         <div className={`w-12 h-12 rounded-2xl ${gradient} flex items-center justify-center shadow-lg shrink-0`}>{icon}</div>
         <div>
-          <span className="text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-md" style={{ backgroundColor: 'var(--brand-emerald-light)', color: 'var(--brand-emerald)' }}>{name}</span>
           <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight" style={{ color: 'var(--text-primary)' }}>{title}</h2>
           <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>{subtitle}</p>
         </div>
@@ -521,16 +577,13 @@ function StageWrap({ icon, title, subtitle, name, gradient, children, onPrev, on
 
 function HowItWorks() {
   const items = [
-    { icon: <Heart size={14} />, text: 'Connection — Rate emotional closeness & valued moments' },
-    { icon: <Scale size={14} />, text: 'Responsibility — Evaluate workload balance & acknowledgment' },
-    { icon: <Shield size={14} />, text: 'Trust — Reflect on honesty, boundaries & security' },
-    { icon: <Flame size={14} />, text: 'Emotional Intimacy — Vulnerability, feeling heard & closeness' },
-    { icon: <TrendingUp size={14} />, text: 'Growth — Gratitude, improvement & shared goals' },
-    { icon: <Sparkles size={14} />, text: 'AI compares answers, detects alignment, generates your report' },
+    { icon: <Heart size={14} />, text: 'Answer 5 pillars securely on your own device' },
+    { icon: <RotateCcw size={14} />, text: 'Your partner receives an alert to complete their half' },
+    { icon: <Sparkles size={14} />, text: 'AI generates a single report comparing your answers' },
   ];
   return (
     <div className="rounded-2xl p-5 border space-y-3" style={{ backgroundColor: 'var(--bg-tertiary)', borderColor: 'var(--border-primary)' }}>
-      <h4 className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--text-muted)' }}>5-Pillar Assessment</h4>
+      <h4 className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--text-muted)' }}>How it Works</h4>
       <div className="grid gap-2">
         {items.map((item, i) => (
           <div key={i} className="flex items-center gap-3 text-sm" style={{ color: 'var(--text-secondary)' }}>

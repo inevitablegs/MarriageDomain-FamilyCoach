@@ -631,11 +631,12 @@ export type ConflictResolutionSession = {
 
 export type PulseCheckSession = {
   id: string;
-  user_id: string;
-  partner_a_name: string;
-  partner_b_name: string;
-  partner_a_responses: Record<string, unknown>;
-  partner_b_responses: Record<string, unknown>;
-  report: Record<string, unknown>;
+  initiator_id: string;
+  partner_id: string;
+  status: 'pending_partner' | 'completed';
+  initiator_responses: Record<string, unknown> | null;
+  partner_responses: Record<string, unknown> | null;
+  report: Record<string, unknown> | null;
   created_at: string;
+  completed_at?: string;
 };
