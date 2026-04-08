@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Heart, User, LogOut, Sun, Moon, Menu, X, LayoutDashboard } from 'lucide-react';
+import { Heart, LogOut, Sun, Moon, Menu, X, LayoutDashboard, GraduationCap, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 
@@ -7,9 +7,11 @@ type HeaderProps = {
   onAuthClick: () => void;
   onNavigate: (page: string) => void;
   currentPage: string;
+  onMentorAuthClick?: () => void;
+  onAdminAuthClick?: () => void;
 };
 
-export function Header({ onAuthClick, onNavigate, currentPage }: HeaderProps) {
+export function Header({ onAuthClick, onNavigate, currentPage, onMentorAuthClick, onAdminAuthClick }: HeaderProps) {
   const { user, profile, signOut } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -46,13 +48,23 @@ export function Header({ onAuthClick, onNavigate, currentPage }: HeaderProps) {
                 activeClass="text-white shadow-sm"
                 activeStyle={{ backgroundColor: 'var(--text-primary)', color: 'var(--bg-primary)' }}
               />
-              {user && (
+              {user && profile?.role !== 'mentor' && profile?.role !== 'admin' && (
                 <NavPill
                   label="Dashboard"
-                  active={isActive(['dashboard', 'dashboard-before', 'dashboard-after', 'quiz', 'health-tracker', 'red-flags', 'pre-marriage-analysis', 'couple-pulse-check'])}
+                  active={isActive(['dashboard', 'dashboard-before', 'dashboard-after', 'quiz', 'health-tracker', 'red-flags', 'pre-marriage-analysis', 'couple-pulse-check', 'chat'])}
                   onClick={() => onNavigate('dashboard')}
                   activeClass="bg-[var(--brand-indigo)] text-white"
                   icon={<LayoutDashboard size={14} />}
+                />
+              )}
+              {user && profile?.role === 'mentor' && (
+                <NavPill
+                  label="Mentor Dashboard"
+                  active={isActive(['mentor-dashboard'])}
+                  onClick={() => onNavigate('mentor-dashboard')}
+                  activeClass="text-white shadow-sm"
+                  activeStyle={{ backgroundColor: '#8b5cf6' }}
+                  icon={<GraduationCap size={14} />}
                 />
               )}
             </nav>
@@ -94,12 +106,28 @@ export function Header({ onAuthClick, onNavigate, currentPage }: HeaderProps) {
                   </button>
                 </div>
               ) : (
-                <button
-                  onClick={onAuthClick}
-                  className="hidden md:flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white px-5 py-2 rounded-full font-semibold text-sm shadow-md transition-all hover:-translate-y-0.5 focus-ring"
-                >
-                  Sign In
-                </button>
+                <div className="hidden md:flex items-center gap-2">
+                  <button
+                    onClick={onAuthClick}
+                    className="flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white px-5 py-2 rounded-full font-semibold text-sm shadow-md transition-all hover:-translate-y-0.5 focus-ring"
+                  >
+                    Sign In
+                  </button>
+                  <button
+                    onClick={onMentorAuthClick}
+                    className="flex items-center gap-2 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white px-4 py-2 rounded-full font-semibold text-sm shadow-md transition-all hover:-translate-y-0.5 focus-ring"
+                  >
+                    <GraduationCap size={15} /> Coach Login
+                  </button>
+                  <button
+                    onClick={onAdminAuthClick}
+                    className="flex items-center justify-center w-9 h-9 rounded-xl border transition-all hover:scale-105 focus-ring"
+                    style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--bg-secondary)', color: 'var(--text-muted)' }}
+                    title="Admin Login"
+                  >
+                    <ShieldCheck size={16} />
+                  </button>
+                </div>
               )}
 
               {/* Mobile hamburger */}
@@ -129,8 +157,11 @@ export function Header({ onAuthClick, onNavigate, currentPage }: HeaderProps) {
           >
             <div className="space-y-1 mb-4">
               <MobileNavItem label="Home" onClick={() => { onNavigate('home'); closeMobile(); }} active={isActive(['home'])} />
-              {user && (
+              {user && profile?.role !== 'mentor' && profile?.role !== 'admin' && (
                 <MobileNavItem label="Dashboard" onClick={() => { onNavigate('dashboard'); closeMobile(); }} active={isActive(['dashboard', 'dashboard-before', 'dashboard-after'])} />
+              )}
+              {user && profile?.role === 'mentor' && (
+                <MobileNavItem label="Mentor Dashboard" onClick={() => { onNavigate('mentor-dashboard'); closeMobile(); }} active={isActive(['mentor-dashboard'])} />
               )}
             </div>
 
@@ -153,12 +184,27 @@ export function Header({ onAuthClick, onNavigate, currentPage }: HeaderProps) {
                   <LogOut size={16} /> Sign Out
                 </button>
               ) : (
-                <button
-                  onClick={() => { onAuthClick(); closeMobile(); }}
-                  className="bg-gradient-to-r from-indigo-600 to-blue-600 text-white px-5 py-2 rounded-full font-semibold text-sm shadow-md"
-                >
-                  Sign In
-                </button>
+                <div className="flex flex-col gap-2">
+                  <button
+                    onClick={() => { onAuthClick(); closeMobile(); }}
+                    className="bg-gradient-to-r from-indigo-600 to-blue-600 text-white px-5 py-2 rounded-full font-semibold text-sm shadow-md"
+                  >
+                    Sign In
+                  </button>
+                  <button
+                    onClick={() => { onMentorAuthClick?.(); closeMobile(); }}
+                    className="bg-gradient-to-r from-violet-600 to-purple-600 text-white px-5 py-2 rounded-full font-semibold text-sm shadow-md flex items-center justify-center gap-2"
+                  >
+                    <GraduationCap size={14} /> Coach Login
+                  </button>
+                  <button
+                    onClick={() => { onAdminAuthClick?.(); closeMobile(); }}
+                    className="flex items-center justify-center gap-2 text-sm font-medium px-3 py-2 rounded-lg transition-colors"
+                    style={{ color: 'var(--text-secondary)', backgroundColor: 'var(--bg-tertiary)' }}
+                  >
+                    <ShieldCheck size={14} /> Admin
+                  </button>
+                </div>
               )}
             </div>
 

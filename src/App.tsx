@@ -13,6 +13,9 @@ import { PreMarriageAnalysis } from './pages/PreMarriageAnalysis';
 import { ConflictResolution } from './pages/ConflictResolution';
 import { CouplePulseCheck } from './pages/CouplePulseCheck';
 import { Services } from './pages/Services';
+import { MentorDashboard } from './pages/MentorDashboard';
+import { AdminDashboard } from './pages/AdminDashboard';
+import { ChatPage } from './pages/ChatPage';
 
 // ── Page type ────────────────────────────────────────────────────────────────
 type AppPage =
@@ -28,7 +31,12 @@ type AppPage =
   | 'pre-marriage-analysis'
   | 'conflict-resolution'
   | 'couple-pulse-check'
-  | 'services';
+  | 'services'
+  | 'auth-mentor'
+  | 'auth-admin'
+  | 'mentor-dashboard'
+  | 'admin-dashboard'
+  | 'chat';
 
 // ── Global spinner ────────────────────────────────────────────────────────────
 function GlobalLoader() {
@@ -114,7 +122,19 @@ function AppContent() {
     }
   }, [currentPage, user, profile]);
 
-  const handleAuthClick = () => setCurrentPage('auth-before');
+
+
+  const handleAuthClick = () => {
+    setCurrentPage('auth-before');
+  };
+
+  const handleMentorAuthClick = () => {
+    setCurrentPage('auth-mentor');
+  };
+
+  const handleAdminAuthClick = () => {
+    setCurrentPage('auth-admin');
+  };
 
   if (loading) return <GlobalLoader />;
 
@@ -125,6 +145,8 @@ function AppContent() {
     >
       <Header
         onAuthClick={handleAuthClick}
+        onMentorAuthClick={handleMentorAuthClick}
+        onAdminAuthClick={handleAdminAuthClick}
         onNavigate={handleNavigate}
         currentPage={currentPage}
       />
@@ -156,6 +178,22 @@ function AppContent() {
           />
         )}
 
+        {currentPage === 'auth-mentor' && (
+          <Auth
+            mode="mentor"
+            onBack={() => handleNavigate('home')}
+            onSuccess={() => setCurrentPage('mentor-dashboard')}
+          />
+        )}
+
+        {currentPage === 'auth-admin' && (
+          <Auth
+            mode="admin"
+            onBack={() => handleNavigate('home')}
+            onSuccess={() => setCurrentPage('admin-dashboard')}
+          />
+        )}
+
         {/* Dashboards */}
         {currentPage === 'dashboard' && user && (
           <Dashboard
@@ -170,6 +208,14 @@ function AppContent() {
 
         {currentPage === 'dashboard-after' && user && (
           <Dashboard onNavigate={handleNavigate} mode="after" />
+        )}
+
+        {currentPage === 'mentor-dashboard' && user && (
+          <MentorDashboard onNavigate={handleNavigate} />
+        )}
+
+        {currentPage === 'admin-dashboard' && (
+          <AdminDashboard onNavigate={handleNavigate} />
         )}
 
         {/* Feature pages */}
@@ -195,6 +241,10 @@ function AppContent() {
 
         {currentPage === 'couple-pulse-check' && user && (
           <CouplePulseCheck onNavigate={handleNavigate} />
+        )}
+
+        {currentPage === 'chat' && user && (
+          <ChatPage onNavigate={handleNavigate} />
         )}
       </main>
     </div>

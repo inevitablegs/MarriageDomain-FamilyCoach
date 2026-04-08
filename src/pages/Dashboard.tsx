@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useMemo, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { CompatibilityAssessment, RedFlag, RelationshipHealth, supabase, CoupleAssessmentSession, PulseCheckSession } from '../lib/supabase';
+import { CompatibilityAssessment, RedFlag, RelationshipHealth, supabase, CoupleAssessmentSession, PulseCheckSession, MentorAssignment, Mentor } from '../lib/supabase';
 import {
   AlertTriangle,
   ArrowRight,
@@ -91,6 +91,8 @@ export function Dashboard({ mode, onNavigate }: DashboardProps) {
   const [healthRecords, setHealthRecords] = useState<RelationshipHealth[]>([]);
   const [jointSessions, setJointSessions] = useState<CoupleAssessmentSession[]>([]);
   const [pulseSessions, setPulseSessions] = useState<PulseCheckSession[]>([]);
+  const [assignedMentor, setAssignedMentor] = useState<Mentor | null>(null);
+  const [mentorAssignment, setMentorAssignment] = useState<MentorAssignment | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -136,6 +138,24 @@ export function Dashboard({ mode, onNavigate }: DashboardProps) {
         if (healthData.data) setHealthRecords(healthData.data);
         if (jointData && jointData.data) setJointSessions(jointData.data as CoupleAssessmentSession[]);
         if (pulseData.data) setPulseSessions(pulseData.data as PulseCheckSession[]);
+
+        // Load mentor assignment
+        const { data: assignmentData } = await supabase
+          .from('mentor_assignments')
+          .select('*')
+          .eq('user_id', profile.id)
+          .eq('status', 'active');
+
+        if (assignmentData && (assignmentData as MentorAssignment[]).length > 0) {
+          const assignment = (assignmentData as MentorAssignment[])[0];
+          setMentorAssignment(assignment);
+          const { data: mentorData } = await supabase
+            .from('mentors')
+            .select('*')
+            .eq('id', assignment.mentor_id)
+            .maybeSingle();
+          if (mentorData) setAssignedMentor(mentorData as Mentor);
+        }
       } catch (error) {
         console.error('Error loading dashboard data:', error);
       } finally {
@@ -178,6 +198,8 @@ export function Dashboard({ mode, onNavigate }: DashboardProps) {
       jointSessions={jointSessions}
       pulseSessions={pulseSessions}
       profileId={profile.id}
+      assignedMentor={assignedMentor}
+      mentorAssignment={mentorAssignment}
     />
   ) : (
     <BeforeMarriageDashboard
@@ -185,6 +207,8 @@ export function Dashboard({ mode, onNavigate }: DashboardProps) {
       profileName={profile.full_name}
       assessments={assessments}
       redFlags={redFlags}
+      assignedMentor={assignedMentor}
+      mentorAssignment={mentorAssignment}
     />
   );
 }
@@ -194,6 +218,8 @@ type CommonDataProps = {
   profileName: string;
   assessments: CompatibilityAssessment[];
   redFlags: RedFlag[];
+  assignedMentor: Mentor | null;
+  mentorAssignment: MentorAssignment | null;
 };
 
 type CoupleDataProps = CommonDataProps & {
@@ -204,7 +230,7 @@ type CoupleDataProps = CommonDataProps & {
   profileId: string;
 };
 
-function BeforeMarriageDashboard({ onNavigate, profileName, assessments, redFlags }: CommonDataProps) {
+function BeforeMarriageDashboard({ onNavigate, profileName, assessments, redFlags, assignedMentor, mentorAssignment }: CommonDataProps) {
   const latestAssessment = assessments[0];
   const highRisk = redFlags.filter((entry) => entry.severity === 'high').length;
 
@@ -263,6 +289,9 @@ function BeforeMarriageDashboard({ onNavigate, profileName, assessments, redFlag
             ]}
           />
         </div>
+
+        {/* Chat with Mentor widget */}
+        <MentorChatWidget assignedMentor={assignedMentor} mentorAssignment={mentorAssignment} onNavigate={onNavigate} />
       </div>
     </div>
   );
@@ -278,6 +307,8 @@ function AfterMarriageDashboard({
   jointSessions,
   pulseSessions,
   profileId,
+  assignedMentor,
+  mentorAssignment,
 }: CoupleDataProps) {
   const latestJointSession = jointSessions[0];
   const latestAssessment = assessments[0];
@@ -470,6 +501,9 @@ function AfterMarriageDashboard({
             ]}
           />
         </div>
+
+        {/* Chat with Mentor widget */}
+        <MentorChatWidget assignedMentor={assignedMentor} mentorAssignment={mentorAssignment} onNavigate={onNavigate} />
       </div>
     </div>
   );
@@ -700,5 +734,70 @@ function MetricCard({ icon, label, value, helper, theme }: MetricCardProps) {
         </p>
       </div>
     </article>
+  );
+}
+
+// ── MentorChatWidget ─────────────────────────────────────────────────────────
+
+function MentorChatWidget({
+  assignedMentor,
+  mentorAssignment,
+  onNavigate,
+}: {
+  assignedMentor: Mentor | null;
+  mentorAssignment: MentorAssignment | null;
+  onNavigate: (page: string) => void;
+}) {
+  return (
+    <section className="premium-card p-8" style={{ backgroundColor: 'var(--bg-secondary)' }}>
+      <h2
+        className="text-xl font-extrabold mb-4 flex items-center gap-3"
+        style={{ color: 'var(--text-primary)' }}
+      >
+        <MessageCircleHeart className="text-violet-500" size={22} />
+        Chat with Your Mentor
+      </h2>
+
+      {assignedMentor && mentorAssignment ? (
+        <div className="flex items-center justify-between gap-4 p-5 rounded-2xl border" style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--bg-primary)' }}>
+          <div className="flex items-center gap-4">
+            <div
+              className="w-12 h-12 rounded-full flex items-center justify-center text-sm font-bold shrink-0"
+              style={{ backgroundColor: 'rgba(139,92,246,0.1)', color: '#8b5cf6' }}
+            >
+              {assignedMentor.full_name[0]?.toUpperCase() || 'M'}
+            </div>
+            <div>
+              <p className="text-sm font-bold" style={{ color: 'var(--text-primary)' }}>
+                {assignedMentor.full_name}
+              </p>
+              <p className="text-xs font-medium" style={{ color: 'var(--text-muted)' }}>
+                {assignedMentor.specialization}
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => onNavigate('chat')}
+            className="inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-bold text-white transition-all hover:-translate-y-0.5 shadow-sm focus-ring shrink-0"
+            style={{ backgroundColor: '#8b5cf6' }}
+          >
+            <MessageCircleHeart size={15} /> Open Chat
+          </button>
+        </div>
+      ) : (
+        <div
+          className="text-center py-10 rounded-2xl border-2 border-dashed"
+          style={{ borderColor: 'var(--border-primary)' }}
+        >
+          <MessageCircleHeart size={36} className="mx-auto mb-3 opacity-30" style={{ color: 'var(--text-muted)' }} />
+          <p className="text-sm font-semibold mb-1" style={{ color: 'var(--text-secondary)' }}>
+            No mentor assigned yet
+          </p>
+          <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+            A mentor will be assigned to you by the admin. Check back soon!
+          </p>
+        </div>
+      )}
+    </section>
   );
 }

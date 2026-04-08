@@ -32,6 +32,9 @@ type LocalDatabase = {
   conflict_resolution_sessions: ConflictResolutionSession[];
   pulse_check_sessions: PulseCheckSession[];
   bookings: Booking[];
+  mentors: Mentor[];
+  mentor_assignments: MentorAssignment[];
+  chat_messages: ChatMessage[];
 };
 
 type QueryResult<T> = Promise<{ data: T; error: Error | null }>;
@@ -82,6 +85,9 @@ function defaultDb(): LocalDatabase {
     conflict_resolution_sessions: [],
     pulse_check_sessions: [],
     bookings: [],
+    mentors: [],
+    mentor_assignments: [],
+    chat_messages: [],
   };
 }
 
@@ -530,6 +536,7 @@ export type Profile = {
   full_name: string;
   email: string;
   relationship_status: 'single' | 'engaged' | 'married';
+  role: 'user' | 'mentor' | 'admin';
   partner_id?: string;
   created_at: string;
   updated_at: string;
@@ -639,4 +646,34 @@ export type PulseCheckSession = {
   report: Record<string, unknown> | null;
   created_at: string;
   completed_at?: string;
+};
+
+export type Mentor = {
+  id: string;
+  user_id: string;
+  full_name: string;
+  email: string;
+  specialization: string;
+  bio: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
+export type MentorAssignment = {
+  id: string;
+  user_id: string;
+  mentor_id: string;
+  assigned_at: string;
+  status: 'active' | 'inactive';
+};
+
+export type ChatMessage = {
+  id: string;
+  sender_id: string;
+  receiver_id: string;
+  assignment_id: string;
+  message: string;
+  timestamp: string;
+  read: boolean;
 };

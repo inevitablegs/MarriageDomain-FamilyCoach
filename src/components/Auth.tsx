@@ -3,7 +3,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { ArrowLeft, HeartHandshake, Users, AlertCircle, Eye, EyeOff } from 'lucide-react';
 
 type AuthProps = {
-  mode: 'before' | 'after';
+  mode: 'before' | 'after' | 'mentor' | 'admin';
   onBack: () => void;
   onSuccess: () => void;
 };
@@ -19,24 +19,49 @@ export function Auth({ mode, onBack, onSuccess }: AuthProps) {
   const { signIn, signOut, signUp } = useAuth();
 
   const isAfterMarriage = mode === 'after';
+  const isMentor = mode === 'mentor';
+  const isAdmin = mode === 'admin';
+  const isSpecialRole = isMentor || isAdmin;
 
-  const theme = {
-    gradient: isAfterMarriage
-      ? 'from-emerald-600 via-emerald-600 to-teal-600'
-      : 'from-indigo-600 via-indigo-600 to-blue-600',
-    ringClass: isAfterMarriage ? 'focus:ring-emerald-500' : 'focus:ring-indigo-500',
-    accentColor: isAfterMarriage ? '#10b981' : '#6366f1',
-    title: isAfterMarriage ? 'After Marriage Journey' : 'Before Marriage Journey',
-    subtitle: isAfterMarriage
-      ? 'Connect, rebuild, and track your relationship health securely.'
-      : 'Analyze compatibility and uncover red flags before committing.',
-    icon: isAfterMarriage
-      ? <Users size={26} className="text-white" />
-      : <HeartHandshake size={26} className="text-white" />,
-    testimonial: isAfterMarriage
-      ? '"We finally have a shared language for our relationship." — Priya & Rohan'
-      : '"MarriageWise gave us the clarity we needed." — Ananya, Pune',
-  };
+  const theme = isMentor
+    ? {
+        gradient: 'from-violet-600 via-purple-600 to-indigo-600',
+        ringClass: 'focus:ring-violet-500',
+        accentColor: '#8b5cf6',
+        title: 'Coach / Mentor Portal',
+        subtitle: 'Sign in to your mentor account to connect with assigned users and provide guidance.',
+        icon: <Users size={26} className="text-white" />,
+        testimonial: '"Empowering families through structured guidance and connection." — MarriageWise Mentors',
+      }
+    : isAdmin
+    ? {
+        gradient: 'from-slate-700 via-zinc-700 to-slate-800',
+        ringClass: 'focus:ring-slate-500',
+        accentColor: '#64748b',
+        title: 'Admin Control Center',
+        subtitle: 'Manage mentors, assign coaches to users, and oversee the platform.',
+        icon: <HeartHandshake size={26} className="text-white" />,
+        testimonial: '"Platform administration and mentor management." — MarriageWise Admin',
+      }
+    : isAfterMarriage
+    ? {
+        gradient: 'from-emerald-600 via-emerald-600 to-teal-600',
+        ringClass: 'focus:ring-emerald-500',
+        accentColor: '#10b981',
+        title: 'After Marriage Journey',
+        subtitle: 'Connect, rebuild, and track your relationship health securely.',
+        icon: <Users size={26} className="text-white" />,
+        testimonial: '"We finally have a shared language for our relationship." — Priya & Rohan',
+      }
+    : {
+        gradient: 'from-indigo-600 via-indigo-600 to-blue-600',
+        ringClass: 'focus:ring-indigo-500',
+        accentColor: '#6366f1',
+        title: 'Before Marriage Journey',
+        subtitle: 'Analyze compatibility and uncover red flags before committing.',
+        icon: <HeartHandshake size={26} className="text-white" />,
+        testimonial: '"MarriageWise gave us the clarity we needed." — Ananya, Pune',
+      };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,13 +69,39 @@ export function Auth({ mode, onBack, onSuccess }: AuthProps) {
     setLoading(true);
 
     try {
-      if (isSignUp) {
+      // Admin login — validate against env credentials
+      if (isAdmin) {
+        const adminEmail = import.meta.env.VITE_ADMIN_EMAIL || 'admin@marriagewise.com';
+        const adminPassword = import.meta.env.VITE_ADMIN_PASSWORD || 'admin123';
+        if (email.trim().toLowerCase() !== adminEmail.toLowerCase() || password !== adminPassword) {
+          setError('Invalid admin credentials.');
+          setLoading(false);
+          return;
+        }
+        onSuccess();
+        return;
+      }
+
+      if (isSignUp && !isSpecialRole) {
         const relationshipStatus = mode === 'after' ? 'married' : 'single';
         const { error } = await signUp(email, password, fullName, relationshipStatus);
         if (error) throw error;
       } else {
         const { error, profile: signedInProfile } = await signIn(email, password);
         if (error) throw error;
+
+        // Mentor role validation
+        if (isMentor) {
+          const role = signedInProfile?.role || 'user';
+          if (role !== 'mentor') {
+            await signOut();
+            setError('This account is not registered as a mentor. Contact admin for access.');
+            setLoading(false);
+            return;
+          }
+          onSuccess();
+          return;
+        }
 
         const relationshipStatus = signedInProfile?.relationship_status;
         const beforeMarriageAllowed =
@@ -87,11 +138,11 @@ export function Auth({ mode, onBack, onSuccess }: AuthProps) {
       {/* Ambient blobs */}
       <div
         className="absolute top-0 right-0 h-[500px] w-[500px] rounded-full blur-[120px] opacity-20 pointer-events-none"
-        style={{ backgroundColor: isAfterMarriage ? '#10b981' : '#6366f1' }}
+        style={{ backgroundColor: isMentor ? '#8b5cf6' : isAdmin ? '#64748b' : isAfterMarriage ? '#10b981' : '#6366f1' }}
       />
       <div
         className="absolute bottom-0 left-0 h-[500px] w-[500px] rounded-full blur-[120px] opacity-20 pointer-events-none"
-        style={{ backgroundColor: isAfterMarriage ? '#14b8a6' : '#3b82f6' }}
+        style={{ backgroundColor: isMentor ? '#7c3aed' : isAdmin ? '#475569' : isAfterMarriage ? '#14b8a6' : '#3b82f6' }}
       />
 
       <div className="w-full max-w-5xl animate-rise-in relative z-10">
@@ -161,8 +212,8 @@ export function Auth({ mode, onBack, onSuccess }: AuthProps) {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Full Name (sign-up only) */}
-              {isSignUp && (
+              {/* Full Name (sign-up only, not for mentor/admin) */}
+              {isSignUp && !isSpecialRole && (
                 <div>
                   <label
                     htmlFor="fullName"
@@ -272,25 +323,37 @@ export function Auth({ mode, onBack, onSuccess }: AuthProps) {
               </button>
             </form>
 
-            {/* Toggle sign-in / sign-up */}
-            <div
-              className="mt-8 pt-6 border-t text-center"
-              style={{ borderColor: 'var(--border-primary)' }}
-            >
-              <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                {isSignUp ? 'Already have an account?' : "Don't have an account?"}{' '}
-                <button
-                  onClick={() => {
-                    setIsSignUp(!isSignUp);
-                    setError('');
-                  }}
-                  className="font-bold transition-colors hover:opacity-80 focus-ring rounded"
-                  style={{ color: theme.accentColor }}
-                >
-                  {isSignUp ? 'Log in instead' : 'Create an account'}
-                </button>
-              </p>
-            </div>
+            {/* Toggle sign-in / sign-up (only for user modes) */}
+            {!isSpecialRole && (
+              <div
+                className="mt-8 pt-6 border-t text-center"
+                style={{ borderColor: 'var(--border-primary)' }}
+              >
+                <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                  {isSignUp ? 'Already have an account?' : "Don't have an account?"}{' '}
+                  <button
+                    onClick={() => {
+                      setIsSignUp(!isSignUp);
+                      setError('');
+                    }}
+                    className="font-bold transition-colors hover:opacity-80 focus-ring rounded"
+                    style={{ color: theme.accentColor }}
+                  >
+                    {isSignUp ? 'Log in instead' : 'Create an account'}
+                  </button>
+                </p>
+              </div>
+            )}
+
+            {/* Mentor help text */}
+            {isMentor && (
+              <div className="mt-8 pt-6 border-t text-center" style={{ borderColor: 'var(--border-primary)' }}>
+                <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
+                  Mentor accounts are created by the platform admin.<br />
+                  Contact your administrator for access.
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -74,23 +74,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return;
       }
 
-      // Self-heal for old users or partial signups where profile row is missing.
-      const fallbackName =
-        (typeof authUser.user_metadata?.full_name === 'string' && authUser.user_metadata.full_name.trim()) ||
-        (typeof authUser.email === 'string' && authUser.email.split('@')[0]) ||
-        'User';
+      const { data: existingProfile } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('id', authUser.id)
+        .maybeSingle();
 
-      const { error: upsertError } = await supabase.from('profiles').upsert(
-        {
+      if (!existingProfile) {
+        const fallbackName =
+          (typeof authUser.user_metadata?.full_name === 'string' && authUser.user_metadata.full_name.trim()) ||
+          (typeof authUser.email === 'string' && authUser.email.split('@')[0]) ||
+          'User';
+
+        const { error: insertError } = await supabase.from('profiles').insert({
           id: authUser.id,
           email: authUser.email || '',
           full_name: fallbackName,
           relationship_status: 'single',
-        },
-        { onConflict: 'id' }
-      );
+          role: 'user',
+        });
 
-      if (upsertError) throw upsertError;
+        if (insertError) throw insertError;
+      }
 
       const { data: createdProfile, error: createdProfileError } = await supabase
         .from('profiles')
@@ -149,6 +154,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               email,
               full_name: fullName,
               relationship_status: relationshipStatus,
+              role: 'user',
             },
             { onConflict: 'id' }
           );
