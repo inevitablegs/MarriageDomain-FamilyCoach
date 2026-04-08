@@ -90,7 +90,8 @@ export function PreMarriageAnalysis({ onNavigate }: PreMarriageAnalysisProps) {
   const [incidentText, setIncidentText] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<PreMarriageAnalysisResult | null>(null);
-
+  const [error, setError] = useState('');
+  
   if (authLoading) return <PageSpinner label="Loading workspace…" />;
 
   if (!profile) {
@@ -106,9 +107,16 @@ export function PreMarriageAnalysis({ onNavigate }: PreMarriageAnalysisProps) {
   const handleAnalyze = async () => {
     if (!behaviorText.trim() || !incidentText.trim()) return;
     setLoading(true);
-    const analysis = await analyzePreMarriageBehaviorWithGemini(behaviorText, incidentText);
-    setResult(analysis);
-    setLoading(false);
+    setError('');
+    try {
+      const analysis = await analyzePreMarriageBehaviorWithGemini(behaviorText, incidentText);
+      setResult(analysis);
+    } catch (e: any) {
+      console.error(e);
+      setError(e.message || 'An error occurred during analysis.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   // ── Input form ──────────────────────────────────────────────────────────────
@@ -144,6 +152,12 @@ export function PreMarriageAnalysis({ onNavigate }: PreMarriageAnalysisProps) {
             <p className="text-sm leading-relaxed mb-8" style={{ color: 'var(--text-secondary)' }}>
               Describe your partner's general traits and a specific recent incident to uncover hidden red flags and their real personality.
             </p>
+
+            {error && (
+              <div className="flex items-start gap-3 rounded-xl px-4 py-3 border text-sm font-medium animate-fade-in mb-6" style={{ backgroundColor: '#fff1f2', borderColor: '#fecdd3', color: '#be123c' }}>
+                <AlertTriangle size={18} className="shrink-0 mt-0.5" />{error}
+              </div>
+            )}
 
             <div className="space-y-5">
               {/* Textarea 1 */}

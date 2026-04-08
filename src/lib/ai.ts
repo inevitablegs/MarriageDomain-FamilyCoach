@@ -391,7 +391,7 @@ export async function analyzePreMarriageBehaviorWithGemini(
   incidentText: string
 ): Promise<PreMarriageAnalysisResult | null> {
   const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-  if (!apiKey) return null;
+  if (!apiKey) throw new Error('Gemini API key is not configured.');
 
   const systemPrompt = `You are an expert behavioral psychologist analyzing pre‑marriage behavior.
 
@@ -434,7 +434,10 @@ Recent Incident: ${incidentText}`;
       }
     );
 
-    if (!response.ok) return null;
+    if (!response.ok) {
+      const errData = await response.text();
+      throw new Error(`API error: ${response.status} - ${errData}`);
+    }
 
     const data = await response.json();
     let text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
@@ -453,10 +456,10 @@ Recent Incident: ${incidentText}`;
         recommendedActions: Array.isArray(parsed.recommendedActions) ? parsed.recommendedActions.slice(0, 5) : [],
       };
     }
-    return null;
-  } catch (error) {
+    throw new Error('AI returned an empty response.');
+  } catch (error: any) {
     console.error("Failed to analyze pre-marriage behavior:", error);
-    return null;
+    throw error;
   }
 }
 
