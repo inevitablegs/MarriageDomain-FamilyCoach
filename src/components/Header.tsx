@@ -11,7 +11,7 @@ type HeaderProps = {
   onAdminAuthClick?: () => void;
 };
 
-export function Header({ onAuthClick, onNavigate, currentPage, onMentorAuthClick, onAdminAuthClick }: HeaderProps) {
+export function Header({ onNavigate, currentPage, onMentorAuthClick, onAdminAuthClick }: HeaderProps) {
   const { user, profile, signOut } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -107,12 +107,7 @@ export function Header({ onAuthClick, onNavigate, currentPage, onMentorAuthClick
                 </div>
               ) : (
                 <div className="hidden md:flex items-center gap-2">
-                  <button
-                    onClick={onAuthClick}
-                    className="flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white px-5 py-2 rounded-full font-semibold text-sm shadow-md transition-all hover:-translate-y-0.5 focus-ring"
-                  >
-                    Sign In
-                  </button>
+
                   <button
                     onClick={onMentorAuthClick}
                     className="flex items-center gap-2 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white px-4 py-2 rounded-full font-semibold text-sm shadow-md transition-all hover:-translate-y-0.5 focus-ring"
@@ -185,12 +180,7 @@ export function Header({ onAuthClick, onNavigate, currentPage, onMentorAuthClick
                 </button>
               ) : (
                 <div className="flex flex-col gap-2">
-                  <button
-                    onClick={() => { onAuthClick(); closeMobile(); }}
-                    className="bg-gradient-to-r from-indigo-600 to-blue-600 text-white px-5 py-2 rounded-full font-semibold text-sm shadow-md"
-                  >
-                    Sign In
-                  </button>
+
                   <button
                     onClick={() => { onMentorAuthClick?.(); closeMobile(); }}
                     className="bg-gradient-to-r from-violet-600 to-purple-600 text-white px-5 py-2 rounded-full font-semibold text-sm shadow-md flex items-center justify-center gap-2"
