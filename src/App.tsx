@@ -16,6 +16,8 @@ import { Services } from './pages/Services';
 import { MentorDashboard } from './pages/MentorDashboard';
 import { AdminDashboard } from './pages/AdminDashboard';
 import { ChatPage } from './pages/ChatPage';
+import { RelationshipStressTest } from './pages/RelationshipStressTest';
+import { NeedToKnow } from './pages/NeedToKnow';
 
 // ── Page type ────────────────────────────────────────────────────────────────
 type AppPage =
@@ -36,7 +38,9 @@ type AppPage =
   | 'auth-admin'
   | 'mentor-dashboard'
   | 'admin-dashboard'
-  | 'chat';
+  | 'chat'
+  | 'relationship-stress-test'
+  | 'need-to-know';
 
 // ── Global spinner ────────────────────────────────────────────────────────────
 function GlobalLoader() {
@@ -89,7 +93,9 @@ function AppContent() {
       page === 'dashboard' ||
       page === 'pre-marriage-analysis' ||
       page === 'conflict-resolution' ||
-      page === 'couple-pulse-check'
+      page === 'couple-pulse-check' ||
+      page === 'relationship-stress-test' ||
+      page === 'need-to-know'
     ) {
       if (!user) {
         setCurrentPage(page === 'health-tracker' ? 'auth-after' : 'auth-before');
@@ -111,7 +117,9 @@ function AppContent() {
       currentPage === 'health-tracker' ||
       currentPage === 'pre-marriage-analysis' ||
       currentPage === 'conflict-resolution' ||
-      currentPage === 'couple-pulse-check';
+      currentPage === 'couple-pulse-check' ||
+      currentPage === 'relationship-stress-test' ||
+      currentPage === 'need-to-know';
 
     if (!user && isProtectedPage) {
       setCurrentPage('home');
@@ -241,6 +249,14 @@ function AppContent() {
 
         {currentPage === 'couple-pulse-check' && user && (
           <CouplePulseCheck onNavigate={handleNavigate} />
+        )}
+
+        {currentPage === 'relationship-stress-test' && user && (
+          <RelationshipStressTest onNavigate={handleNavigate} />
+        )}
+
+        {currentPage === 'need-to-know' && (
+          <NeedToKnow onNavigate={handleNavigate} />
         )}
 
         {currentPage === 'chat' && user && (

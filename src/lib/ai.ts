@@ -971,7 +971,7 @@ export async function runCouplePulsePipeline(
     const trust = computeLocalTrustScore(a, b);
     const intimacy = computeLocalIntimacyScore(a, b);
     const growth = computeLocalGrowthScore(a, b);
-    const discrepancies = detectLocalDiscrepancies(a, b, aName, bName);
+    const discrepancies = detectLocalDiscrepancies(a, b, aName, bName); 
 
     // ── Phase 2: AI similarity ──
     onProgress?.('similarity', 'Comparing partner answers for alignment…');

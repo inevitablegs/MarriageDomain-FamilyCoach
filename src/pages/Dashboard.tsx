@@ -27,7 +27,7 @@ type ServiceItem = {
   description: string;
   bullets: string[];
   cta: string;
-  targetPage: 'quiz' | 'red-flags' | 'health-tracker' | 'pre-marriage-analysis' | 'conflict-resolution' | 'couple-pulse-check';
+  targetPage: 'quiz' | 'red-flags' | 'health-tracker' | 'pre-marriage-analysis' | 'conflict-resolution' | 'couple-pulse-check' | 'need-to-know';
 };
 
 const beforeMarriageServices: ServiceItem[] = [
@@ -54,6 +54,14 @@ const beforeMarriageServices: ServiceItem[] = [
     bullets: ['Behavior pattern analysis', 'Warning indicators', 'Guided interpretation'],
     cta: 'Run Deep Analysis',
     targetPage: 'pre-marriage-analysis',
+  },
+  {
+    name: 'Need to Know Reality Check',
+    priceLabel: 'PREMIUM',
+    description: 'AI-guided breakdowns on the 6 hidden dangers of Indian marriages.',
+    bullets: ['Family & Society Pressure', 'Fake Personalities', 'Financial Transparency'],
+    cta: 'Enter AI Hub',
+    targetPage: 'need-to-know',
   },
 ];
 
@@ -282,9 +290,10 @@ function BeforeMarriageDashboard({ onNavigate, profileName, assessments, redFlag
 
           <QuickActionsPanel
             theme="indigo"
-            tip="Consistency is key. Try running an assessment every week for trend tracking."
+            tip="Identify systemic structural risks and hidden mismatches beneath the surface."
             actions={[
-              { label: 'Start Compatibility Assessment', onClick: () => onNavigate('quiz'), variant: 'primary' },
+              { label: 'Start Relationship Stress Test', onClick: () => onNavigate('relationship-stress-test'), variant: 'primary' },
+              { label: 'Start Compatibility Assessment', onClick: () => onNavigate('quiz'), variant: 'secondary' },
               { label: 'Run Deep Behavior Analysis', onClick: () => onNavigate('pre-marriage-analysis'), variant: 'secondary' },
             ]}
           />

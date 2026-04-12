@@ -35,6 +35,8 @@ type LocalDatabase = {
   mentors: Mentor[];
   mentor_assignments: MentorAssignment[];
   chat_messages: ChatMessage[];
+  relationship_stress_tests: RelationshipStressTest[];
+  need_to_know_chats: NeedToKnowChatSession[];
 };
 
 type QueryResult<T> = Promise<{ data: T; error: Error | null }>;
@@ -88,6 +90,8 @@ function defaultDb(): LocalDatabase {
     mentors: [],
     mentor_assignments: [],
     chat_messages: [],
+    relationship_stress_tests: [],
+    need_to_know_chats: [],
   };
 }
 
@@ -676,4 +680,28 @@ export type ChatMessage = {
   message: string;
   timestamp: string;
   read: boolean;
+};
+
+export type RelationshipStressTest = {
+  id: string;
+  user_id: string;
+  risk_score: number;
+  breaking_points: string[];
+  expectation_gaps: Array<{ domain: string; gap: string }>;
+  blind_spots: string[];
+  action_plan: Array<{ title: string; task: string }>;
+  created_at: string;
+};
+
+export type NeedToKnowChatSession = {
+  id: string;
+  user_id: string;
+  category_id: string;
+  messages: Array<{
+    id: string;
+    role: 'user' | 'assistant';
+    content: string;
+    created_at: string;
+  }>;
+  updated_at: string;
 };
