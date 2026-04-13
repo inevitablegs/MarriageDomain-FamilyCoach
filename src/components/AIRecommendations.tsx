@@ -35,8 +35,8 @@ export function AIRecommendations({ assessmentData, redFlagData, healthData }: A
         style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-primary)' }}
       >
         <div className="flex items-center gap-3 mb-6">
-          <Brain size={20} className="text-indigo-500 animate-pulse" />
-          <h3 className="text-lg font-bold" style={{ color: 'var(--text-primary)' }}>
+          <Brain size={20} className="text-[#d97757] animate-pulse" />
+          <h3 className="text-lg font-bold font-display" style={{ color: 'var(--text-primary)' }}>
             AI-Powered Clinical Solution
           </h3>
         </div>
@@ -63,11 +63,11 @@ export function AIRecommendations({ assessmentData, redFlagData, healthData }: A
       >
         <div
           className="w-9 h-9 rounded-xl flex items-center justify-center"
-          style={{ backgroundColor: 'var(--brand-indigo-light)', color: 'var(--brand-indigo)' }}
+          style={{ backgroundColor: 'rgba(217,119,87,0.1)', color: '#d97757' }}
         >
           <Sparkles size={18} />
         </div>
-        <h3 className="text-lg font-extrabold" style={{ color: 'var(--text-primary)' }}>
+        <h3 className="text-lg font-extrabold font-display" style={{ color: 'var(--text-primary)' }}>
           AI Solution Report
         </h3>
       </div>
@@ -76,11 +76,11 @@ export function AIRecommendations({ assessmentData, redFlagData, healthData }: A
         {/* Core Insight */}
         <div
           className="rounded-xl p-5 border flex gap-4"
-          style={{ backgroundColor: 'var(--brand-indigo-light)', borderColor: 'rgba(99,102,241,0.15)' }}
+          style={{ backgroundColor: 'rgba(217,119,87,0.05)', borderColor: 'rgba(217,119,87,0.15)' }}
         >
-          <Brain size={20} className="shrink-0 mt-0.5 text-indigo-500" />
+          <Brain size={20} className="shrink-0 mt-0.5 text-[#d97757]" />
           <div>
-            <p className="text-[11px] font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--brand-indigo)' }}>
+            <p className="text-[11px] font-bold uppercase tracking-widest mb-2" style={{ color: '#d97757' }}>
               Core Insight
             </p>
             <p className="text-sm font-medium leading-relaxed" style={{ color: 'var(--text-primary)' }}>
@@ -92,16 +92,16 @@ export function AIRecommendations({ assessmentData, redFlagData, healthData }: A
         {/* Problems + Precautions */}
         <div className="grid md:grid-cols-2 gap-5">
           <ReportSection
-            icon={<Activity size={16} className="text-rose-500" />}
+            icon={<Activity size={16} className="text-[#a65d50]" />}
             title="Identified Issues"
             items={report.mainProblems}
-            dotColor="#f43f5e"
+            dotColor="#a65d50"
           />
           <ReportSection
-            icon={<ShieldAlert size={16} className="text-amber-500" />}
+            icon={<ShieldAlert size={16} className="text-[#d97757]" />}
             title="Future Precautions"
             items={report.futurePrecautions}
-            dotColor="#f59e0b"
+            dotColor="#d97757"
           />
         </div>
 
@@ -111,7 +111,7 @@ export function AIRecommendations({ assessmentData, redFlagData, healthData }: A
           style={{ backgroundColor: 'var(--bg-tertiary)', borderColor: 'var(--border-primary)' }}
         >
           <div className="flex items-center gap-2 mb-4">
-            <Target size={16} className="text-emerald-500" />
+            <Target size={16} className="text-[#5c7c64]" />
             <h4 className="text-sm font-bold" style={{ color: 'var(--text-primary)' }}>
               Step-by-Step Actions
             </h4>
@@ -121,7 +121,7 @@ export function AIRecommendations({ assessmentData, redFlagData, healthData }: A
               <li key={idx} className="flex items-start gap-3">
                 <span
                   className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
-                  style={{ backgroundColor: 'var(--brand-emerald-light)', color: 'var(--brand-emerald)' }}
+                  style={{ backgroundColor: 'rgba(92,124,100,0.1)', color: '#5c7c64' }}
                 >
                   {idx + 1}
                 </span>
@@ -136,7 +136,7 @@ export function AIRecommendations({ assessmentData, redFlagData, healthData }: A
         {/* Recommended Actions */}
         <div>
           <div className="flex items-center gap-2 mb-3">
-            <ArrowRight size={15} className="text-blue-500" />
+            <ArrowRight size={15} className="text-[#5c7c64]" />
             <h4 className="text-sm font-bold" style={{ color: 'var(--text-primary)' }}>
               Professional Recommendations
             </h4>
@@ -147,8 +147,8 @@ export function AIRecommendations({ assessmentData, redFlagData, healthData }: A
                 key={idx}
                 className="text-sm font-medium rounded-xl px-4 py-3 border"
                 style={{
-                  backgroundColor: 'rgba(59,130,246,0.06)',
-                  borderColor: 'rgba(59,130,246,0.15)',
+                  backgroundColor: 'rgba(92,124,100,0.06)',
+                  borderColor: 'rgba(92,124,100,0.15)',
                   color: 'var(--text-primary)',
                 }}
               >

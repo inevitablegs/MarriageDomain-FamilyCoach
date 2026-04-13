@@ -58,7 +58,7 @@ export function ChatPage({ onNavigate }: ChatPageProps) {
         style={{ backgroundColor: 'var(--bg-primary)' }}
       >
         <div className="text-center animate-pulse">
-          <MessageCircleHeart size={40} className="mx-auto mb-4" style={{ color: '#8b5cf6', opacity: 0.5 }} />
+          <MessageCircleHeart size={40} className="mx-auto mb-4" style={{ color: '#d97757', opacity: 0.5 }} />
           <p className="font-semibold" style={{ color: 'var(--text-muted)' }}>Loading chat...</p>
         </div>
       </div>
@@ -73,7 +73,7 @@ export function ChatPage({ onNavigate }: ChatPageProps) {
       >
         <div className="max-w-md text-center">
           <MessageCircleHeart size={64} className="mx-auto mb-6 opacity-30" style={{ color: 'var(--text-muted)' }} />
-          <h2 className="text-2xl font-extrabold mb-2" style={{ color: 'var(--text-primary)' }}>No Mentor Assigned</h2>
+          <h2 className="text-2xl font-extrabold mb-2 font-display" style={{ color: 'var(--text-primary)' }}>No Mentor Assigned</h2>
           <p className="mb-8" style={{ color: 'var(--text-secondary)' }}>You don't have an active mentor assignment yet. Please wait for the admin to assign a mentor to your account.</p>
           <button
             onClick={() => onNavigate('dashboard')}
@@ -99,7 +99,7 @@ export function ChatPage({ onNavigate }: ChatPageProps) {
           otherUserName={assignedMentor.full_name}
           assignmentId={mentorAssignment.id}
           onBack={() => onNavigate('dashboard')}
-          accentColor="#8b5cf6"
+          accentColor="#d97757"
         />
       </div>
     </div>

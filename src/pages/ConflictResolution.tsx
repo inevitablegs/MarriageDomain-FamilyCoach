@@ -22,7 +22,7 @@ type ConflictResolutionProps = {
 };
 
 // ── Shared spinner ───────────────────────────────────────────────────────────
-function PageSpinner({ color = '#f59e0b', label }: { color?: string; label: string }) {
+function PageSpinner({ color = '#d97757', label }: { color?: string; label: string }) {
   return (
     <div
       className="min-h-[calc(100vh-68px)] flex items-center justify-center transition-colors duration-300"
@@ -60,7 +60,7 @@ function SignInPrompt({ icon: Icon, message, onNavigate }: { icon: React.Element
         </p>
         <button
           onClick={() => onNavigate('home')}
-          className="w-full bg-gradient-to-r from-indigo-600 to-blue-600 text-white px-6 py-3.5 rounded-xl font-bold hover:opacity-90 transition shadow-md hover:-translate-y-0.5 focus-ring"
+          className="w-full bg-[#d97757] text-white px-6 py-3.5 rounded-xl font-bold hover:opacity-90 transition shadow-md hover:-translate-y-0.5 focus-ring"
         >
           Go Home
         </button>
@@ -171,13 +171,13 @@ export function ConflictResolution({ onNavigate }: ConflictResolutionProps) {
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 animate-rise-in">
           <div
             className="premium-card p-8 sm:p-12 border-t-4"
-            style={{ backgroundColor: 'var(--bg-secondary)', borderTopColor: '#f59e0b' }}
+            style={{ backgroundColor: 'var(--bg-secondary)', borderTopColor: '#d97757' }}
           >
             {/* Header */}
             <div className="flex items-center gap-4 mb-4">
               <div
                 className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0"
-                style={{ backgroundColor: 'rgba(245,158,11,0.1)', color: '#f59e0b' }}
+                style={{ backgroundColor: 'rgba(217,119,87,0.1)', color: '#d97757' }}
               >
                 <Swords size={24} />
               </div>
@@ -301,8 +301,7 @@ export function ConflictResolution({ onNavigate }: ConflictResolutionProps) {
                 <button
                   onClick={processPhase1To2}
                   disabled={!isFormValid}
-                  className="flex-1 inline-flex items-center justify-center gap-2 text-amber-950 py-3.5 rounded-xl font-bold shadow-md hover:opacity-90 transition-all hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 focus-ring"
-                  style={{ backgroundColor: '#fbbf24' }}
+                  className="flex-1 inline-flex items-center justify-center gap-2 bg-[#d97757] text-white py-3.5 rounded-xl font-bold shadow-md hover:opacity-90 transition-all hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 focus-ring"
                 >
                   Confirm Intake <ArrowRight size={16} />
                 </button>
@@ -329,7 +328,7 @@ export function ConflictResolution({ onNavigate }: ConflictResolutionProps) {
             <div className="text-center mb-8">
               <div
                 className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 border-4"
-                style={{ backgroundColor: 'rgba(245,158,11,0.1)', borderColor: 'rgba(245,158,11,0.2)', color: '#d97706' }}
+                style={{ backgroundColor: 'rgba(217,119,87,0.1)', borderColor: 'rgba(217,119,87,0.2)', color: '#d97757' }}
               >
                 <Brain size={28} />
               </div>
@@ -350,18 +349,18 @@ export function ConflictResolution({ onNavigate }: ConflictResolutionProps) {
 
             <div className="grid sm:grid-cols-2 gap-4 mb-8">
               <div className="p-4 rounded-xl border" style={{ backgroundColor: 'var(--bg-tertiary)', borderColor: 'var(--border-primary)' }}>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-indigo-500 mb-2">My Reaction</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-[#d97757] mb-2">My Reaction</p>
                 <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>{userReaction}</p>
               </div>
               <div className="p-4 rounded-xl border" style={{ backgroundColor: 'var(--bg-tertiary)', borderColor: 'var(--border-primary)' }}>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-emerald-500 mb-2">Partner's Reaction</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-[#5c7c64] mb-2">Partner's Reaction</p>
                 <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>{partnerReaction}</p>
               </div>
             </div>
 
             <div className="flex flex-wrap gap-2 mb-8 justify-center">
-              <span className="badge" style={{ backgroundColor: 'rgba(59,130,246,0.1)', color: '#3b82f6' }}>{frequency}</span>
-              <span className="badge" style={{ backgroundColor: 'rgba(239,68,68,0.1)', color: '#ef4444' }}>Intensity: {intensity}</span>
+              <span className="badge" style={{ backgroundColor: 'rgba(217,119,87,0.1)', color: '#d97757' }}>{frequency}</span>
+              <span className="badge" style={{ backgroundColor: 'rgba(166,93,80,0.1)', color: '#a65d50' }}>Intensity: {intensity}</span>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t" style={{ borderColor: 'var(--border-primary)' }}>
@@ -374,7 +373,7 @@ export function ConflictResolution({ onNavigate }: ConflictResolutionProps) {
               </button>
               <button
                 onClick={executeAnalysis}
-                className="flex-1 inline-flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white py-3.5 rounded-xl font-bold shadow-md hover:opacity-90 transition-all hover:-translate-y-0.5 focus-ring"
+                className="flex-1 inline-flex items-center justify-center gap-2 bg-[#d97757] text-white py-3.5 rounded-xl font-bold shadow-md hover:opacity-90 transition-all hover:-translate-y-0.5 focus-ring"
               >
                 <Sparkles size={16} /> Run AI Diagnosis
               </button>
@@ -420,8 +419,8 @@ export function ConflictResolution({ onNavigate }: ConflictResolutionProps) {
 
   // ── Phase 4: Resolution Report ──────────────────────────────────────────────
   if (phase === 4 && report) {
-    const sevColor = report.severityLevel === 'critical' ? '#ef4444' : report.severityLevel === 'moderate' ? '#f59e0b' : '#10b981';
-    const sevBg = report.severityLevel === 'critical' ? 'rgba(239,68,68,0.1)' : report.severityLevel === 'moderate' ? 'rgba(245,158,11,0.1)' : 'rgba(16,185,129,0.1)';
+    const sevColor = report.severityLevel === 'critical' ? '#a65d50' : report.severityLevel === 'moderate' ? '#d97757' : '#5c7c64';
+    const sevBg = report.severityLevel === 'critical' ? 'rgba(166,93,80,0.1)' : report.severityLevel === 'moderate' ? 'rgba(217,119,87,0.1)' : 'rgba(92,124,100,0.1)';
 
     return (
       <div
@@ -462,12 +461,12 @@ export function ConflictResolution({ onNavigate }: ConflictResolutionProps) {
                   <HeartCrack size={18} className="text-rose-500" /> The Behavioral Loop
                 </h3>
                 <div className="space-y-4">
-                  <div className="p-3 rounded-lg border-l-4 border-l-indigo-500" style={{ backgroundColor: 'var(--bg-tertiary)', borderColor: 'var(--border-primary)' }}>
-                    <p className="text-[10px] font-bold uppercase text-indigo-500 mb-1">Your Role</p>
+                  <div className="p-3 rounded-lg border-l-4 border-l-[#d97757]" style={{ backgroundColor: 'var(--bg-tertiary)', borderColor: 'var(--border-primary)' }}>
+                    <p className="text-[10px] font-bold uppercase text-[#d97757] mb-1">Your Role</p>
                     <p className="text-xs font-semibold" style={{ color: 'var(--text-primary)' }}>{report.partnerARole}</p>
                   </div>
-                  <div className="p-3 rounded-lg border-l-4 border-l-emerald-500" style={{ backgroundColor: 'var(--bg-tertiary)', borderColor: 'var(--border-primary)' }}>
-                    <p className="text-[10px] font-bold uppercase text-emerald-500 mb-1">Partner's Role</p>
+                  <div className="p-3 rounded-lg border-l-4 border-l-[#5c7c64]" style={{ backgroundColor: 'var(--bg-tertiary)', borderColor: 'var(--border-primary)' }}>
+                    <p className="text-[10px] font-bold uppercase text-[#5c7c64] mb-1">Partner's Role</p>
                     <p className="text-xs font-semibold" style={{ color: 'var(--text-primary)' }}>{report.partnerBRole}</p>
                   </div>
                 </div>
@@ -475,17 +474,17 @@ export function ConflictResolution({ onNavigate }: ConflictResolutionProps) {
             </div>
 
             {/* De-Escalation Scripts */}
-            <div className="premium-card p-6 border-t-4 border-t-amber-500" style={{ backgroundColor: 'var(--bg-secondary)' }}>
+            <div className="premium-card p-6 border-t-4 border-t-[#d97757]" style={{ backgroundColor: 'var(--bg-secondary)' }}>
               <h3 className="text-sm font-extrabold mb-4 flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
-                <MessageCircleWarning size={18} className="text-amber-500" /> De-Escalation Scripts
+                <MessageCircleWarning size={18} className="text-[#d97757]" /> De-Escalation Scripts
               </h3>
               <p className="text-xs mb-4" style={{ color: 'var(--text-muted)' }}>
                 Memorize these or keep them handy. Say them exactly as written when you feel flooded.
               </p>
               <ul className="space-y-3">
                 {report.deEscalationScript.map((script, i) => (
-                  <li key={i} className="flex items-start gap-3 p-3 rounded-xl border border-amber-500/20" style={{ backgroundColor: 'rgba(245,158,11,0.05)' }}>
-                    <span className="text-amber-600 font-serif text-2xl leading-none font-bold">"</span>
+                  <li key={i} className="flex items-start gap-3 p-3 rounded-xl border border-[#d97757]/20" style={{ backgroundColor: 'rgba(217,119,87,0.05)' }}>
+                    <span className="text-[#d97757] font-serif text-2xl leading-none font-bold">"</span>
                     <span className="text-sm font-medium pt-1" style={{ color: 'var(--text-primary)' }}>{script}</span>
                   </li>
                 ))}
@@ -569,7 +568,7 @@ export function ConflictResolution({ onNavigate }: ConflictResolutionProps) {
             </button>
             <button
               onClick={() => onNavigate('dashboard')}
-              className="flex-1 bg-indigo-600 text-white py-4 rounded-xl font-bold shadow-md hover:bg-indigo-700 transition-all hover:-translate-y-0.5 focus-ring"
+              className="flex-1 bg-[#d97757] text-white py-4 rounded-xl font-bold shadow-md hover:opacity-90 transition-all hover:-translate-y-0.5 focus-ring"
             >
               Return to Dashboard
             </button>

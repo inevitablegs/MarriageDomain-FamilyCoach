@@ -204,7 +204,7 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
         <div className="text-center">
           <div
             className="h-10 w-10 rounded-full border-4 border-t-transparent animate-spin mx-auto mb-4"
-            style={{ borderColor: 'rgba(16,185,129,0.2)', borderTopColor: '#10b981' }}
+            style={{ borderColor: 'var(--brand-emerald-light)', borderTopColor: 'var(--brand-emerald)' }}
           />
           <p className="text-sm font-semibold" style={{ color: 'var(--text-muted)' }}>
             Loading records…
@@ -235,7 +235,7 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
           </p>
           <button
             onClick={() => onNavigate('home')}
-            className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 py-3.5 rounded-xl font-bold hover:opacity-90 transition shadow-md hover:-translate-y-0.5 focus-ring"
+            className="w-full bg-[#d97757] text-white px-6 py-3.5 rounded-xl font-bold hover:opacity-90 transition shadow-md hover:-translate-y-0.5 focus-ring"
           >
             Go Home
           </button>
@@ -260,7 +260,7 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
         <TrendingUp
           className="shrink-0"
           size={20}
-          style={{ color: '#10b981', backgroundColor: 'rgba(16,185,129,0.1)', padding: 3, borderRadius: '50%' }}
+          style={{ color: 'var(--brand-emerald)', backgroundColor: 'var(--brand-emerald-light)', padding: 3, borderRadius: '50%' }}
         />
       );
     if (trend === 'down')
@@ -268,7 +268,7 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
         <TrendingDown
           className="shrink-0"
           size={20}
-          style={{ color: '#f43f5e', backgroundColor: 'rgba(244,63,94,0.1)', padding: 3, borderRadius: '50%' }}
+          style={{ color: 'var(--brand-rose)', backgroundColor: 'var(--brand-rose-light)', padding: 3, borderRadius: '50%' }}
         />
       );
     return (
@@ -334,36 +334,36 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
       label: 'Emotional',
       key: 'emotional_score' as const,
       prev: previousRecord?.emotional_score,
-      color: '#6366f1',
-      bg: 'rgba(99,102,241,0.08)',
-      border: 'rgba(99,102,241,0.15)',
+      color: '#d97757',
+      bg: 'rgba(217,119,87,0.08)',
+      border: 'rgba(217,119,87,0.15)',
       icon: <Heart size={18} />,
     },
     {
       label: 'Communication',
       key: 'communication_score' as const,
       prev: previousRecord?.communication_score,
-      color: '#14b8a6',
-      bg: 'rgba(20,184,166,0.08)',
-      border: 'rgba(20,184,166,0.15)',
+      color: '#5c7c64',
+      bg: 'rgba(92,124,100,0.08)',
+      border: 'rgba(92,124,100,0.15)',
       icon: <Brain size={18} />,
     },
     {
       label: 'Intimacy',
       key: 'intimacy_score' as const,
       prev: previousRecord?.intimacy_score,
-      color: '#f43f5e',
-      bg: 'rgba(244,63,94,0.08)',
-      border: 'rgba(244,63,94,0.15)',
+      color: '#a65d50',
+      bg: 'rgba(166,93,80,0.08)',
+      border: 'rgba(166,93,80,0.15)',
       icon: <Flame size={18} />,
     },
     {
       label: 'Conflict Mgmt',
       key: 'conflict_score' as const,
       prev: previousRecord?.conflict_score,
-      color: '#f59e0b',
-      bg: 'rgba(245,158,11,0.08)',
-      border: 'rgba(245,158,11,0.15)',
+      color: '#8c857f',
+      bg: 'rgba(140,133,127,0.08)',
+      border: 'rgba(140,133,127,0.15)',
       icon: <Scale size={18} />,
     },
   ];
@@ -371,9 +371,9 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
   const gridColor = theme === 'dark' ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
 
   const getScoreColor = (score: number) => {
-    if (score >= 80) return '#10b981';
-    if (score >= 60) return '#f59e0b';
-    return '#f43f5e';
+    if (score >= 80) return 'var(--brand-emerald)';
+    if (score >= 60) return '#d97757';
+    return 'var(--brand-rose)';
   };
 
   const getScoreLabel = (score: number) => {
@@ -413,10 +413,10 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
             }}
           >
             <h2
-              className="text-2xl font-extrabold mb-2 tracking-tight flex items-center gap-3"
+              className="font-display text-2xl mb-2 tracking-tight flex items-center gap-3"
               style={{ color: 'var(--text-primary)' }}
             >
-              <MessageSquareText className="text-emerald-500" size={24} /> Weekly Reflection
+              <MessageSquareText className="text-[#d97757]" size={24} /> Weekly Reflection
             </h2>
             <p className="text-sm mb-8" style={{ color: 'var(--text-secondary)' }}>
               Write a few sentences about your relationship this week. Our AI will analyze your entry to extract
@@ -441,13 +441,13 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
                       backdropFilter: 'blur(4px)',
                     }}
                   >
-                    <Loader2 className="animate-spin text-emerald-500 mb-3" size={36} />
+                    <Loader2 className="animate-spin text-[#d97757] mb-3" size={36} />
                     <p
                       className="font-bold text-sm px-5 py-2.5 rounded-full border shadow-sm"
                       style={{
-                        backgroundColor: 'var(--brand-emerald-light)',
-                        color: 'var(--brand-emerald)',
-                        borderColor: 'rgba(16,185,129,0.2)',
+                        backgroundColor: 'var(--brand-indigo-light)',
+                        color: 'var(--brand-indigo)',
+                        borderColor: 'rgba(217,119,87,0.2)',
                       }}
                     >
                       Gemini is analyzing your entry…
@@ -486,7 +486,7 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
                 <button
                   type="submit"
                   disabled={saving}
-                  className="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 text-white flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold hover:opacity-90 transition disabled:opacity-50 shadow-md hover:-translate-y-0.5 focus-ring"
+                  className="flex-1 bg-[#d97757] text-white flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold hover:opacity-90 transition disabled:opacity-50 shadow-md hover:-translate-y-0.5 focus-ring"
                 >
                   {saving ? (
                     'Analyzing…'
@@ -513,12 +513,12 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
           style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-primary)' }}
         >
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/20 shrink-0">
+            <div className="w-12 h-12 rounded-2xl bg-[#d97757] flex items-center justify-center shadow-lg shadow-coral-500/10 shrink-0">
               <Sparkles className="text-white" size={24} />
             </div>
             <div>
               <h1
-                className="text-2xl sm:text-3xl font-extrabold tracking-tight"
+                className="font-display text-2xl sm:text-3xl tracking-tight"
                 style={{ color: 'var(--text-primary)' }}
               >
                 AI Health Tracker
@@ -530,7 +530,7 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
           </div>
           <button
             onClick={() => setShowForm(true)}
-            className="inline-flex flex-shrink-0 items-center justify-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white w-full sm:w-auto px-6 py-3 rounded-xl font-bold hover:opacity-90 transition shadow-md hover:-translate-y-0.5 focus-ring"
+            className="inline-flex flex-shrink-0 items-center justify-center gap-2 bg-[#d97757] text-white w-full sm:w-auto px-6 py-3 rounded-xl font-bold hover:opacity-90 transition shadow-md hover:-translate-y-0.5 focus-ring"
           >
             <Plus size={18} /> New AI Check-in
           </button>
@@ -541,28 +541,28 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
         ──────────────────────────────────────────────────────────────────── */}
         {latestRecord && (
           <>
-            {/* ── Row 1: Overall Score Hero + 4 Metric Cards ────────────── */}
-            <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
+            {/* ── Row 1: Overall Score Hero + 4 Metric Cards ──────────── */}
+            <div className="stagger-1 grid grid-cols-2 lg:grid-cols-5 gap-4">
               {/* Overall Score — spans 2 cols on mobile, 1 col on desktop */}
               <div
-                className="col-span-2 lg:col-span-1 premium-card p-6 relative overflow-hidden flex flex-col items-center justify-center text-center"
+                className={`col-span-2 lg:col-span-1 premium-card p-6 relative overflow-hidden flex flex-col items-center justify-center text-center ${latestRecord.overall_score >= 80 ? 'glow-bloom' : ''}`}
                 style={{
-                  background: 'linear-gradient(135deg, #064e3b 0%, #065f46 50%, #047857 100%)',
+                  background: 'linear-gradient(135deg, #2a2826 0%, #3e3a36 50%, #2a2826 100%)',
                 }}
               >
                 <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 blur-3xl rounded-full translate-x-1/2 -translate-y-1/2 pointer-events-none" />
                 <div className="relative z-10">
-                  <div className="text-[10px] font-bold text-emerald-300/80 uppercase tracking-[0.2em] mb-2">
+                  <div className="label-clinical text-[#d97757] mb-2">
                     Overall Vitality
                   </div>
                   <div
-                    className="text-5xl font-extrabold tracking-tight mb-1"
+                    className={`text-5xl font-extrabold tracking-tight mb-1 ${latestRecord.overall_score >= 80 ? 'data-pulse' : ''}`}
                     style={{ color: getScoreColor(latestRecord.overall_score) }}
                   >
                     {latestRecord.overall_score}%
                   </div>
                   <div
-                    className="text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mt-2 inline-block"
+                    className="label-clinical px-3 py-1 rounded-full mt-2 inline-block"
                     style={{
                       backgroundColor: `${getScoreColor(latestRecord.overall_score)}20`,
                       color: getScoreColor(latestRecord.overall_score),
@@ -576,6 +576,7 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
               {/* 4 Metric Cards */}
               {metricConfig.map((metric) => {
                 const score = latestRecord[metric.key];
+                const isHigh = score >= 80;
                 return (
                   <div
                     key={metric.label}
@@ -596,19 +597,17 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
                         </div>
                         <TrendIcon trend={getTrend(score, metric.prev)} />
                       </div>
-                      <div className="text-2xl font-extrabold tracking-tight" style={{ color: metric.color }}>
+                      <div className={`text-2xl font-extrabold tracking-tight ${isHigh ? 'data-pulse' : ''}`} style={{ color: metric.color }}>
                         {score}%
                       </div>
-                      <div
-                        className="text-[11px] font-bold uppercase tracking-wide mt-0.5"
-                        style={{ color: 'var(--text-secondary)' }}
-                      >
+                      <div className="label-clinical mt-0.5" style={{ color: 'var(--text-secondary)' }}>
                         {metric.label}
                       </div>
-                      {/* Progress bar */}
-                      <div className="w-full rounded-full h-1.5 mt-3" style={{ backgroundColor: `${metric.color}15` }}>
+                      {/* Vitality Strand */}
+                      <div className="vitality-strand mt-3" style={{ '--strand-glow': `${metric.color}80` } as React.CSSProperties}>
+                        <div className="vitality-track" style={{ backgroundColor: metric.color }} />
                         <div
-                          className="h-full rounded-full transition-all duration-700"
+                          className="vitality-fill"
                           style={{ width: `${score}%`, backgroundColor: metric.color }}
                         />
                       </div>
@@ -619,20 +618,20 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
             </div>
 
             {/* ── Row 2: Core Insight + Reflection ──────────────────────── */}
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="stagger-2 grid md:grid-cols-2 gap-6">
               {/* Core Insight Card */}
               <div
                 className="premium-card p-7 relative overflow-hidden"
                 style={{
                   background:
                     theme === 'dark'
-                      ? 'linear-gradient(135deg, rgba(16,185,129,0.12) 0%, rgba(6,78,59,0.3) 100%)'
-                      : 'linear-gradient(135deg, rgba(16,185,129,0.06) 0%, rgba(6,78,59,0.08) 100%)',
+                      ? 'linear-gradient(135deg, rgba(217,119,87,0.12) 0%, rgba(166,93,80,0.3) 100%)'
+                      : 'linear-gradient(135deg, rgba(217,119,87,0.06) 0%, rgba(166,93,80,0.08) 100%)',
                   backgroundColor: 'var(--bg-secondary)',
                 }}
               >
                 <div className="flex items-start gap-4">
-                  <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shrink-0 shadow-lg shadow-emerald-500/20">
+                  <div className="w-11 h-11 rounded-2xl bg-[#d97757] flex items-center justify-center shrink-0 shadow-lg shadow-coral-500/10">
                     <Sparkles className="text-white" size={20} />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -659,12 +658,12 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
                     <div className="flex items-center gap-3">
                       <div
                         className="w-11 h-11 rounded-2xl flex items-center justify-center shrink-0"
-                        style={{ backgroundColor: 'rgba(99,102,241,0.1)', color: '#6366f1' }}
+                        style={{ backgroundColor: 'var(--brand-indigo-light)', color: 'var(--brand-indigo)' }}
                       >
                         <MessageSquareText size={20} />
                       </div>
                       <div>
-                        <h3 className="text-xs font-bold uppercase tracking-[0.15em]" style={{ color: '#6366f1' }}>
+                        <h3 className="text-xs font-bold uppercase tracking-[0.15em]" style={{ color: 'var(--brand-indigo)' }}>
                           Your Reflection
                         </h3>
                         <p className="text-xs mt-0.5" style={{ color: 'var(--text-muted)' }}>
@@ -693,7 +692,7 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
             </div>
 
             {/* ── Row 3: Collapsible Insight Panels (2×2 grid) ──────────── */}
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="stagger-3 grid md:grid-cols-2 gap-6">
               {/* Identified Problems — collapsed by default */}
               {latestSolution && latestSolution.mainProblems.length > 0 && (
                 <div className="premium-card p-0 overflow-hidden" style={{ backgroundColor: 'var(--bg-secondary)' }}>
@@ -704,7 +703,7 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
                       <div className="flex items-center gap-3">
                         <div
                           className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-                          style={{ backgroundColor: 'rgba(244,63,94,0.1)', color: '#f43f5e' }}
+                          style={{ backgroundColor: 'var(--brand-rose-light)', color: 'var(--brand-rose)' }}
                         >
                           <AlertTriangle size={18} />
                         </div>
@@ -735,7 +734,7 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
                               color: 'var(--text-primary)',
                             }}
                           >
-                            <span className="text-rose-500 shrink-0 mt-0.5 font-bold">•</span>
+                            <span className="text-[#a65d50] shrink-0 mt-0.5 font-bold">•</span>
                             {prob}
                           </li>
                         ))}
@@ -755,7 +754,7 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
                       <div className="flex items-center gap-3">
                         <div
                           className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-                          style={{ backgroundColor: 'rgba(16,185,129,0.1)', color: '#10b981' }}
+                          style={{ backgroundColor: 'var(--brand-emerald-light)', color: 'var(--brand-emerald)' }}
                         >
                           <Target size={18} />
                         </div>
@@ -780,7 +779,7 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
                           <li key={i} className="flex items-start gap-4 text-sm leading-relaxed">
                             <span
                               className="font-bold w-7 h-7 rounded-full flex items-center justify-center shrink-0 text-xs text-white shadow-sm"
-                              style={{ backgroundColor: '#10b981' }}
+                              style={{ backgroundColor: 'var(--brand-emerald)' }}
                             >
                               {i + 1}
                             </span>
@@ -1026,7 +1025,7 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
                         style={{
                           color: 'var(--brand-emerald)',
                           backgroundColor: 'var(--brand-emerald-light)',
-                          borderColor: 'rgba(16,185,129,0.15)',
+                          borderColor: 'rgba(92,124,100,0.15)',
                         }}
                       >
                         {record.overall_score}%
@@ -1070,7 +1069,7 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
                               className="p-5 rounded-xl border shadow-sm transition hover:shadow-md space-y-4"
                               style={{
                                 backgroundColor: 'var(--brand-emerald-light)',
-                                borderColor: 'rgba(16,185,129,0.15)',
+                                borderColor: 'rgba(92,124,100,0.15)',
                               }}
                             >
                               <div>
@@ -1089,7 +1088,7 @@ You MUST respond with ONLY valid JSON strictly matching the format below, nothin
                               </div>
 
                               {sol.stepByStepActions.length > 0 && (
-                                <div className="pt-3 border-t" style={{ borderColor: 'rgba(16,185,129,0.15)' }}>
+                                <div className="pt-3 border-t" style={{ borderColor: 'rgba(92,124,100,0.15)' }}>
                                   <h5
                                     className="text-[11px] font-bold uppercase tracking-widest mb-3"
                                     style={{ color: 'var(--brand-emerald)' }}

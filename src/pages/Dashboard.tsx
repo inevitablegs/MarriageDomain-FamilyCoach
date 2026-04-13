@@ -2,8 +2,10 @@ import { ReactNode, useEffect, useMemo, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { CompatibilityAssessment, RedFlag, RelationshipHealth, supabase, CoupleAssessmentSession, PulseCheckSession, MentorAssignment, Mentor } from '../lib/supabase';
 import {
+  Activity,
   AlertTriangle,
   ArrowRight,
+  Bell,
   CheckCircle2,
   ClipboardList,
   Handshake,
@@ -183,7 +185,7 @@ export function Dashboard({ mode, onNavigate }: DashboardProps) {
         <div className="text-center">
           <div
             className="h-10 w-10 rounded-full border-4 border-t-transparent animate-spin mx-auto mb-4"
-            style={{ borderColor: 'rgba(99,102,241,0.2)', borderTopColor: '#6366f1' }}
+            style={{ borderColor: 'var(--border-primary)', borderTopColor: 'var(--brand-indigo)' }}
           />
           <p className="text-sm font-semibold" style={{ color: 'var(--text-muted)' }}>
             Loading workspace…
@@ -242,17 +244,21 @@ function BeforeMarriageDashboard({ onNavigate, profileName, assessments, redFlag
   const latestAssessment = assessments[0];
   const highRisk = redFlags.filter((entry) => entry.severity === 'high').length;
 
+  // Smart nudge conditions
+  const hasHighRiskFlags = highRisk > 0;
+  const hasNoAssessments = assessments.length === 0;
+
   return (
     <div
       className="min-h-[calc(100vh-68px)] py-10 transition-colors duration-300"
       style={{ backgroundColor: 'var(--bg-primary)' }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
-        {/* Hero banner */}
-        <section className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-r from-indigo-700 to-blue-600 px-8 py-12 shadow-2xl shadow-indigo-900/20 sm:px-12 noise-overlay">
-          <div className="absolute top-0 right-0 h-64 w-64 bg-white/10 blur-[80px] rounded-full translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+        {/* Hero banner — stagger-0 (instant) */}
+        <section className="animate-rise-in relative overflow-hidden rounded-[2.5rem] bg-gradient-to-r from-[#2a2826] to-[#4a4642] px-8 py-12 shadow-2xl shadow-stone-900/20 sm:px-12 noise-overlay">
+          <div className="absolute top-0 right-0 h-64 w-64 bg-white/5 blur-[80px] rounded-full translate-x-1/2 -translate-y-1/2 pointer-events-none" />
           <div className="relative z-10">
-            <div className="inline-flex items-center rounded-full bg-white/20 backdrop-blur-md px-3 py-1 text-xs font-bold uppercase tracking-widest text-white border border-white/30 shadow-sm">
+            <div className="inline-flex items-center rounded-full bg-white/10 backdrop-blur-md px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-white border border-white/20 shadow-sm">
               Before Marriage Dashboard
             </div>
             <h1 className="mt-6 text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
@@ -264,17 +270,49 @@ function BeforeMarriageDashboard({ onNavigate, profileName, assessments, redFlag
           </div>
         </section>
 
-        {/* Metrics */}
-        <section className="grid sm:grid-cols-3 gap-5">
-          <MetricCard theme="indigo" icon={<ClipboardList size={22} />} label="Assessments" value={String(assessments.length)} helper="Completed reports" />
-          <MetricCard theme="blue" icon={<TrendingUp size={22} />} label="Latest Compatibility" value={latestAssessment ? `${latestAssessment.total_score}%` : 'N/A'} helper="Most recent score" />
+        {/* Smart Nudges — stagger-1 */}
+        <div className="stagger-1 space-y-3">
+          {hasNoAssessments && (
+            <div className="smart-nudge glass-tier-floating" style={{ borderLeftColor: 'var(--brand-indigo)' }}>
+              <div className="nudge-icon" style={{ backgroundColor: 'var(--brand-indigo-light)', color: 'var(--brand-indigo)' }}>
+                <Bell size={18} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-bold" style={{ color: 'var(--text-primary)' }}>Start your first assessment</p>
+                <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>Run a Compatibility Deep Scan to get your baseline score.</p>
+              </div>
+              <button onClick={() => onNavigate('quiz')} className="text-xs font-bold px-4 py-2 rounded-lg transition-all hover:-translate-y-0.5" style={{ backgroundColor: 'var(--brand-indigo)', color: '#fff' }}>
+                Start Now
+              </button>
+            </div>
+          )}
+          {hasHighRiskFlags && (
+            <div className="smart-nudge glass-tier-floating" style={{ borderLeftColor: 'var(--brand-rose)' }}>
+              <div className="nudge-icon" style={{ backgroundColor: 'var(--brand-rose-light)', color: 'var(--brand-rose)' }}>
+                <AlertTriangle size={18} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-bold" style={{ color: 'var(--text-primary)' }}>{highRisk} high-severity red flag{highRisk > 1 ? 's' : ''} detected</p>
+                <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>Review your behavioral risk analysis for critical insights.</p>
+              </div>
+              <button onClick={() => onNavigate('pre-marriage-analysis')} className="text-xs font-bold px-4 py-2 rounded-lg transition-all hover:-translate-y-0.5" style={{ backgroundColor: 'var(--brand-rose)', color: '#fff' }}>
+                Review
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Metrics — stagger-2 */}
+        <section className="stagger-2 grid sm:grid-cols-3 gap-5">
+          <MetricCard theme="coral" icon={<ClipboardList size={22} />} label="Assessments" value={String(assessments.length)} helper="Completed reports" />
+          <MetricCard theme="coral" icon={<TrendingUp size={22} />} label="Latest Compatibility" value={latestAssessment ? `${latestAssessment.total_score}%` : 'N/A'} helper="Most recent score" numericValue={latestAssessment?.total_score} />
           <MetricCard theme="rose" icon={<ShieldAlert size={22} />} label="High Risk Flags" value={String(highRisk)} helper="Needs careful review" />
         </section>
 
-        {/* Main grid */}
+        {/* Main grid — stagger-3/4 */}
         <div className="grid lg:grid-cols-[1fr,300px] gap-8">
           <section
-            className="premium-card p-8"
+            className="stagger-3 premium-card p-8"
             style={{ backgroundColor: 'var(--bg-secondary)' }}
           >
             <h2 className="text-2xl font-extrabold mb-6 flex items-center gap-3" style={{ color: 'var(--text-primary)' }}>
@@ -283,24 +321,28 @@ function BeforeMarriageDashboard({ onNavigate, profileName, assessments, redFlag
             </h2>
             <div className="grid sm:grid-cols-2 gap-5">
               {beforeMarriageServices.map((service) => (
-                <ServiceCard key={service.name} service={service} onNavigate={onNavigate} color="indigo" />
+                <ServiceCard key={service.name} service={service} onNavigate={onNavigate} color="coral" />
               ))}
             </div>
           </section>
 
-          <QuickActionsPanel
-            theme="indigo"
-            tip="Identify systemic structural risks and hidden mismatches beneath the surface."
-            actions={[
-              { label: 'Start Relationship Stress Test', onClick: () => onNavigate('relationship-stress-test'), variant: 'primary' },
-              { label: 'Start Compatibility Assessment', onClick: () => onNavigate('quiz'), variant: 'secondary' },
-              { label: 'Run Deep Behavior Analysis', onClick: () => onNavigate('pre-marriage-analysis'), variant: 'secondary' },
-            ]}
-          />
+          <div className="stagger-4">
+            <QuickActionsPanel
+              theme="coral"
+              tip="Identify systemic structural risks and hidden mismatches beneath the surface."
+              actions={[
+                { label: 'Start Relationship Stress Test', onClick: () => onNavigate('relationship-stress-test'), variant: 'primary' },
+                { label: 'Start Compatibility Assessment', onClick: () => onNavigate('quiz'), variant: 'secondary' },
+                { label: 'Run Deep Behavior Analysis', onClick: () => onNavigate('pre-marriage-analysis'), variant: 'secondary' },
+              ]}
+            />
+          </div>
         </div>
 
-        {/* Chat with Mentor widget */}
-        <MentorChatWidget assignedMentor={assignedMentor} mentorAssignment={mentorAssignment} onNavigate={onNavigate} />
+        {/* Chat with Mentor widget — stagger-5 */}
+        <div className="stagger-5">
+          <MentorChatWidget assignedMentor={assignedMentor} mentorAssignment={mentorAssignment} onNavigate={onNavigate} />
+        </div>
       </div>
     </div>
   );
@@ -358,17 +400,23 @@ function AfterMarriageDashboard({
     return 'Needs Attention';
   }, [latestHealth]);
 
+  // Smart nudge conditions
+  const lastHealthDate = latestHealth ? new Date(latestHealth.recorded_at || latestHealth.created_at || '') : null;
+  const healthIsStale = !lastHealthDate || (Date.now() - lastHealthDate.getTime() > 7 * 24 * 60 * 60 * 1000);
+  const lastPulseDate = completedPulses[0] ? new Date(completedPulses[0].created_at || '') : null;
+  const pulseIsStale = !lastPulseDate || (Date.now() - lastPulseDate.getTime() > 7 * 24 * 60 * 60 * 1000);
+
   return (
     <div
       className="min-h-[calc(100vh-68px)] py-10 transition-colors duration-300"
       style={{ backgroundColor: 'var(--bg-primary)' }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
-        {/* Hero banner */}
-        <section className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-r from-emerald-700 to-teal-600 px-8 py-12 shadow-2xl shadow-emerald-900/20 sm:px-12 noise-overlay">
-          <div className="absolute top-0 right-0 h-64 w-64 bg-white/10 blur-[80px] rounded-full translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+        {/* Hero banner — stagger-0 */}
+        <section className="animate-rise-in relative overflow-hidden rounded-[2.5rem] bg-gradient-to-r from-[#3d4f40] to-[#5c7c64] px-8 py-12 shadow-2xl shadow-emerald-900/10 sm:px-12 noise-overlay">
+          <div className="absolute top-0 right-0 h-64 w-64 bg-white/5 blur-[80px] rounded-full translate-x-1/2 -translate-y-1/2 pointer-events-none" />
           <div className="relative z-10">
-            <div className="inline-flex items-center rounded-full bg-white/20 backdrop-blur-md px-3 py-1 text-xs font-bold uppercase tracking-widest text-white border border-white/30 shadow-sm">
+            <div className="inline-flex items-center rounded-full bg-white/10 backdrop-blur-md px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-white border border-white/20 shadow-sm">
               <Users size={13} className="mr-1.5" /> After Marriage Dashboard
             </div>
             <h1 className="mt-6 text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
@@ -380,81 +428,102 @@ function AfterMarriageDashboard({
           </div>
         </section>
 
-        {/* Partner connection alert */}
-        {!hasPartnerConnected && (
-          <section
-            className="animate-rise-in rounded-[2rem] border-l-4 border-l-amber-500 p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6"
-            style={{ backgroundColor: 'rgba(245,158,11,0.07)', border: '1px solid rgba(245,158,11,0.2)', borderLeft: '4px solid #f59e0b' }}
-          >
-            <div>
-              <h2 className="text-lg font-extrabold flex items-center gap-3 mb-2" style={{ color: '#92400e' }}>
-                <Link2 size={20} className="text-amber-600" /> Joint Account Required
-              </h2>
-              <p className="text-sm font-medium max-w-2xl" style={{ color: '#78350f' }}>
-                Couples dashboard features require an active partner connection. Open Couple Assessment to invite your partner or link accounts.
-              </p>
+        {/* Smart Nudges — stagger-1 */}
+        <div className="stagger-1 space-y-3">
+          {/* Partner connection alert */}
+          {!hasPartnerConnected && (
+            <div className="smart-nudge glass-tier-floating" style={{ borderLeftColor: '#f59e0b' }}>
+              <div className="nudge-icon" style={{ backgroundColor: 'rgba(245,158,11,0.1)', color: '#f59e0b' }}>
+                <Link2 size={18} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-bold" style={{ color: 'var(--text-primary)' }}>Joint Account Required</p>
+                <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>Connect your partner to unlock couple features.</p>
+              </div>
+              <button onClick={() => onNavigate('quiz')} className="text-xs font-bold px-4 py-2 rounded-lg transition-all hover:-translate-y-0.5 shrink-0" style={{ backgroundColor: '#f59e0b', color: '#451a03' }}>
+                Connect <ArrowRight size={12} className="inline ml-1" />
+              </button>
             </div>
-            <button
-              onClick={() => onNavigate('quiz')}
-              className="flex-shrink-0 inline-flex items-center justify-center gap-2 rounded-xl bg-amber-500 px-6 py-3 font-bold text-amber-950 hover:bg-amber-400 transition-colors shadow-md focus-ring"
-            >
-              Connect Partner <ArrowRight size={16} />
-            </button>
-          </section>
-        )}
+          )}
 
-        {/* Pending Pulse Alert */}
-        {hasPartnerConnected && pendingPulse && (
-          <section
-            className="animate-rise-in rounded-[2rem] p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6"
-            style={{ backgroundColor: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)' }}
-          >
-            <div>
-              <h2 className="text-xl font-extrabold flex items-center gap-3 mb-2" style={{ color: '#064e3b' }}>
-                <Heart size={24} className="text-emerald-600 animate-pulse" /> Action Needed: Partner's Pulse Check
-              </h2>
-              <p className="text-sm font-medium max-w-2xl" style={{ color: '#064e3b' }}>
-                Your partner has completed their half of the weekly Couple Pulse Check. It's your turn to respond so you can both see the results!
-              </p>
+          {/* Pending Pulse Alert */}
+          {hasPartnerConnected && pendingPulse && (
+            <div className="smart-nudge glass-tier-floating" style={{ borderLeftColor: '#10b981' }}>
+              <div className="nudge-icon" style={{ backgroundColor: 'rgba(92,124,100,0.1)', color: '#5c7c64' }}>
+                <Heart size={18} className="animate-pulse" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-bold" style={{ color: 'var(--text-primary)' }}>Partner's Pulse Check Waiting</p>
+                <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>Your partner completed their half. Respond to see joint results!</p>
+              </div>
+              <button onClick={() => onNavigate('couple-pulse-check')} className="text-xs font-bold px-4 py-2 rounded-lg transition-all hover:-translate-y-0.5 shrink-0" style={{ backgroundColor: 'var(--brand-emerald)', color: '#fff' }}>
+                Respond <ArrowRight size={12} className="inline ml-1" />
+              </button>
             </div>
-            <button
-              onClick={() => onNavigate('couple-pulse-check')}
-              className="flex-shrink-0 inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-6 py-3 font-bold text-white hover:bg-emerald-500 transition-colors shadow-lg focus-ring shrink-0"
-            >
-              Respond to Pulse <ArrowRight size={16} />
-            </button>
-          </section>
-        )}
+          )}
 
-        {/* Partner Insights Widget */}
+          {/* Health tracking nudge */}
+          {hasPartnerConnected && healthIsStale && (
+            <div className="smart-nudge glass-tier-floating" style={{ borderLeftColor: '#14b8a6' }}>
+              <div className="nudge-icon" style={{ backgroundColor: 'rgba(20,184,166,0.1)', color: '#14b8a6' }}>
+                <Activity size={18} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-bold" style={{ color: 'var(--text-primary)' }}>Weekly health check-in due</p>
+                <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>Track your relationship health to see trends over time.</p>
+              </div>
+              <button onClick={() => onNavigate('health-tracker')} className="text-xs font-bold px-4 py-2 rounded-lg transition-all hover:-translate-y-0.5 shrink-0" style={{ backgroundColor: 'var(--brand-emerald)', color: '#fff' }}>
+                Track Now
+              </button>
+            </div>
+          )}
+
+          {/* Pulse check nudge */}
+          {hasPartnerConnected && !pendingPulse && pulseIsStale && (
+            <div className="smart-nudge glass-tier-floating" style={{ borderLeftColor: '#8b5cf6' }}>
+              <div className="nudge-icon" style={{ backgroundColor: 'rgba(139,92,246,0.1)', color: '#8b5cf6' }}>
+                <Bell size={18} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-bold" style={{ color: 'var(--text-primary)' }}>Weekly Couple Pulse is due</p>
+                <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>Start a new pulse assessment with your partner.</p>
+              </div>
+              <button onClick={() => onNavigate('couple-pulse-check')} className="text-xs font-bold px-4 py-2 rounded-lg transition-all hover:-translate-y-0.5 shrink-0" style={{ backgroundColor: 'var(--brand-indigo)', color: '#fff' }}>
+                Start Pulse
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Partner Insights Widget — stagger-2 */}
         {partnerInsights && (
-          <section className="premium-card p-8 bg-gradient-to-br from-indigo-50 to-pink-50 border-indigo-100/50">
-            <h2 className="text-2xl font-extrabold mb-6 flex items-center gap-3 text-indigo-900">
-              <MessageCircleHeart className="text-pink-500" size={24} /> Partner Insights
+          <section className="stagger-2 premium-card p-8 bg-gradient-to-br from-[#fdfcfb] to-[#f7f3f0] border-[#2a2826]/5">
+            <h2 className="text-2xl font-extrabold mb-6 flex items-center gap-3 text-[#2a2826]">
+              <MessageCircleHeart className="text-[#a65d50]" size={24} /> Partner Insights
             </h2>
-            <p className="text-sm text-indigo-800/70 mb-6 font-medium">Direct quotes from your partner's latest Pulse Check</p>
+            <p className="text-sm text-[#57524e]/70 mb-6 font-medium">Direct quotes from your partner's latest Pulse Check</p>
             <div className="grid md:grid-cols-3 gap-5">
-              <div className="bg-white/80 backdrop-blur-sm p-5 rounded-2xl border border-indigo-100 shadow-sm">
-                <h3 className="text-xs font-bold uppercase tracking-widest text-indigo-400 mb-3 flex items-center gap-2">
-                  <Heart size={14} className="text-pink-400" /> Gratitude
+              <div className="glass-tier-elevated p-5 rounded-2xl">
+                <h3 className="label-clinical text-[#d97757] mb-3 flex items-center gap-2">
+                  <Heart size={14} className="text-[#a65d50]" /> Gratitude
                 </h3>
-                <p className="text-sm font-medium text-indigo-900 italic leading-relaxed">
+                <p className="text-sm font-medium text-[#2a2826] italic leading-relaxed">
                   "{partnerInsights.gratitude || 'No specific gratitude recorded this week.'}"
                 </p>
               </div>
-              <div className="bg-white/80 backdrop-blur-sm p-5 rounded-2xl border border-indigo-100 shadow-sm">
-                <h3 className="text-xs font-bold uppercase tracking-widest text-indigo-400 mb-3 flex items-center gap-2">
-                  <Sparkles size={14} className="text-indigo-400" /> What they wish you knew
+              <div className="glass-tier-elevated p-5 rounded-2xl">
+                <h3 className="label-clinical text-[#d97757] mb-3 flex items-center gap-2">
+                  <Sparkles size={14} className="text-[#d97757]" /> What they wish you knew
                 </h3>
-                <p className="text-sm font-medium text-indigo-900 italic leading-relaxed">
+                <p className="text-sm font-medium text-[#2a2826] italic leading-relaxed">
                   "{partnerInsights.wish || 'Communication felt clear this week.'}"
                 </p>
               </div>
-              <div className="bg-white/80 backdrop-blur-sm p-5 rounded-2xl border border-indigo-100 shadow-sm">
-                <h3 className="text-xs font-bold uppercase tracking-widest text-indigo-400 mb-3 flex items-center gap-2">
-                  <TrendingUp size={14} className="text-emerald-400" /> Room for Growth
+              <div className="glass-tier-elevated p-5 rounded-2xl">
+                <h3 className="label-clinical text-[#d97757] mb-3 flex items-center gap-2">
+                  <TrendingUp size={14} className="text-[#5c7c64]" /> Room for Growth
                 </h3>
-                <p className="text-sm font-medium text-indigo-900 italic leading-relaxed">
+                <p className="text-sm font-medium text-[#2a2826] italic leading-relaxed">
                   "{partnerInsights.improvement || 'Nothing specific right now.'}"
                 </p>
               </div>
@@ -462,24 +531,25 @@ function AfterMarriageDashboard({
           </section>
         )}
 
-        {/* Metrics */}
-        <section className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        {/* Metrics — stagger-3 */}
+        <section className="stagger-3 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
           <MetricCard theme="teal" icon={<Users size={22} />} label="Joint Status" value={hasPartnerConnected ? 'Connected' : 'Pending'} helper="Partner linked" />
           <MetricCard
-            theme="rose"
+            theme="coral"
             icon={<Heart size={22} />}
             label="Couples Alignment"
             value={alignmentScore ? `${alignmentScore}%` : (latestAssessment ? `${latestAssessment.total_score}%` : 'N/A')}
             helper={alignmentHelper}
+            numericValue={alignmentScore || latestAssessment?.total_score}
           />
-          <MetricCard theme="red" icon={<AlertTriangle size={22} />} label="High Risk Flags" value={String(highRisk)} helper="Urgent issues" />
-          <MetricCard theme="emerald" icon={<MessageCircleHeart size={22} />} label="Relationship Health" value={healthLabel} helper={latestHealth ? `Overall ${latestHealth.overall_score}%` : 'Track it now'} />
+          <MetricCard theme="rose" icon={<AlertTriangle size={22} />} label="High Risk Flags" value={String(highRisk)} helper="Urgent issues" />
+          <MetricCard theme="sage" icon={<MessageCircleHeart size={22} />} label="Relationship Health" value={healthLabel} helper={latestHealth ? `Overall ${latestHealth.overall_score}%` : 'Track it now'} numericValue={latestHealth?.overall_score} />
         </section>
 
-        {/* Main grid */}
+        {/* Main grid — stagger-4/5 */}
         <div className="grid lg:grid-cols-[1fr,300px] gap-8">
           <section
-            className="premium-card p-8"
+            className="stagger-4 premium-card p-8"
             style={{ backgroundColor: 'var(--bg-secondary)' }}
           >
             <h2 className="text-2xl font-extrabold mb-6 flex items-center gap-3" style={{ color: 'var(--text-primary)' }}>
@@ -493,26 +563,30 @@ function AfterMarriageDashboard({
                   service={service}
                   onNavigate={onNavigate}
                   disabled={!hasPartnerConnected && service.targetPage !== 'quiz'}
-                  color="emerald"
+                  color="sage"
                 />
               ))}
             </div>
           </section>
 
-          <QuickActionsPanel
-            theme="emerald"
-            tip="Review the Relationship Health once a week together with your partner."
-            actions={[
-              { label: 'Open Couple Assessment', onClick: () => onNavigate('quiz'), variant: 'primary' },
-              { label: 'Track Relationship Health', onClick: () => onNavigate('health-tracker'), variant: 'secondary', disabled: !hasPartnerConnected },
-              { label: 'Start Conflict Program', onClick: () => onNavigate('conflict-resolution'), variant: 'secondary', disabled: !hasPartnerConnected },
-              { label: 'Start Couple Pulse', onClick: () => onNavigate('couple-pulse-check'), variant: 'secondary', disabled: !hasPartnerConnected },
-            ]}
-          />
+          <div className="stagger-5">
+            <QuickActionsPanel
+              theme="sage"
+              tip="Review the Relationship Health once a week together with your partner."
+              actions={[
+                { label: 'Open Couple Assessment', onClick: () => onNavigate('quiz'), variant: 'primary' },
+                { label: 'Track Relationship Health', onClick: () => onNavigate('health-tracker'), variant: 'secondary', disabled: !hasPartnerConnected },
+                { label: 'Start Conflict Program', onClick: () => onNavigate('conflict-resolution'), variant: 'secondary', disabled: !hasPartnerConnected },
+                { label: 'Start Couple Pulse', onClick: () => onNavigate('couple-pulse-check'), variant: 'secondary', disabled: !hasPartnerConnected },
+              ]}
+            />
+          </div>
         </div>
 
-        {/* Chat with Mentor widget */}
-        <MentorChatWidget assignedMentor={assignedMentor} mentorAssignment={mentorAssignment} onNavigate={onNavigate} />
+        {/* Chat with Mentor widget — stagger-6 */}
+        <div className="stagger-6">
+          <MentorChatWidget assignedMentor={assignedMentor} mentorAssignment={mentorAssignment} onNavigate={onNavigate} />
+        </div>
       </div>
     </div>
   );
@@ -527,13 +601,13 @@ type ActionDef = {
 };
 
 function QuickActionsPanel({ theme, tip, actions }: {
-  theme: 'indigo' | 'emerald';
+  theme: 'coral' | 'sage';
   tip: string;
   actions: ActionDef[];
 }) {
-  const accentColor = theme === 'indigo' ? '#6366f1' : '#10b981';
-  const accentLight = theme === 'indigo' ? 'rgba(99,102,241,0.08)' : 'rgba(16,185,129,0.08)';
-  const accentBorder = theme === 'indigo' ? 'rgba(99,102,241,0.2)' : 'rgba(16,185,129,0.2)';
+  const accentColor = theme === 'coral' ? '#d97757' : '#5c7c64';
+  const accentLight = theme === 'coral' ? 'rgba(217,119,87,0.08)' : 'rgba(92,124,100,0.08)';
+  const accentBorder = theme === 'coral' ? 'rgba(217,119,87,0.2)' : 'rgba(92,124,100,0.2)';
 
   return (
     <section
@@ -575,30 +649,30 @@ type ServiceCardProps = {
   service: ServiceItem;
   onNavigate: (page: string) => void;
   disabled?: boolean;
-  color: 'indigo' | 'emerald';
+  color: 'coral' | 'sage';
 };
 
 function ServiceCard({ service, onNavigate, disabled = false, color }: ServiceCardProps) {
   const isPremium = service.priceLabel === 'PREMIUM';
 
   const colorTokens = {
-    indigo: {
-      badgeBg: 'rgba(99,102,241,0.1)',
-      badgeColor: '#6366f1',
-      premiumBg: 'rgba(245,158,11,0.1)',
-      premiumColor: '#d97706',
-      checkColor: '#6366f1',
-      btnBg: '#4f46e5',
-      btnBgHover: '#4338ca',
+    coral: {
+      badgeBg: 'var(--brand-indigo-light)',
+      badgeColor: 'var(--brand-indigo)',
+      premiumBg: 'rgba(217,119,87,0.15)',
+      premiumColor: '#d97757',
+      checkColor: 'var(--brand-indigo)',
+      btnBg: 'var(--brand-indigo)',
+      btnBgHover: '#bf664a',
     },
-    emerald: {
-      badgeBg: 'rgba(16,185,129,0.1)',
-      badgeColor: '#10b981',
-      premiumBg: 'rgba(245,158,11,0.1)',
-      premiumColor: '#d97706',
-      checkColor: '#10b981',
-      btnBg: '#059669',
-      btnBgHover: '#047857',
+    sage: {
+      badgeBg: 'var(--brand-emerald-light)',
+      badgeColor: 'var(--brand-emerald)',
+      premiumBg: 'rgba(92,124,100,0.15)',
+      premiumColor: '#5c7c64',
+      checkColor: 'var(--brand-emerald)',
+      btnBg: 'var(--brand-emerald)',
+      btnBgHover: '#4d6854',
     },
   };
 
@@ -659,13 +733,13 @@ type ActionButtonProps = {
   label: string;
   variant?: 'primary' | 'secondary';
   disabled?: boolean;
-  theme: 'indigo' | 'emerald';
+  theme: 'coral' | 'sage';
 };
 
 function ActionButton({ onClick, label, variant = 'primary', disabled = false, theme }: ActionButtonProps) {
   const isPrimary = variant === 'primary';
-  const primaryBg = theme === 'indigo' ? '#4f46e5' : '#059669';
-  const primaryHover = theme === 'indigo' ? '#4338ca' : '#047857';
+  const primaryBg = theme === 'coral' ? 'var(--brand-indigo)' : 'var(--brand-emerald)';
+  const primaryHover = theme === 'coral' ? '#bf664a' : '#4d6854';
 
   return (
     <button
@@ -698,24 +772,26 @@ type MetricCardProps = {
   label: string;
   value: string;
   helper: string;
-  theme: 'indigo' | 'emerald' | 'rose' | 'blue' | 'teal' | 'red';
+  theme: 'coral' | 'sage' | 'rose' | 'blue' | 'teal' | 'red';
+  numericValue?: number;
 };
 
 const metricThemeMap: Record<string, { bg: string; color: string }> = {
-  indigo: { bg: 'rgba(99,102,241,0.1)', color: '#6366f1' },
-  emerald: { bg: 'rgba(16,185,129,0.1)', color: '#10b981' },
-  rose: { bg: 'rgba(244,63,94,0.1)', color: '#f43f5e' },
+  coral: { bg: 'rgba(217,119,87,0.1)', color: '#d97757' },
+  sage: { bg: 'rgba(92,124,100,0.1)', color: '#5c7c64' },
+  rose: { bg: 'rgba(166,93,80,0.1)', color: '#a65d50' },
   blue: { bg: 'rgba(59,130,246,0.1)', color: '#3b82f6' },
   teal: { bg: 'rgba(20,184,166,0.1)', color: '#14b8a6' },
   red: { bg: 'rgba(239,68,68,0.1)', color: '#ef4444' },
 };
 
-function MetricCard({ icon, label, value, helper, theme }: MetricCardProps) {
-  const t = metricThemeMap[theme] ?? metricThemeMap.indigo;
+function MetricCard({ icon, label, value, helper, theme, numericValue }: MetricCardProps) {
+  const t = metricThemeMap[theme] ?? metricThemeMap.coral;
+  const isHighScore = typeof numericValue === 'number' && numericValue >= 80;
 
   return (
     <article
-      className="premium-card p-6 relative overflow-hidden group"
+      className={`premium-card p-6 relative overflow-hidden group ${isHighScore ? 'glow-bloom' : ''}`}
       style={{ backgroundColor: 'var(--bg-secondary)' }}
     >
       {/* Glow blob */}
@@ -732,10 +808,10 @@ function MetricCard({ icon, label, value, helper, theme }: MetricCardProps) {
         </div>
       </div>
       <div>
-        <p className="text-3xl font-extrabold tracking-tight" style={{ color: 'var(--text-primary)' }}>
+        <p className={`text-3xl font-extrabold tracking-tight ${isHighScore ? 'data-pulse' : ''}`} style={{ color: 'var(--text-primary)' }}>
           {value}
         </p>
-        <p className="text-xs font-bold uppercase tracking-wide mt-1" style={{ color: 'var(--text-secondary)' }}>
+        <p className="label-clinical mt-1" style={{ color: 'var(--text-secondary)' }}>
           {label}
         </p>
         <p className="text-xs font-semibold mt-1.5" style={{ color: 'var(--text-muted)' }}>

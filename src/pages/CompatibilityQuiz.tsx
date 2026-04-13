@@ -116,9 +116,9 @@ const isQuestionAnswered = (question: AssessmentQuestion, value: ResponseValue |
 };
 
 const riskBadgeClass = (riskLevel: RiskLevel): string => {
-  if (riskLevel === 'High') return 'text-red-700 bg-red-100';
-  if (riskLevel === 'Medium') return 'text-amber-700 bg-amber-100';
-  return 'text-green-700 bg-green-100';
+  if (riskLevel === 'High') return 'text-[#a65d50] bg-[#a65d50]/10';
+  if (riskLevel === 'Medium') return 'text-[#d97757] bg-[#d97757]/10';
+  return 'text-[#5c7c64] bg-[#5c7c64]/10';
 };
 
 const isPartnerInvitationsTableMissing = (error: unknown): boolean => {
@@ -938,7 +938,7 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
     return (
       <div className="min-h-[calc(100vh-68px)] flex items-center justify-center" style={{ backgroundColor: 'var(--bg-primary)' }}>
         <div className="text-center">
-          <div className="rounded-full h-10 w-10 border-4 border-t-transparent animate-spin mx-auto mb-4" style={{ borderColor: 'rgba(99,102,241,0.2)', borderTopColor: '#6366f1' }} />
+          <div className="rounded-full h-10 w-10 border-4 border-t-transparent animate-spin mx-auto mb-4" style={{ borderColor: 'rgba(217,119,87,0.2)', borderTopColor: '#d97757' }} />
           <p className="text-sm font-semibold" style={{ color: 'var(--text-muted)' }}>Loading workspace…</p>
         </div>
       </div>
@@ -991,7 +991,7 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
 
           {partnerProfile ? (
             <div className="space-y-4">
-              <div className="rounded-lg border p-4" style={{ backgroundColor: 'var(--brand-emerald-light)', borderColor: 'rgba(16,185,129,0.2)' }}>
+              <div className="rounded-lg border p-4" style={{ backgroundColor: 'var(--brand-emerald-light)', borderColor: 'rgba(92,124,100,0.2)' }}>
                 <p className="font-semibold" style={{ color: 'var(--brand-emerald)' }}>Connected Partner</p>
                 <p style={{ color: 'var(--text-primary)' }}>
                   {partnerProfile!.full_name} ({partnerProfile!.email})
@@ -1048,7 +1048,7 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
                             <button
                               onClick={() => acceptInvitation(invite.id)}
                               disabled={busyAction === `accept-${invite.id}`}
-                              className="bg-emerald-600 text-white px-3 py-1.5 rounded-md text-sm font-semibold hover:bg-emerald-700 transition disabled:opacity-60"
+                              className="bg-[#d97757] text-white px-3 py-1.5 rounded-md text-sm font-semibold hover:opacity-90 transition disabled:opacity-60"
                             >
                               Accept
                             </button>
@@ -1114,7 +1114,7 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
               <button
                 onClick={startNewSession}
                 disabled={busyAction === 'start-session'}
-                className="bg-gradient-to-r from-indigo-600 to-blue-600 text-white px-6 py-3 rounded-xl font-bold hover:opacity-90 shadow-md hover:-translate-y-0.5 transition-all disabled:opacity-60 disabled:hover:translate-y-0"
+                className="bg-[#d97757] text-white px-6 py-3 rounded-xl font-bold hover:opacity-90 shadow-md hover:-translate-y-0.5 transition-all disabled:opacity-60 disabled:hover:translate-y-0"
               >
                 Start New Assessment
               </button>
@@ -1147,7 +1147,7 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
                       style={{
                         backgroundColor: isSelected ? 'var(--brand-indigo-light)' : 'var(--bg-secondary)',
                         borderColor: isSelected ? 'var(--brand-indigo)' : 'var(--border-primary)',
-                        boxShadow: isSelected ? '0 0 0 4px rgba(99,102,241,0.1)' : 'none',
+                        boxShadow: isSelected ? '0 0 0 4px rgba(217,119,87,0.1)' : 'none',
                         transform: isSelected ? 'scale(1.02)' : 'scale(1)',
                       }}
                     >
@@ -1297,7 +1297,7 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
 
                     <div className="grid md:grid-cols-2 gap-6">
                       {/* Step By Step */}
-                      <div className="p-5 rounded-2xl border" style={{ backgroundColor: 'var(--brand-emerald-light)', borderColor: 'rgba(16,185,129,0.15)' }}>
+                      <div className="p-5 rounded-2xl border" style={{ backgroundColor: 'var(--brand-emerald-light)', borderColor: 'rgba(92,124,100,0.15)' }}>
                         <h5 className="text-sm font-bold uppercase tracking-wider mb-3" style={{ color: 'var(--brand-emerald)' }}>Daily/Weekly Steps</h5>
                         <ul className="space-y-3">
                           {report!.ai_analysis.stepByStepActions.map((action, i) => (
@@ -1373,7 +1373,7 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
                             borderColor: isSelected ? 'var(--brand-indigo)' : 'var(--border-primary)',
                             backgroundColor: isSelected ? 'var(--brand-indigo-light)' : 'var(--bg-secondary)',
                             color: isSelected ? 'var(--brand-indigo)' : 'var(--text-primary)',
-                            boxShadow: isSelected ? '0 0 0 4px rgba(99,102,241,0.1)' : 'none',
+                            boxShadow: isSelected ? '0 0 0 4px rgba(217,119,87,0.1)' : 'none',
                           }}
                         >
                           {option}
@@ -1399,7 +1399,7 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
                             borderColor: selected ? 'var(--brand-indigo)' : 'var(--border-primary)',
                             backgroundColor: selected ? 'var(--brand-indigo-light)' : 'var(--bg-secondary)',
                             color: selected ? 'var(--brand-indigo)' : 'var(--text-primary)',
-                            boxShadow: selected ? '0 0 0 4px rgba(99,102,241,0.1)' : 'none',
+                            boxShadow: selected ? '0 0 0 4px rgba(217,119,87,0.1)' : 'none',
                           }}
                         >
                           <div className="flex items-center gap-3">
@@ -1443,7 +1443,7 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
                     <button
                       onClick={() => setCurrentQuestionIndex((prev) => prev + 1)}
                       disabled={!canMoveNext()}
-                      className="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-blue-600 text-white px-8 py-3 rounded-xl font-bold hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:-translate-y-0.5"
+                      className="inline-flex items-center gap-2 bg-[#d97757] text-white px-8 py-3 rounded-xl font-bold hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:-translate-y-0.5"
                     >
                       Next <ArrowRight size={18} />
                     </button>
@@ -1451,7 +1451,7 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
                     <button
                       onClick={submitMyAssessment}
                       disabled={!isAllAnswered() || savingSubmission}
-                      className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-8 py-3 rounded-xl font-bold hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:-translate-y-0.5"
+                      className="inline-flex items-center gap-2 bg-[#5c7c64] text-white px-8 py-3 rounded-xl font-bold hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:-translate-y-0.5"
                     >
                       {savingSubmission ? (
                         <>Submitting <div className="animate-spin rounded-full h-4 w-4 border-2 border-white/40 border-t-white ml-2"></div></>

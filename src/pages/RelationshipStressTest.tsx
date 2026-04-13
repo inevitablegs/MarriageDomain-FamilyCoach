@@ -131,14 +131,14 @@ export function RelationshipStressTest({ onNavigate }: RelationshipStressTestPro
           >
             <SkipBack size={16} /> Dashboard
           </button>
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full" style={{ backgroundColor: 'rgba(217,119,6,0.1)', color: '#d97706' }}>
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full" style={{ backgroundColor: 'rgba(217,119,87,0.1)', color: '#d97757' }}>
             <Activity size={16} />
             <span className="text-[10px] font-extrabold uppercase tracking-widest">Premium Service</span>
           </div>
         </div>
 
         <div className="mb-6">
-          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-2" style={{ color: 'var(--text-primary)' }}>
+          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-2 font-display" style={{ color: 'var(--text-primary)' }}>
             Relationship Stress Test
           </h1>
           <p className="text-sm font-medium max-w-2xl" style={{ color: 'var(--text-secondary)' }}>
@@ -149,12 +149,12 @@ export function RelationshipStressTest({ onNavigate }: RelationshipStressTestPro
         {/* Progress */}
         <div className="mb-10 premium-card p-6" style={{ backgroundColor: 'var(--bg-secondary)' }}>
           <div className="flex justify-between text-xs font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--text-secondary)' }}>
-            <span style={{ color: '#6366f1' }}>Domain: {currentQ.domain}</span>
+            <span style={{ color: '#d97757' }}>Domain: {currentQ.domain}</span>
             <span>Scenario {currentStep + 1} of {assessmentQuestions.length}</span>
           </div>
           <div className="h-2 w-full rounded-full overflow-hidden" style={{ backgroundColor: 'var(--bg-tertiary)' }}>
             <div 
-              className="h-full bg-gradient-to-r from-indigo-500 to-amber-500 transition-all duration-500 ease-out"
+              className="h-full bg-gradient-to-r from-[#d97757] to-[#5c7c64] transition-all duration-500 ease-out"
               style={{ width: `${((currentStep) / assessmentQuestions.length) * 100}%` }}
             />
           </div>
@@ -175,14 +175,14 @@ export function RelationshipStressTest({ onNavigate }: RelationshipStressTestPro
                   onClick={() => handleSelectOption(currentQ.id, opt.value)}
                   className={`w-full text-left p-6 rounded-2xl border-2 transition-all duration-200 ${
                     isSelected 
-                      ? 'border-indigo-500 bg-indigo-50 shadow-sm dark:bg-indigo-950/20' 
+                      ? 'border-[#d97757] bg-[#d97757]/5 shadow-sm' 
                       : 'border-transparent hover:border-slate-300 dark:hover:border-slate-700'
                   }`}
                   style={{ 
                     backgroundColor: isSelected ? undefined : 'var(--bg-tertiary)',
                   }}
                 >
-                  <p className={`font-semibold text-sm sm:text-[15px] leading-relaxed ${isSelected ? 'text-indigo-700 dark:text-indigo-400' : ''}`} style={{ color: !isSelected ? 'var(--text-primary)' : undefined }}>
+                  <p className={`font-semibold text-sm sm:text-[15px] leading-relaxed ${isSelected ? 'text-[#d97757]' : ''}`} style={{ color: !isSelected ? 'var(--text-primary)' : undefined }}>
                     {opt.text}
                   </p>
                 </button>
@@ -196,7 +196,7 @@ export function RelationshipStressTest({ onNavigate }: RelationshipStressTestPro
               disabled={!hasAnswered}
               className={`flex items-center gap-2 px-8 py-3.5 rounded-xl font-bold transition-all focus-ring ${
                 hasAnswered 
-                  ? 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-md hover:-translate-y-0.5' 
+                  ? 'bg-[#d97757] text-white hover:opacity-90 shadow-md hover:-translate-y-0.5' 
                   : 'bg-slate-200 text-slate-400 dark:bg-slate-800 cursor-not-allowed'
               }`}
              >
@@ -214,7 +214,7 @@ function LoadingState() {
   return (
     <div className="min-h-[calc(100vh-68px)] flex items-center justify-center transition-colors duration-300" style={{ backgroundColor: 'var(--bg-primary)' }}>
       <div className="text-center animate-pulse max-w-md px-6">
-        <BrainCircuit size={48} className="mx-auto mb-6 text-indigo-500 opacity-80" />
+        <BrainCircuit size={48} className="mx-auto mb-6 text-[#d97757] opacity-80" />
         <h2 className="text-xl font-extrabold mb-3 uppercase tracking-widest" style={{ color: 'var(--text-primary)' }}>Processing Audit Pipeline</h2>
         <p className="font-semibold text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
            Detecting contradictions. Mapping internal blind spots. Generating behavioral mismatch probabilities...
@@ -229,8 +229,8 @@ function ResultState({ result, onNavigate }: { result: RelationshipStressTestTyp
   const isHighRisk = result.risk_score >= 70;
   const isModerate = result.risk_score >= 30 && result.risk_score < 70;
   
-  const riskColor = isHighRisk ? '#ef4444' : (isModerate ? '#f59e0b' : '#10b981');
-  const riskBg = isHighRisk ? 'rgba(239,68,68,0.1)' : (isModerate ? 'rgba(245,158,11,0.1)' : 'rgba(16,185,129,0.1)');
+  const riskColor = isHighRisk ? '#a65d50' : (isModerate ? '#d97757' : '#5c7c64');
+  const riskBg = isHighRisk ? 'rgba(166,93,80,0.1)' : (isModerate ? 'rgba(217,119,87,0.1)' : 'rgba(92,124,100,0.1)');
 
   return (
     <div className="min-h-[calc(100vh-68px)] py-12 sm:py-16 transition-colors duration-300" style={{ backgroundColor: 'var(--bg-primary)' }}>
@@ -238,10 +238,10 @@ function ResultState({ result, onNavigate }: { result: RelationshipStressTestTyp
         
         {/* Header Section */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400 font-extrabold text-[10px] uppercase tracking-widest rounded-full mb-6">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#d97757]/10 text-[#d97757] font-extrabold text-[10px] uppercase tracking-widest rounded-full mb-6">
             <Target size={14} /> Official Audit Architecture
           </div>
-          <h1 className="text-4xl sm:text-5xl font-black tracking-tight leading-tight mb-6" style={{ color: 'var(--text-primary)' }}>
+          <h1 className="text-4xl sm:text-5xl font-black tracking-tight leading-tight mb-6 font-display" style={{ color: 'var(--text-primary)' }}>
             Stress Diagnostics Complete
           </h1>
           <p className="text-lg font-medium" style={{ color: 'var(--text-secondary)' }}>
@@ -280,7 +280,7 @@ function ResultState({ result, onNavigate }: { result: RelationshipStressTestTyp
               <ul className="space-y-4">
                 {result.blind_spots.map((spot, i) => (
                   <li key={i} className="text-sm font-bold leading-relaxed flex items-start gap-3" style={{ color: 'var(--text-primary)' }}>
-                    <div className="mt-1 w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: '#8b5cf6' }}></div>
+                    <div className="mt-1 w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: '#d97757' }}></div>
                     {spot}
                   </li>
                 ))}
@@ -294,7 +294,7 @@ function ResultState({ result, onNavigate }: { result: RelationshipStressTestTyp
             {/* Top Breaking Points */}
             <div className="premium-card p-8" style={{ backgroundColor: 'var(--bg-secondary)' }}>
               <h3 className="text-xs font-black uppercase tracking-widest mb-6 flex items-center gap-2" style={{ color: 'var(--text-muted)' }}>
-                <ShieldAlert size={16} className="text-amber-500" /> Primary Breaking Points
+                <ShieldAlert size={16} className="text-[#a65d50]" /> Primary Breaking Points
               </h3>
               <div className="space-y-4">
                 {result.breaking_points.map((bp, i) => (
@@ -311,12 +311,12 @@ function ResultState({ result, onNavigate }: { result: RelationshipStressTestTyp
             {/* Expectation Gaps */}
             <div className="premium-card p-8" style={{ backgroundColor: 'var(--bg-secondary)' }}>
               <h3 className="text-xs font-black uppercase tracking-widest mb-6 flex items-center gap-2" style={{ color: 'var(--text-muted)' }}>
-                <AlertTriangle size={16} className="text-rose-500" /> Structural Expectation Gaps
+                <AlertTriangle size={16} className="text-[#d97757]" /> Structural Expectation Gaps
               </h3>
               <div className="space-y-5">
                 {result.expectation_gaps.map((gap, i) => (
                   <div key={i} className="pb-5 border-b last:border-b-0 last:pb-0" style={{ borderColor: 'var(--border-primary)' }}>
-                    <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#d97706' }}>{gap.domain}</p>
+                    <p className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: '#d97757' }}>{gap.domain}</p>
                     <p className="text-[15px] font-semibold leading-relaxed" style={{ color: 'var(--text-primary)' }}>{gap.gap}</p>
                   </div>
                 ))}
@@ -324,14 +324,14 @@ function ResultState({ result, onNavigate }: { result: RelationshipStressTestTyp
             </div>
 
             {/* Action Plan */}
-            <div className="premium-card p-8" style={{ backgroundColor: 'var(--bg-secondary)', borderLeft: '4px solid #10b981' }}>
+            <div className="premium-card p-8" style={{ backgroundColor: 'var(--bg-secondary)', borderLeft: '4px solid #5c7c64' }}>
               <h3 className="text-xs font-black uppercase tracking-widest mb-6 flex items-center gap-2" style={{ color: 'var(--text-muted)' }}>
-                <ClipboardCheck size={16} className="text-emerald-500" /> Remediation Action Plan
+                <ClipboardCheck size={16} className="text-[#5c7c64]" /> Remediation Action Plan
               </h3>
               <div className="grid sm:grid-cols-2 gap-5">
                 {result.action_plan.map((action, i) => (
-                  <div key={i} className="p-5 rounded-2xl" style={{ backgroundColor: 'rgba(16,185,129,0.05)', border: '1px solid rgba(16,185,129,0.1)' }}>
-                    <h4 className="font-extrabold text-[15px] mb-3" style={{ color: '#10b981' }}>{action.title}</h4>
+                  <div key={i} className="p-5 rounded-2xl" style={{ backgroundColor: 'rgba(92,124,100,0.05)', border: '1px solid rgba(92,124,100,0.1)' }}>
+                    <h4 className="font-extrabold text-[15px] mb-3" style={{ color: '#5c7c64' }}>{action.title}</h4>
                     <p className="text-sm font-semibold leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{action.task}</p>
                   </div>
                 ))}
@@ -345,7 +345,7 @@ function ResultState({ result, onNavigate }: { result: RelationshipStressTestTyp
         <div className="flex justify-center pt-8">
            <button 
               onClick={() => onNavigate('dashboard')}
-              className="bg-indigo-600 text-white hover:bg-indigo-700 px-8 py-4 rounded-xl font-bold uppercase tracking-widest text-xs transition-all focus-ring shadow-md hover:-translate-y-0.5"
+              className="bg-[#d97757] text-white hover:opacity-90 px-8 py-4 rounded-xl font-bold uppercase tracking-widest text-xs transition-all focus-ring shadow-md hover:-translate-y-0.5"
            >
              Return to Dashboard
            </button>

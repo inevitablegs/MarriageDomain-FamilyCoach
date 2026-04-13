@@ -31,7 +31,7 @@ function renderMarkdown(text: string) {
               const cleanItem = item.replace(/^-\s*/, '');
               return (
                 <li key={i} className="flex items-start gap-3">
-                  <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-violet-500 shrink-0"></div>
+                  <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#d97757] shrink-0"></div>
                   <div className="leading-relaxed font-medium text-[15px] text-slate-700 dark:text-slate-300" dangerouslySetInnerHTML={{ __html: parseInline(cleanItem) }} />
                 </li>
               );
@@ -50,7 +50,7 @@ function renderMarkdown(text: string) {
             const cleanItem = item.replace(/^-\s/, '');
             return (
               <li key={i} className="flex items-start gap-3">
-                <div className="mt-2 w-1.5 h-1.5 rounded-full bg-violet-500 shrink-0"></div>
+                <div className="mt-2 w-1.5 h-1.5 rounded-full bg-[#d97757] shrink-0"></div>
                 <div className="leading-relaxed font-medium text-[15px] text-slate-700 dark:text-slate-300" dangerouslySetInnerHTML={{ __html: parseInline(cleanItem) }} />
               </li>
             );
@@ -61,7 +61,7 @@ function renderMarkdown(text: string) {
 
     // Default paragraph (handles 👉 icons beautifully)
     return (
-      <p key={bIdx} className={`mb-5 leading-relaxed font-medium text-[15.5px] ${block.startsWith('👉 Core risk:') ? 'bg-rose-50 dark:bg-rose-950/30 text-rose-800 dark:text-rose-300 p-4 rounded-xl border border-rose-100 dark:border-rose-900/50' : 'text-slate-600 dark:text-slate-400'}`} dangerouslySetInnerHTML={{ __html: parseInline(block) }} />
+      <p key={bIdx} className={`mb-5 leading-relaxed font-medium text-[15.5px] ${block.startsWith('👉 Core risk:') ? 'bg-[#a65d50]/10 text-[#a65d50] p-4 rounded-xl border border-[#a65d50]/20' : 'text-slate-600 dark:text-slate-400'}`} dangerouslySetInnerHTML={{ __html: parseInline(block) }} />
     );
   });
 }
@@ -72,7 +72,7 @@ function parseInline(str: string): string {
   // Italic
   s = s.replace(/\*(.*?)\*/g, '<em style="color: var(--text-primary);">$1</em>');
   // Handle the 👉 icon to make it bold and colorized
-  s = s.replace(/👉/g, '<span class="text-violet-500 mr-1 text-lg">👉</span>');
+  s = s.replace(/👉/g, '<span class="text-[#d97757] mr-1 text-lg">👉</span>');
   return s;
 }
 
@@ -88,7 +88,7 @@ function renderChatMarkdown(text: string) {
       <ul key={key} className="space-y-1.5 my-2 ml-1">
         {currentList.map((item, i) => (
           <li key={i} className="flex items-start gap-2">
-            <div className="mt-1.5 w-1 h-1 rounded-full bg-violet-400 shrink-0"></div>
+            <div className="mt-1.5 w-1 h-1 rounded-full bg-[#d97757]/60 shrink-0"></div>
             <span className="text-[14px] leading-relaxed" dangerouslySetInnerHTML={{ __html: parseChatInline(item) }} />
           </li>
         ))}
@@ -123,7 +123,7 @@ function renderChatMarkdown(text: string) {
 function parseChatInline(str: string): string {
   let s = str.replace(/\*\*(.*?)\*\*/g, '<strong style="font-weight:700;">$1</strong>');
   s = s.replace(/\*(.*?)\*/g, '<em>$1</em>');
-  s = s.replace(/`(.*?)`/g, '<code style="background:rgba(139,92,246,0.1);padding:1px 5px;border-radius:4px;font-size:13px;">$1</code>');
+  s = s.replace(/`(.*?)`/g, '<code style="background:rgba(217,119,87,0.1);padding:1px 5px;border-radius:4px;font-size:13px;">$1</code>');
   return s;
 }
 
@@ -306,7 +306,7 @@ export function NeedToKnow({ onNavigate }: NeedToKnowProps) {
                   onClick={() => setActiveCategoryId(category.id)}
                   className={`w-full text-left p-4 rounded-xl transition-all font-bold ${
                     activeCategoryId === category.id 
-                      ? 'bg-violet-50 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400' 
+                      ? 'bg-[#d97757]/10 text-[#d97757]' 
                       : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
                   }`}
                 >
@@ -342,10 +342,10 @@ export function NeedToKnow({ onNavigate }: NeedToKnowProps) {
           </div>
 
           {/* Ask AI Contextual Module */}
-          <div ref={aiModuleRef} className="premium-card overflow-hidden flex flex-col h-[500px] mt-8" style={{ backgroundColor: 'var(--bg-secondary)', borderTop: '4px solid #8b5cf6' }}>
-             <div className="p-3 sm:p-4 border-b flex justify-between items-center bg-violet-50 dark:bg-violet-950/20" style={{ borderColor: 'var(--border-primary)' }}>
+          <div ref={aiModuleRef} className="premium-card overflow-hidden flex flex-col h-[500px] mt-8" style={{ backgroundColor: 'var(--bg-secondary)', borderTop: '4px solid #d97757' }}>
+             <div className="p-3 sm:p-4 border-b flex justify-between items-center bg-[#d97757]/5" style={{ borderColor: 'var(--border-primary)' }}>
                <div className="flex items-center gap-2">
-                 <Bot size={18} className="text-violet-600 dark:text-violet-400" />
+                 <Bot size={18} className="text-[#d97757]" />
                  <h3 className="text-sm font-black uppercase tracking-wider" style={{ color: 'var(--text-primary)' }}>Live AI Analysis</h3>
                </div>
                <div className="flex items-center gap-2">
@@ -440,7 +440,7 @@ export function NeedToKnow({ onNavigate }: NeedToKnowProps) {
       {/* Floating Ask AI Button */}
       <button
         onClick={() => aiModuleRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
-        className={`fixed bottom-8 right-8 z-50 flex items-center gap-2 px-6 py-4 bg-violet-600 hover:bg-violet-700 text-white font-bold rounded-full shadow-2xl transition-all duration-300 transform ${
+        className={`fixed bottom-8 right-8 z-50 flex items-center gap-2 px-6 py-4 bg-[#d97757] hover:opacity-90 text-white font-bold rounded-full shadow-2xl transition-all duration-300 transform ${
           showFab 
             ? 'translate-y-0 opacity-100 scale-100' 
             : 'translate-y-16 opacity-0 scale-90 pointer-events-none'
@@ -459,7 +459,7 @@ export function NeedToKnow({ onNavigate }: NeedToKnowProps) {
           >
             <div className="flex items-center justify-between p-5 border-b" style={{ borderColor: 'var(--border-primary)' }}>
               <div className="flex items-center gap-2">
-                <History size={18} className="text-violet-500" />
+                <History size={18} className="text-[#d97757]" />
                 <h2 className="text-lg font-extrabold" style={{ color: 'var(--text-primary)' }}>Cleared Chat History</h2>
               </div>
               <button onClick={() => setShowHistoryModal(false)} className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
@@ -488,7 +488,7 @@ export function NeedToKnow({ onNavigate }: NeedToKnowProps) {
                         <div key={msg.id} className={`flex gap-2 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                           <div className={`max-w-[85%] p-3 rounded-xl text-[13px] leading-relaxed ${
                             msg.role === 'user'
-                              ? 'bg-violet-600 text-white rounded-tr-sm'
+                              ? 'bg-[#d97757] text-white rounded-tr-sm'
                               : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-tl-sm'
                           }`}>
                             {msg.role === 'assistant' ? renderChatMarkdown(msg.content) : <p className="font-medium">{msg.content}</p>}

@@ -25,9 +25,9 @@ export function Auth({ mode, onBack, onSuccess }: AuthProps) {
 
   const theme = isMentor
     ? {
-        gradient: 'from-violet-600 via-purple-600 to-indigo-600',
-        ringClass: 'focus:ring-violet-500',
-        accentColor: '#8b5cf6',
+        gradient: 'from-[#5c7c64] via-[#455d4b] to-[#5c7c64]',
+        ringClass: 'focus:ring-[#5c7c64]',
+        accentColor: '#5c7c64',
         title: 'Coach / Mentor Portal',
         subtitle: 'Sign in to your mentor account to connect with assigned users and provide guidance.',
         icon: <Users size={26} className="text-white" />,
@@ -35,9 +35,9 @@ export function Auth({ mode, onBack, onSuccess }: AuthProps) {
       }
     : isAdmin
     ? {
-        gradient: 'from-slate-700 via-zinc-700 to-slate-800',
-        ringClass: 'focus:ring-slate-500',
-        accentColor: '#64748b',
+        gradient: 'from-[#2a2826] via-[#3e3a36] to-[#2a2826]',
+        ringClass: 'focus:ring-[#2a2826]',
+        accentColor: '#2a2826',
         title: 'Admin Control Center',
         subtitle: 'Manage mentors, assign coaches to users, and oversee the platform.',
         icon: <HeartHandshake size={26} className="text-white" />,
@@ -45,18 +45,18 @@ export function Auth({ mode, onBack, onSuccess }: AuthProps) {
       }
     : isAfterMarriage
     ? {
-        gradient: 'from-emerald-600 via-emerald-600 to-teal-600',
-        ringClass: 'focus:ring-emerald-500',
-        accentColor: '#10b981',
+        gradient: 'from-[#5c7c64] via-[#455d4b] to-[#5c7c64]',
+        ringClass: 'focus:ring-[#5c7c64]',
+        accentColor: '#5c7c64',
         title: 'After Marriage Journey',
         subtitle: 'Connect, rebuild, and track your relationship health securely.',
         icon: <Users size={26} className="text-white" />,
         testimonial: '"We finally have a shared language for our relationship." — Priya & Rohan',
       }
     : {
-        gradient: 'from-indigo-600 via-indigo-600 to-blue-600',
-        ringClass: 'focus:ring-indigo-500',
-        accentColor: '#6366f1',
+        gradient: 'from-[#d97757] via-[#a65d50] to-[#d97757]',
+        ringClass: 'focus:ring-[#d97757]',
+        accentColor: '#d97757',
         title: 'Before Marriage Journey',
         subtitle: 'Analyze compatibility and uncover red flags before committing.',
         icon: <HeartHandshake size={26} className="text-white" />,
@@ -138,11 +138,11 @@ export function Auth({ mode, onBack, onSuccess }: AuthProps) {
       {/* Ambient blobs */}
       <div
         className="absolute top-0 right-0 h-[500px] w-[500px] rounded-full blur-[120px] opacity-20 pointer-events-none"
-        style={{ backgroundColor: isMentor ? '#8b5cf6' : isAdmin ? '#64748b' : isAfterMarriage ? '#10b981' : '#6366f1' }}
+        style={{ backgroundColor: isMentor ? '#5c7c64' : isAdmin ? '#2a2826' : isAfterMarriage ? '#5c7c64' : '#d97757' }}
       />
       <div
         className="absolute bottom-0 left-0 h-[500px] w-[500px] rounded-full blur-[120px] opacity-20 pointer-events-none"
-        style={{ backgroundColor: isMentor ? '#7c3aed' : isAdmin ? '#475569' : isAfterMarriage ? '#14b8a6' : '#3b82f6' }}
+        style={{ backgroundColor: isMentor ? '#455d4b' : isAdmin ? '#1a1817' : isAfterMarriage ? '#455d4b' : '#a65d50' }}
       />
 
       <div className="w-full max-w-5xl animate-rise-in relative z-10">

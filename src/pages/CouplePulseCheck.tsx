@@ -23,7 +23,7 @@ const empty = (): PulsePartnerResponses => ({
   gratitude_message: '', improvement_suggestion: '', growing_together: true, relationship_goal: '',
 });
 
-const sColor = (s: number) => s >= 80 ? '#10b981' : s >= 60 ? '#f59e0b' : '#f43f5e';
+const sColor = (s: number) => s >= 80 ? '#5c7c64' : s >= 60 ? '#d97757' : '#a65d50';
 const statusLabel = (s: string) => s === 'strong' ? '💚 Strong' : s === 'stable' ? '💛 Stable' : s === 'needs-attention' ? '🟠 Needs Attention' : '🔴 Critical';
 
 export function CouplePulseCheck({ onNavigate }: Props) {
@@ -138,7 +138,7 @@ export function CouplePulseCheck({ onNavigate }: Props) {
 
   if (loading) return (
     <div className="min-h-[calc(100vh-68px)] flex items-center justify-center">
-      <Loader2 size={32} className="animate-spin text-emerald-500" />
+      <Loader2 size={32} className="animate-spin text-[#5c7c64]" />
     </div>
   );
 
@@ -147,9 +147,9 @@ export function CouplePulseCheck({ onNavigate }: Props) {
       <Card>
         <div className="text-center space-y-3">
           <AlertTriangle className="mx-auto text-amber-500 mb-2" size={48} />
-          <h2 className="text-2xl font-extrabold" style={{ color: 'var(--text-primary)' }}>Partner Connection Required</h2>
+          <h2 className="text-2xl font-extrabold font-display" style={{ color: 'var(--text-primary)' }}>Partner Connection Required</h2>
           <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>You cannot start a Couple Pulse check until you have connected your partner's account.</p>
-          <button onClick={() => onNavigate('dashboard')} className="mt-4 px-6 py-2 rounded-xl border border-emerald-500 text-emerald-600 font-bold hover:bg-emerald-50">Back to Dashboard</button>
+          <button onClick={() => onNavigate('dashboard')} className="mt-4 px-6 py-2 rounded-xl border border-[#5c7c64] text-[#5c7c64] font-bold hover:bg-[#5c7c64]/5">Back to Dashboard</button>
         </div>
       </Card>
     </div>
@@ -164,16 +164,16 @@ export function CouplePulseCheck({ onNavigate }: Props) {
         {stage !== 'setup' && stage !== 'analyzing' && stage !== 'results' && (
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight flex items-center gap-3" style={{ color: 'var(--text-primary)' }}>
-                <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight flex items-center gap-3 font-display" style={{ color: 'var(--text-primary)' }}>
+                <div className="w-10 h-10 rounded-2xl bg-[#5c7c64] flex items-center justify-center shadow-lg">
                   <Heart className="text-white" size={20} fill="currentColor" />
                 </div>
                 Your Pulse
               </h1>
-              <span className="text-sm font-bold text-emerald-600">{partnerPendingPulse ? 'Responding directly' : 'Starting new session'}</span>
+              <span className="text-sm font-bold text-[#5c7c64]">{partnerPendingPulse ? 'Responding directly' : 'Starting new session'}</span>
             </div>
             <div className="relative h-2 rounded-full overflow-hidden" style={{ backgroundColor: 'var(--bg-tertiary)' }}>
-              <div className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 transition-all duration-500" style={{ width: `${pct}%` }} />
+              <div className="absolute inset-y-0 left-0 rounded-full bg-[#5c7c64] transition-all duration-500" style={{ width: `${pct}%` }} />
             </div>
           </div>
         )}
@@ -189,10 +189,10 @@ export function CouplePulseCheck({ onNavigate }: Props) {
           <div className="space-y-6">
             <Card>
               <div className="text-center space-y-3">
-                <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-xl shadow-emerald-500/25">
+                <div className="w-16 h-16 mx-auto rounded-2xl bg-[#5c7c64] flex items-center justify-center shadow-xl">
                   <Users className="text-white" size={32} />
                 </div>
-                <h2 className="text-2xl font-extrabold tracking-tight" style={{ color: 'var(--text-primary)' }}>Weekly Couple Pulse</h2>
+                <h2 className="text-2xl font-extrabold tracking-tight font-display" style={{ color: 'var(--text-primary)' }}>Weekly Couple Pulse</h2>
                 <p className="text-sm max-w-md mx-auto leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
                   A secure, private 5-pillar relationship check-in. Fill it out on your own device, and verify alignment together.
                 </p>
@@ -207,11 +207,11 @@ export function CouplePulseCheck({ onNavigate }: Props) {
               )}
 
               {partnerPendingPulse && (
-                <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-6 text-center animate-fade-in shadow-lg shadow-emerald-500/10">
-                  <AlertTriangle className="mx-auto text-emerald-600 mb-3" size={32} />
-                  <h3 className="text-lg font-bold text-emerald-900 mb-2">{partnerProfile?.full_name} is waiting for you!</h3>
-                  <p className="text-sm text-emerald-800 mb-5">Your partner has completed the pulse check. Answer your half to run the AI alignment report.</p>
-                  <button onClick={() => { setResponses(empty()); next(); }} className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:opacity-90 transition shadow-lg focus-ring">
+                <div className="bg-[#5c7c64]/5 border border-[#5c7c64]/20 rounded-2xl p-6 text-center animate-fade-in shadow-lg">
+                  <AlertTriangle className="mx-auto text-[#5c7c64] mb-3" size={32} />
+                  <h3 className="text-lg font-bold text-[#2a2826] mb-2">{partnerProfile?.full_name} is waiting for you!</h3>
+                  <p className="text-sm text-[#2a2826]/80 mb-5">Your partner has completed the pulse check. Answer your half to run the AI alignment report.</p>
+                  <button onClick={() => { setResponses(empty()); next(); }} className="w-full bg-[#5c7c64] text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:opacity-90 transition shadow-lg focus-ring">
                     Respond Now <ArrowRight size={18} />
                   </button>
                 </div>
@@ -220,7 +220,7 @@ export function CouplePulseCheck({ onNavigate }: Props) {
               {!pendingPulse && (
                 <div className="space-y-6">
                   <HowItWorks />
-                  <button onClick={() => { setResponses(empty()); next(); }} className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:opacity-90 transition shadow-lg shadow-emerald-500/20 hover:-translate-y-0.5 focus-ring">
+                  <button onClick={() => { setResponses(empty()); next(); }} className="w-full bg-[#d97757] text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:opacity-90 transition shadow-lg hover:-translate-y-0.5 focus-ring">
                     Start New Pulse Check <ArrowRight size={18} />
                   </button>
                 </div>
@@ -230,14 +230,14 @@ export function CouplePulseCheck({ onNavigate }: Props) {
             {/* History Tracker */}
             {history.length > 0 && (
               <div className="premium-card p-6 sm:p-8" style={{ backgroundColor: 'var(--bg-secondary)' }}>
-                <h3 className="text-lg font-extrabold mb-4 flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
-                  <Clock size={20} className="text-indigo-500" /> Pulse History
+                <h3 className="text-lg font-extrabold mb-4 flex items-center gap-2 font-display" style={{ color: 'var(--text-primary)' }}>
+                  <Clock size={20} className="text-[#d97757]" /> Pulse History
                 </h3>
                 <div className="space-y-3">
                   {history.map((s) => {
                     const r = s.report as any;
                     return (
-                      <div key={s.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl border border-indigo-100 bg-indigo-50/30 gap-4 transition hover:bg-indigo-50/50">
+                      <div key={s.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl border border-[#d97757]/10 bg-[#d97757]/5 gap-4 transition hover:bg-[#d97757]/10">
                         <div>
                           <div className="font-bold text-sm text-indigo-900 mb-1">
                             {new Date(s.completed_at || s.created_at).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}
@@ -245,8 +245,8 @@ export function CouplePulseCheck({ onNavigate }: Props) {
                           <div className="text-xs text-indigo-700/80">Alignment Score: {r?.alignment_score || 'N/A'}%</div>
                         </div>
                         <div className="flex gap-2">
-                          <span className="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-lg text-xs font-bold">Overall: {r?.overall_pulse || 'N/A'}%</span>
-                          <button onClick={() => { setReport(r); window.scrollTo(0,0); setStage('results'); }} className="px-3 py-1 bg-white border border-indigo-200 text-indigo-600 rounded-lg text-xs font-bold shadow-sm hover:shadow">View Report</button>
+                          <span className="px-3 py-1 bg-[#5c7c64]/10 text-[#5c7c64] rounded-lg text-xs font-bold">Overall: {r?.overall_pulse || 'N/A'}%</span>
+                          <button onClick={() => { setReport(r); window.scrollTo(0,0); setStage('results'); }} className="px-3 py-1 bg-white border border-[#d97757]/20 text-[#d97757] rounded-lg text-xs font-bold shadow-sm hover:shadow">View Report</button>
                         </div>
                       </div>
                     );
@@ -259,7 +259,7 @@ export function CouplePulseCheck({ onNavigate }: Props) {
 
         {/* --- STAGE 1: CONNECTION --- */}
         {stage === 'connection' && (
-          <StageWrap icon={<Heart className="text-white" size={24} fill="currentColor" />} title="Connection" subtitle="How connected did you feel this week?" gradient="bg-gradient-to-br from-rose-500 to-pink-600" onPrev={prev} onNext={() => { if (!responses.valued_action.trim()) { setError('Please describe what made you feel valued.'); return; } next(); }}>
+          <StageWrap icon={<Heart className="text-white" size={24} fill="currentColor" />} title="Connection" subtitle="How connected did you feel this week?" gradient="bg-[#a65d50]" onPrev={prev} onNext={() => { if (!responses.valued_action.trim()) { setError('Please describe what made you feel valued.'); return; } next(); }}>
             <Q>On a scale of 1–10, how connected did you feel this week?</Q>
             <Slider value={responses.connection_rating} onChange={v => upd({ connection_rating: v })} />
             <Q>What did your partner do that made you feel truly valued?</Q>
@@ -273,7 +273,7 @@ export function CouplePulseCheck({ onNavigate }: Props) {
 
         {/* --- STAGE 2: RESPONSIBILITY --- */}
         {stage === 'responsibility' && (
-          <StageWrap icon={<Scale className="text-white" size={24} />} title="Responsibility Balance" subtitle="Reflect on how effort was shared." gradient="bg-gradient-to-br from-amber-500 to-orange-600" onPrev={prev} onNext={() => { if (!responses.tasks_handled.trim()) { setError('Please list tasks you handled.'); return; } next(); }}>
+          <StageWrap icon={<Scale className="text-white" size={24} />} title="Responsibility Balance" subtitle="Reflect on how effort was shared." gradient="bg-[#d97757]" onPrev={prev} onNext={() => { if (!responses.tasks_handled.trim()) { setError('Please list tasks you handled.'); return; } next(); }}>
             <Q>List the tasks you handled this week (household, planning, emotional support…)</Q>
             <textarea value={responses.tasks_handled} onChange={e => upd({ tasks_handled: e.target.value })} className="input-base min-h-[90px] resize-y" placeholder="Cooking, kids, laundry, scheduling, emotional support..." />
             <Q>Do you feel the workload was fair this week?</Q>
@@ -287,7 +287,7 @@ export function CouplePulseCheck({ onNavigate }: Props) {
 
         {/* --- STAGE 3: TRUST --- */}
         {stage === 'trust' && (
-          <StageWrap icon={<Shield className="text-white" size={24} />} title="Trust & Honesty" subtitle="Reflect on trust, boundaries, and openness." gradient="bg-gradient-to-br from-indigo-500 to-violet-600" onPrev={prev} onNext={next}>
+          <StageWrap icon={<Shield className="text-white" size={24} />} title="Trust & Honesty" subtitle="Reflect on trust, boundaries, and openness." gradient="bg-[#2a2826]" onPrev={prev} onNext={next}>
             <Q>Did anything this week make you feel insecure or doubtful?</Q>
             <textarea value={responses.insecurity_triggers} onChange={e => upd({ insecurity_triggers: e.target.value })} className="input-base min-h-[80px] resize-y" placeholder="Describe honestly, or type 'Nothing' if all good..." />
             <Q>Were any boundaries crossed this week?</Q>
@@ -300,7 +300,7 @@ export function CouplePulseCheck({ onNavigate }: Props) {
 
         {/* --- STAGE 4: EMOTIONAL INTIMACY --- */}
         {stage === 'intimacy' && (
-          <StageWrap icon={<Flame className="text-white" size={24} />} title="Emotional Intimacy" subtitle="How emotionally close did you feel?" gradient="bg-gradient-to-br from-pink-500 to-rose-600" onPrev={prev} onNext={next}>
+          <StageWrap icon={<Flame className="text-white" size={24} />} title="Emotional Intimacy" subtitle="How emotionally close did you feel?" gradient="bg-[#a65d50]" onPrev={prev} onNext={next}>
             <Q>On a scale of 1–10, how emotionally close did you feel this week?</Q>
             <Slider value={responses.intimacy_rating} onChange={v => upd({ intimacy_rating: v })} />
             <Q>Did you share something vulnerable with your partner this week?</Q>
@@ -314,7 +314,7 @@ export function CouplePulseCheck({ onNavigate }: Props) {
 
         {/* --- STAGE 5: GROWTH & APPRECIATION --- */}
         {stage === 'growth' && (
-          <StageWrap icon={<TrendingUp className="text-white" size={24} />} title="Growth & Appreciation" subtitle="Are you growing together?" gradient="bg-gradient-to-br from-emerald-500 to-teal-600" onPrev={prev} onNext={submitMyResponses} nextLabel={partnerPendingPulse ? '✨ Submit & Analyze' : 'Send to Partner'}>
+          <StageWrap icon={<TrendingUp className="text-white" size={24} />} title="Growth & Appreciation" subtitle="Are you growing together?" gradient="bg-[#5c7c64]" onPrev={prev} onNext={submitMyResponses} nextLabel={partnerPendingPulse ? '✨ Submit & Analyze' : 'Send to Partner'}>
             <Q>Write a direct message of gratitude to your partner:</Q>
             <textarea value={responses.gratitude_message} onChange={e => upd({ gratitude_message: e.target.value })} className="input-base min-h-[80px] resize-y" placeholder="Dear [partner], I want you to know that..." />
             <Q>What's one thing your partner could do better next week?</Q>
@@ -331,12 +331,12 @@ export function CouplePulseCheck({ onNavigate }: Props) {
           <Card>
             <div className="text-center space-y-6">
               <div className="relative w-20 h-20 mx-auto">
-                <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-xl"><Sparkles className="text-white" size={36} /></div>
-                <div className="absolute -inset-3 rounded-[28px] border-2 border-emerald-400/20 border-t-emerald-500 animate-spin" />
+                <div className="w-20 h-20 rounded-2xl bg-[#5c7c64] flex items-center justify-center shadow-xl"><Sparkles className="text-white" size={36} /></div>
+                <div className="absolute -inset-3 rounded-[28px] border-2 border-[#5c7c64]/20 border-t-[#5c7c64] animate-spin" />
               </div>
               <h2 className="text-2xl font-extrabold" style={{ color: 'var(--text-primary)' }}>{partnerPendingPulse ? 'Analyzing Pulse Check' : 'Saving Your Answers'}</h2>
               <div className="space-y-2">
-                <div className="flex items-center gap-3 justify-center text-sm font-medium" style={{ color: 'var(--brand-emerald)' }}>
+                <div className="flex items-center gap-3 justify-center text-sm font-medium" style={{ color: '#5c7c64' }}>
                   <Loader2 size={16} className="animate-spin" />
                   {phaseDetail || 'Synchronizing with partner data...'}
                 </div>
@@ -349,15 +349,15 @@ export function CouplePulseCheck({ onNavigate }: Props) {
         {stage === 'results' && report && (
           <div className="space-y-6 animate-rise-in">
             {/* Hero */}
-            <div className="premium-card p-8 sm:p-10 bg-gradient-to-br from-emerald-900 to-teal-900 text-white relative overflow-hidden noise-overlay">
+            <div className="premium-card p-8 sm:p-10 bg-[#2a2826] text-white relative overflow-hidden noise-overlay">
               <div className="absolute top-0 right-0 w-72 h-72 bg-white/10 blur-[80px] rounded-full translate-x-1/2 -translate-y-1/2 pointer-events-none" />
               <div className="relative z-10">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 mb-6">
                   <div className="flex items-center gap-3">
-                    <div className="w-11 h-11 rounded-2xl bg-white/15 backdrop-blur-sm flex items-center justify-center"><Heart className="text-emerald-300" size={22} fill="currentColor" /></div>
+                    <div className="w-11 h-11 rounded-2xl bg-white/10 backdrop-blur-sm flex items-center justify-center"><Heart className="text-[#d97757]" size={22} fill="currentColor" /></div>
                     <div>
-                      <h1 className="text-2xl sm:text-3xl font-extrabold">Couple Pulse Report</h1>
-                      <p className="text-emerald-200/80 text-sm">{profile?.full_name} & {partnerProfile?.full_name}</p>
+                      <h1 className="text-2xl sm:text-3xl font-extrabold font-display">Couple Pulse Report</h1>
+                      <p className="text-white/60 text-sm italic">{profile?.full_name} & {partnerProfile?.full_name}</p>
                     </div>
                   </div>
                   <div className="text-center sm:text-right">
@@ -366,14 +366,14 @@ export function CouplePulseCheck({ onNavigate }: Props) {
                   </div>
                 </div>
                 {/* Emotional Summary */}
-                <div className="bg-white/10 backdrop-blur-md border border-white/20 p-5 rounded-2xl mb-4">
-                  <h4 className="text-emerald-200 text-xs font-bold uppercase tracking-widest mb-2"><Sparkles size={14} className="inline mr-1" />Emotional Summary</h4>
-                  <p className="text-emerald-50 font-medium leading-relaxed">{report.emotional_summary}</p>
+                <div className="bg-white/5 backdrop-blur-md border border-white/10 p-5 rounded-2xl mb-4">
+                  <h4 className="text-white/80 text-xs font-bold uppercase tracking-widest mb-2 font-display"><Sparkles size={14} className="inline mr-1" />Emotional Summary</h4>
+                  <p className="text-white font-medium leading-relaxed">{report.emotional_summary}</p>
                 </div>
                 {/* Insight */}
-                <div className="bg-emerald-800/40 border border-emerald-500/30 p-4 rounded-xl flex items-start gap-3">
-                  <Sparkles className="text-emerald-300 shrink-0 mt-0.5" size={18} />
-                  <p className="text-emerald-50 font-bold text-sm">{report.insight}</p>
+                <div className="bg-[#d97757]/20 border border-[#d97757]/30 p-4 rounded-xl flex items-start gap-3">
+                  <Sparkles className="text-[#d97757] shrink-0 mt-0.5" size={18} />
+                  <p className="text-white font-bold text-sm">{report.insight}</p>
                 </div>
               </div>
             </div>
@@ -400,7 +400,7 @@ export function CouplePulseCheck({ onNavigate }: Props) {
               {/* Alignment Score Card */}
               <div className="premium-card p-5" style={{ backgroundColor: 'var(--bg-secondary)' }}>
                 <div className="flex items-center gap-2 mb-2">
-                  <Users size={18} style={{ color: 'var(--brand-emerald)' }} />
+                  <Users size={18} style={{ color: '#5c7c64' }} />
                   <span className="text-sm font-bold" style={{ color: 'var(--text-primary)' }}>Partner Alignment</span>
                 </div>
                 <div className="text-3xl font-extrabold mb-1" style={{ color: sColor(report.alignment_score) }}>{report.alignment_score}%</div>
@@ -411,14 +411,14 @@ export function CouplePulseCheck({ onNavigate }: Props) {
             {/* Responsibility Balance */}
             <div className="premium-card p-6" style={{ backgroundColor: 'var(--bg-secondary)' }}>
               <h3 className="text-sm font-extrabold mb-3 flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
-                <Scale size={16} className="text-amber-500" />Workload Balance
+                <Scale size={16} className="text-[#d97757]" />Workload Balance
                 {report.responsibility_balance.imbalance_detected && <span className="text-[10px] font-bold px-2 py-0.5 rounded-md ml-2" style={{ backgroundColor: 'rgba(244,63,94,0.1)', color: '#f43f5e' }}>⚠ Imbalance</span>}
               </h3>
               <div className="flex items-center gap-3">
                 <span className="text-xs font-bold w-20 text-right truncate" style={{ color: 'var(--text-primary)' }}>{myPendingPulse ? profile?.full_name : partnerProfile?.full_name}</span>
                 <div className="flex-1 flex h-7 rounded-full overflow-hidden border" style={{ borderColor: 'var(--border-primary)' }}>
-                  <div className="h-full flex items-center justify-center text-xs font-bold text-white transition-all duration-700" style={{ width: `${report.responsibility_balance.partner_a_percent}%`, backgroundColor: '#10b981' }}>{report.responsibility_balance.partner_a_percent}%</div>
-                  <div className="h-full flex items-center justify-center text-xs font-bold text-white transition-all duration-700" style={{ width: `${report.responsibility_balance.partner_b_percent}%`, backgroundColor: '#6366f1' }}>{report.responsibility_balance.partner_b_percent}%</div>
+                  <div className="h-full flex items-center justify-center text-xs font-bold text-white transition-all duration-700" style={{ width: `${report.responsibility_balance.partner_a_percent}%`, backgroundColor: '#5c7c64' }}>{report.responsibility_balance.partner_a_percent}%</div>
+                  <div className="h-full flex items-center justify-center text-xs font-bold text-white transition-all duration-700" style={{ width: `${report.responsibility_balance.partner_b_percent}%`, backgroundColor: '#d97757' }}>{report.responsibility_balance.partner_b_percent}%</div>
                 </div>
                 <span className="text-xs font-bold w-20 truncate" style={{ color: 'var(--text-primary)' }}>{myPendingPulse ? partnerProfile?.full_name : profile?.full_name}</span>
               </div>
@@ -428,7 +428,7 @@ export function CouplePulseCheck({ onNavigate }: Props) {
             {report.similarity_pairs.length > 0 && (
               <div className="premium-card p-6" style={{ backgroundColor: 'var(--bg-secondary)' }}>
                 <h3 className="text-sm font-extrabold mb-4 flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
-                  <MessageCircleHeart size={16} className="text-indigo-500" />Answer Alignment Breakdown
+                  <MessageCircleHeart size={16} className="text-[#d97757]" />Answer Alignment Breakdown
                 </h3>
                 <div className="space-y-2">
                   {report.similarity_pairs.map((sp, i) => (
@@ -448,7 +448,7 @@ export function CouplePulseCheck({ onNavigate }: Props) {
             {/* Discrepancies */}
             {report.discrepancies.length > 0 && (
               <div className="premium-card p-6 border-l-4" style={{ backgroundColor: 'var(--bg-secondary)', borderLeftColor: '#f59e0b' }}>
-                <h3 className="text-sm font-extrabold mb-3 flex items-center gap-2" style={{ color: '#d97706' }}>
+                <h3 className="text-sm font-extrabold mb-3 flex items-center gap-2" style={{ color: '#d97757' }}>
                   <AlertTriangle size={16} />Discrepancy Warnings
                 </h3>
                 <ul className="space-y-2">
@@ -463,11 +463,11 @@ export function CouplePulseCheck({ onNavigate }: Props) {
             <div className="grid sm:grid-cols-2 gap-4">
               {report.top_issues.length > 0 && (
                 <div className="premium-card p-6" style={{ backgroundColor: 'var(--bg-secondary)' }}>
-                  <h3 className="text-sm font-extrabold mb-3 flex items-center gap-2" style={{ color: 'var(--text-primary)' }}><AlertTriangle size={16} className="text-rose-500" />Issues to Address</h3>
+                  <h3 className="text-sm font-extrabold mb-3 flex items-center gap-2" style={{ color: 'var(--text-primary)' }}><AlertTriangle size={16} className="text-[#a65d50]" />Issues to Address</h3>
                   <ul className="space-y-2">
                     {report.top_issues.map((issue, i) => (
-                      <li key={i} className="flex items-start gap-3 text-sm p-3 rounded-xl border" style={{ backgroundColor: 'rgba(244,63,94,0.04)', borderColor: 'rgba(244,63,94,0.12)', color: 'var(--text-secondary)' }}>
-                        <span className="w-5 h-5 rounded-full bg-rose-500 text-white flex items-center justify-center text-[10px] font-bold shrink-0">{i + 1}</span>{issue}
+                      <li key={i} className="flex items-start gap-3 text-sm p-3 rounded-xl border" style={{ backgroundColor: 'rgba(166,93,80,0.04)', borderColor: 'rgba(166,93,80,0.12)', color: 'var(--text-secondary)' }}>
+                        <span className="w-5 h-5 rounded-full bg-[#a65d50] text-white flex items-center justify-center text-[10px] font-bold shrink-0">{i + 1}</span>{issue}
                       </li>
                     ))}
                   </ul>
@@ -475,11 +475,11 @@ export function CouplePulseCheck({ onNavigate }: Props) {
               )}
               {report.positive_behaviors.length > 0 && (
                 <div className="premium-card p-6" style={{ backgroundColor: 'var(--bg-secondary)' }}>
-                  <h3 className="text-sm font-extrabold mb-3 flex items-center gap-2" style={{ color: 'var(--text-primary)' }}><CheckCircle2 size={16} className="text-emerald-500" />What's Going Well</h3>
+                  <h3 className="text-sm font-extrabold mb-3 flex items-center gap-2" style={{ color: 'var(--text-primary)' }}><CheckCircle2 size={16} className="text-[#5c7c64]" />What's Going Well</h3>
                   <ul className="space-y-2">
                     {report.positive_behaviors.map((b, i) => (
-                      <li key={i} className="flex items-start gap-3 text-sm p-3 rounded-xl border" style={{ backgroundColor: 'rgba(16,185,129,0.04)', borderColor: 'rgba(16,185,129,0.12)', color: 'var(--text-secondary)' }}>
-                        <span className="w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[10px] font-bold shrink-0">✓</span>{b}
+                      <li key={i} className="flex items-start gap-3 text-sm p-3 rounded-xl border" style={{ backgroundColor: 'rgba(92,124,100,0.04)', borderColor: 'rgba(92,124,100,0.12)', color: 'var(--text-secondary)' }}>
+                        <span className="w-5 h-5 rounded-full bg-[#5c7c64] text-white flex items-center justify-center text-[10px] font-bold shrink-0">✓</span>{b}
                       </li>
                     ))}
                   </ul>
@@ -491,12 +491,12 @@ export function CouplePulseCheck({ onNavigate }: Props) {
             {report.weekly_actions.length > 0 && (
               <div className="premium-card p-6 sm:p-8 bg-gradient-to-br from-emerald-900 to-teal-900 text-white relative overflow-hidden noise-overlay">
                 <div className="relative z-10">
-                  <h3 className="text-base font-extrabold mb-4 flex items-center gap-2"><Zap size={18} className="text-emerald-300" />Weekly Action Plan</h3>
+                  <h3 className="text-base font-extrabold mb-4 flex items-center gap-2 font-display"><Zap size={18} className="text-[#d97757]" />Weekly Action Plan</h3>
                   <ul className="space-y-3">
                     {report.weekly_actions.map((act, i) => (
                       <li key={i} className="flex items-start gap-3 text-sm leading-relaxed">
-                        <span className="bg-emerald-600 font-bold w-7 h-7 rounded-full flex items-center justify-center shrink-0 text-xs">{i + 1}</span>
-                        <span className="text-emerald-50 font-medium">{act}</span>
+                        <span className="bg-[#d97757] font-bold w-7 h-7 rounded-full flex items-center justify-center shrink-0 text-xs">{i + 1}</span>
+                        <span className="text-white font-medium">{act}</span>
                       </li>
                     ))}
                   </ul>
@@ -507,7 +507,7 @@ export function CouplePulseCheck({ onNavigate }: Props) {
             {/* Actions */}
             <div className="flex justify-center mt-8">
               <button onClick={() => { setReport(null); go('setup'); }}
-                className="w-full sm:w-auto bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-8 py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 hover:opacity-90 transition shadow-md hover:-translate-y-0.5 focus-ring">
+                className="w-full sm:w-auto bg-[#d97757] text-white px-8 py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 hover:opacity-90 transition shadow-md hover:-translate-y-0.5 focus-ring">
                 Back to Dashboard <ArrowRight size={16} />
               </button>
             </div>
@@ -533,7 +533,7 @@ function Toggle({ value, onChange }: { value: boolean; onChange: (v: boolean) =>
     <div className="flex gap-3">
       {[true, false].map(v => (
         <button key={String(v)} onClick={() => onChange(v)} className="flex-1 py-3 rounded-xl font-bold text-sm border transition-all hover:-translate-y-0.5 focus-ring"
-          style={value === v ? { backgroundColor: 'var(--brand-emerald)', borderColor: 'var(--brand-emerald)', color: '#fff' } : { backgroundColor: 'var(--bg-tertiary)', borderColor: 'var(--border-primary)', color: 'var(--text-primary)' }}>
+          style={v === value ? { backgroundColor: '#5c7c64', borderColor: '#5c7c64', color: '#fff' } : { backgroundColor: 'var(--bg-tertiary)', borderColor: 'var(--border-primary)', color: 'var(--text-primary)' }}>
           {v ? 'Yes' : 'No'}
         </button>
       ))}
@@ -544,8 +544,8 @@ function Toggle({ value, onChange }: { value: boolean; onChange: (v: boolean) =>
 function Slider({ value, onChange }: { value: number; onChange: (v: number) => void }) {
   return (
     <div className="flex items-center gap-4">
-      <input type="range" min={1} max={10} value={value} onChange={e => onChange(Number(e.target.value))} className="flex-1 accent-emerald-500 h-2 rounded-full" />
-      <span className="text-2xl font-extrabold w-10 text-center tabular-nums" style={{ color: 'var(--brand-emerald)' }}>{value}</span>
+      <input type="range" min={1} max={10} value={value} onChange={e => onChange(Number(e.target.value))} className="flex-1 accent-[#5c7c64] h-2 rounded-full" />
+      <span className="text-2xl font-extrabold w-10 text-center tabular-nums" style={{ color: '#5c7c64' }}>{value}</span>
     </div>
   );
 }
@@ -567,7 +567,7 @@ function StageWrap({ icon, title, subtitle, gradient, children, onPrev, onNext, 
       <div className="flex gap-3 pt-2">
         <button onClick={onPrev} className="flex-shrink-0 px-5 py-3.5 rounded-xl font-bold border transition-all hover:-translate-y-0.5 focus-ring flex items-center gap-2"
           style={{ backgroundColor: 'var(--bg-tertiary)', borderColor: 'var(--border-primary)', color: 'var(--text-primary)' }}><ArrowLeft size={16} /> Back</button>
-        <button onClick={onNext} className="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 hover:opacity-90 transition shadow-md hover:-translate-y-0.5 focus-ring">
+        <button onClick={onNext} className="flex-1 bg-[#5c7c64] text-white py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 hover:opacity-90 transition shadow-md hover:-translate-y-0.5 focus-ring">
           {nextLabel} <ArrowRight size={16} />
         </button>
       </div>
@@ -587,7 +587,7 @@ function HowItWorks() {
       <div className="grid gap-2">
         {items.map((item, i) => (
           <div key={i} className="flex items-center gap-3 text-sm" style={{ color: 'var(--text-secondary)' }}>
-            <span className="w-7 h-7 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: 'var(--brand-emerald-light)', color: 'var(--brand-emerald)' }}>{item.icon}</span>
+            <span className="w-7 h-7 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: 'rgba(92,124,100,0.1)', color: '#5c7c64' }}>{item.icon}</span>
             {item.text}
           </div>
         ))}

@@ -22,7 +22,13 @@ export function Header({ onNavigate, currentPage, onMentorAuthClick, onAdminAuth
 
   return (
     <>
-      <header className="sticky top-0 z-50 glass-effect border-b transition-all duration-300" style={{ borderColor: 'var(--border-primary)' }}>
+      <header
+        className="sticky top-0 z-50 glass-effect border-b transition-all duration-300"
+        style={{
+          borderColor: 'var(--border-primary)',
+          boxShadow: '0 1px 0 rgba(255,255,255,0.06) inset, 0 4px 20px rgba(0,0,0,0.04)',
+        }}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-[68px]">
 
@@ -31,11 +37,11 @@ export function Header({ onNavigate, currentPage, onMentorAuthClick, onAdminAuth
               onClick={() => { onNavigate('home'); closeMobile(); }}
               className="flex items-center gap-2.5 group focus-ring rounded-lg"
             >
-              <div className="bg-gradient-to-br from-rose-500 to-rose-600 p-1.5 rounded-[10px] shadow-sm transition-transform group-hover:scale-110 group-hover:rotate-[-4deg]">
+              <div className="bg-[#d97757] p-1.5 rounded-[10px] shadow-sm transition-transform group-hover:scale-110 group-hover:rotate-[-4deg]">
                 <Heart className="text-white" size={18} fill="currentColor" />
               </div>
               <span className="text-xl font-extrabold tracking-tight" style={{ color: 'var(--text-primary)' }}>
-                Marriage<span className="gradient-text-indigo">Wise</span>
+                Marriage<span className="text-[#d97757]">Wise</span>
               </span>
             </button>
 
@@ -53,7 +59,7 @@ export function Header({ onNavigate, currentPage, onMentorAuthClick, onAdminAuth
                   label="Dashboard"
                   active={isActive(['dashboard', 'dashboard-before', 'dashboard-after', 'quiz', 'health-tracker', 'red-flags', 'pre-marriage-analysis', 'couple-pulse-check', 'chat'])}
                   onClick={() => onNavigate('dashboard')}
-                  activeClass="bg-[var(--brand-indigo)] text-white"
+                  activeClass="bg-[#d97757] text-white"
                   icon={<LayoutDashboard size={14} />}
                 />
               )}
@@ -62,8 +68,8 @@ export function Header({ onNavigate, currentPage, onMentorAuthClick, onAdminAuth
                   label="Mentor Dashboard"
                   active={isActive(['mentor-dashboard'])}
                   onClick={() => onNavigate('mentor-dashboard')}
-                  activeClass="text-white shadow-sm"
-                  activeStyle={{ backgroundColor: '#8b5cf6' }}
+                  activeClass="text-white shadow-sm font-display"
+                  activeStyle={{ backgroundColor: '#5c7c64' } }
                   icon={<GraduationCap size={14} />}
                 />
               )}
@@ -85,7 +91,7 @@ export function Header({ onNavigate, currentPage, onMentorAuthClick, onAdminAuth
                 <div className="hidden md:flex items-center gap-2 rounded-full border py-1 pl-2 pr-3 transition-all"
                   style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--bg-secondary)' }}>
                   <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
-                    style={{ backgroundColor: 'var(--brand-indigo-light)', color: 'var(--brand-indigo)' }}>
+                    style={{ backgroundColor: 'rgba(217,119,87,0.1)', color: '#d97757' }}>
                     {(profile?.full_name?.[0] ?? 'U').toUpperCase()}
                   </div>
                   <div className="flex flex-col pr-2 border-r" style={{ borderColor: 'var(--border-primary)' }}>
@@ -98,7 +104,7 @@ export function Header({ onNavigate, currentPage, onMentorAuthClick, onAdminAuth
                   </div>
                   <button
                     onClick={signOut}
-                    className="p-1.5 rounded-full transition-colors hover:text-rose-500 focus-ring"
+                    className="p-1.5 rounded-full transition-colors hover:text-[#a65d50] focus-ring"
                     style={{ color: 'var(--text-muted)' }}
                     title="Sign Out"
                   >
@@ -110,7 +116,7 @@ export function Header({ onNavigate, currentPage, onMentorAuthClick, onAdminAuth
 
                   <button
                     onClick={onMentorAuthClick}
-                    className="flex items-center gap-2 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white px-4 py-2 rounded-full font-semibold text-sm shadow-md transition-all hover:-translate-y-0.5 focus-ring"
+                    className="flex items-center gap-2 bg-[#d97757] hover:bg-[#a65d50] text-white px-4 py-2 rounded-full font-semibold text-sm shadow-md transition-all hover:-translate-y-0.5 focus-ring"
                   >
                     <GraduationCap size={15} /> Coach Login
                   </button>
@@ -174,7 +180,7 @@ export function Header({ onNavigate, currentPage, onMentorAuthClick, onAdminAuth
                 <button
                   onClick={() => { signOut(); closeMobile(); }}
                   className="flex items-center gap-2 text-sm font-semibold px-3 py-2 rounded-lg transition-colors"
-                  style={{ color: 'var(--brand-rose)' }}
+                  style={{ color: '#a65d50' }}
                 >
                   <LogOut size={16} /> Sign Out
                 </button>
@@ -183,7 +189,7 @@ export function Header({ onNavigate, currentPage, onMentorAuthClick, onAdminAuth
 
                   <button
                     onClick={() => { onMentorAuthClick?.(); closeMobile(); }}
-                    className="bg-gradient-to-r from-violet-600 to-purple-600 text-white px-5 py-2 rounded-full font-semibold text-sm shadow-md flex items-center justify-center gap-2"
+                    className="bg-[#d97757] text-white px-5 py-2 rounded-full font-semibold text-sm shadow-md flex items-center justify-center gap-2"
                   >
                     <GraduationCap size={14} /> Coach Login
                   </button>
@@ -201,7 +207,7 @@ export function Header({ onNavigate, currentPage, onMentorAuthClick, onAdminAuth
             {user && profile && (
               <div className="mt-3 pt-3 border-t flex items-center gap-3" style={{ borderColor: 'var(--border-primary)' }}>
                 <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
-                  style={{ backgroundColor: 'var(--brand-indigo-light)', color: 'var(--brand-indigo)' }}>
+                  style={{ backgroundColor: 'rgba(217,119,87,0.1)', color: '#d97757' }}>
                   {(profile.full_name?.[0] ?? 'U').toUpperCase()}
                 </div>
                 <div>
@@ -238,7 +244,7 @@ function MobileNavItem({ label, active, onClick }: { label: string; active: bool
     <button
       onClick={onClick}
       className="w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors focus-ring"
-      style={active ? { color: 'var(--brand-indigo)' } : { color: 'var(--text-secondary)' }}
+      style={active ? { color: '#d97757' } : { color: 'var(--text-secondary)' }}
     >
       {label}
     </button>

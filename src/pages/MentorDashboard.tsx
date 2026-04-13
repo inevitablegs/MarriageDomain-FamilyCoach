@@ -96,7 +96,7 @@ export function MentorDashboard({ onNavigate }: MentorDashboardProps) {
         <div className="text-center">
           <div
             className="h-10 w-10 rounded-full border-4 border-t-transparent animate-spin mx-auto mb-4"
-            style={{ borderColor: 'rgba(139,92,246,0.2)', borderTopColor: '#8b5cf6' }}
+            style={{ borderColor: 'rgba(217,119,87,0.2)', borderTopColor: '#d97757' }}
           />
           <p className="text-sm font-semibold" style={{ color: 'var(--text-muted)' }}>
             Loading mentor workspace…
@@ -121,7 +121,7 @@ export function MentorDashboard({ onNavigate }: MentorDashboardProps) {
             otherUserName={activeChatUser.userProfile.full_name}
             assignmentId={activeChatUser.assignment.id}
             onBack={() => setActiveChatUser(null)}
-            accentColor="#8b5cf6"
+            accentColor="#d97757"
           />
         </div>
       </div>
@@ -136,14 +136,14 @@ export function MentorDashboard({ onNavigate }: MentorDashboardProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
 
         {/* Hero Banner */}
-        <section className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-r from-violet-700 via-purple-600 to-indigo-600 px-8 py-12 shadow-2xl shadow-violet-900/20 sm:px-12 noise-overlay">
+        <section className="relative overflow-hidden rounded-[2.5rem] bg-[#2a2826] px-8 py-12 shadow-2xl sm:px-12 noise-overlay">
           <div className="absolute top-0 right-0 h-64 w-64 bg-white/10 blur-[80px] rounded-full translate-x-1/2 -translate-y-1/2 pointer-events-none" />
           <div className="absolute bottom-0 left-0 h-48 w-48 bg-purple-400/10 blur-[60px] rounded-full -translate-x-1/2 translate-y-1/2 pointer-events-none" />
           <div className="relative z-10">
-            <div className="inline-flex items-center rounded-full bg-white/20 backdrop-blur-md px-3 py-1 text-xs font-bold uppercase tracking-widest text-white border border-white/30 shadow-sm">
+            <div className="inline-flex items-center rounded-full bg-white/10 backdrop-blur-md px-3 py-1 text-xs font-bold uppercase tracking-widest text-white border border-white/20 shadow-sm">
               <Star size={13} className="mr-1.5" /> Mentor Dashboard
             </div>
-            <h1 className="mt-6 text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
+            <h1 className="mt-6 text-4xl sm:text-5xl font-extrabold text-white tracking-tight font-display">
               Welcome, {mentor?.full_name || profile.full_name}
             </h1>
             <p className="mt-4 text-purple-100 text-lg max-w-xl leading-relaxed">
@@ -161,31 +161,31 @@ export function MentorDashboard({ onNavigate }: MentorDashboardProps) {
             label="Assigned Users"
             value={String(assignedUsers.length)}
             helper="Currently active"
-            color="#8b5cf6"
+            color="#d97757"
           />
           <MetricCard
             icon={<MessageCircle size={22} />}
             label="Active Chats"
             value={String(assignedUsers.length)}
             helper="Conversations available"
-            color="#7c3aed"
+            color="#5c7c64"
           />
           <MetricCard
             icon={<Users size={22} />}
             label="Status"
             value={mentor?.is_active ? 'Active' : 'Inactive'}
             helper="Your mentor status"
-            color="#6d28d9"
+            color="#a65d50"
           />
         </section>
 
         {/* Assigned Users */}
         <section className="premium-card p-8" style={{ backgroundColor: 'var(--bg-secondary)' }}>
           <h2
-            className="text-2xl font-extrabold mb-6 flex items-center gap-3"
+            className="text-2xl font-extrabold mb-6 flex items-center gap-3 font-display"
             style={{ color: 'var(--text-primary)' }}
           >
-            <Users className="text-violet-500" size={22} />
+            <Users className="text-[#d97757]" size={22} />
             Your Assigned Users
           </h2>
 
@@ -239,7 +239,7 @@ function UserCard({ user, onChat }: { user: AssignedUser; onChat: () => void }) 
       <div className="flex items-start gap-4 mb-4">
         <div
           className="w-11 h-11 rounded-full flex items-center justify-center text-sm font-bold shrink-0"
-          style={{ backgroundColor: 'rgba(139,92,246,0.1)', color: '#8b5cf6' }}
+          style={{ backgroundColor: 'rgba(217,119,87,0.1)', color: '#d97757' }}
         >
           {user.userProfile.full_name[0]?.toUpperCase() || 'U'}
         </div>
@@ -260,8 +260,8 @@ function UserCard({ user, onChat }: { user: AssignedUser; onChat: () => void }) 
         <span
           className="badge"
           style={{
-            backgroundColor: user.assignment.status === 'active' ? 'rgba(16,185,129,0.1)' : 'rgba(245,158,11,0.1)',
-            color: user.assignment.status === 'active' ? '#10b981' : '#d97706',
+            backgroundColor: user.assignment.status === 'active' ? 'rgba(92,124,100,0.1)' : 'rgba(217,119,87,0.1)',
+            color: user.assignment.status === 'active' ? '#5c7c64' : '#d97757',
           }}
         >
           {user.assignment.status}
@@ -275,7 +275,7 @@ function UserCard({ user, onChat }: { user: AssignedUser; onChat: () => void }) 
         <button
           onClick={onChat}
           className="w-full inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-bold text-white transition-all hover:-translate-y-0.5 shadow-sm focus-ring"
-          style={{ backgroundColor: '#8b5cf6' }}
+          style={{ backgroundColor: '#d97757' }}
         >
           <MessageCircle size={15} /> Chat <ArrowRight size={15} />
         </button>

@@ -32,30 +32,30 @@ const redFlagQuestions: RedFlagQuestion[] = [
 // ── Severity config ──────────────────────────────────────────────────────────
 const severityConfig = {
   high: {
-    bg: 'rgba(239,68,68,0.07)',
-    border: 'rgba(239,68,68,0.18)',
-    text: '#dc2626',
-    badgeBg: 'rgba(239,68,68,0.1)',
+    bg: 'rgba(166,93,80,0.07)',
+    border: 'rgba(166,93,80,0.18)',
+    text: '#a65d50',
+    badgeBg: 'rgba(166,93,80,0.1)',
     label: 'High',
   },
   medium: {
-    bg: 'rgba(245,158,11,0.07)',
-    border: 'rgba(245,158,11,0.18)',
-    text: '#d97706',
-    badgeBg: 'rgba(245,158,11,0.1)',
+    bg: 'rgba(217,119,87,0.07)',
+    border: 'rgba(217,119,87,0.18)',
+    text: '#d97757',
+    badgeBg: 'rgba(217,119,87,0.1)',
     label: 'Medium',
   },
   low: {
-    bg: 'rgba(234,179,8,0.07)',
-    border: 'rgba(234,179,8,0.18)',
-    text: '#ca8a04',
-    badgeBg: 'rgba(234,179,8,0.1)',
+    bg: 'rgba(201,138,94,0.07)',
+    border: 'rgba(201,138,94,0.18)',
+    text: '#c98a5e',
+    badgeBg: 'rgba(201,138,94,0.1)',
     label: 'Low',
   },
 };
 
 // ── Reusable spinner ─────────────────────────────────────────────────────────
-function PageSpinner({ color = '#f43f5e', label }: { color?: string; label: string }) {
+function PageSpinner({ color = '#d97757', label }: { color?: string; label: string }) {
   return (
     <div
       className="min-h-[calc(100vh-68px)] flex items-center justify-center transition-colors duration-300"
@@ -103,7 +103,7 @@ export function RedFlagChecker({ onNavigate }: RedFlagCheckerProps) {
           </p>
           <button
             onClick={() => onNavigate('home')}
-            className="w-full bg-gradient-to-r from-indigo-600 to-blue-600 text-white px-6 py-3.5 rounded-xl font-bold hover:opacity-90 transition shadow-md hover:-translate-y-0.5 focus-ring"
+            className="w-full bg-[#d97757] text-white px-6 py-3.5 rounded-xl font-bold hover:opacity-90 transition shadow-md hover:-translate-y-0.5 focus-ring"
           >
             Go Home
           </button>
@@ -156,7 +156,7 @@ export function RedFlagChecker({ onNavigate }: RedFlagCheckerProps) {
         >
           <div
             className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-5"
-            style={{ backgroundColor: 'rgba(244,63,94,0.08)', color: '#f43f5e' }}
+            style={{ backgroundColor: 'var(--brand-rose-light)', color: '#a65d50' }}
           >
             <Loader2 size={26} className="animate-spin" />
           </div>
@@ -180,10 +180,10 @@ export function RedFlagChecker({ onNavigate }: RedFlagCheckerProps) {
     const lowSeverity = detectedFlags.filter((f) => f.severity === 'low').length;
 
     const resultHeader = highSeverity > 0
-      ? { icon: <XCircle size={48} className="text-red-500" />, bg: 'rgba(239,68,68,0.08)', border: 'rgba(239,68,68,0.18)', title: 'Critical Warnings Detected', subtitle: `We found ${detectedFlags.length} potential red flags`, countColor: '#dc2626' }
+      ? { icon: <XCircle size={48} className="text-[#a65d50]" />, bg: 'rgba(166,93,80,0.08)', border: 'rgba(166,93,80,0.18)', title: 'Critical Warnings Detected', subtitle: `We found ${detectedFlags.length} potential red flags`, countColor: '#a65d50' }
       : detectedFlags.length > 0
-        ? { icon: <AlertTriangle size={48} className="text-amber-500" />, bg: 'rgba(245,158,11,0.08)', border: 'rgba(245,158,11,0.18)', title: 'Areas of Concern', subtitle: `We found ${detectedFlags.length} items to address`, countColor: '#d97706' }
-        : { icon: <CheckCircle size={48} className="text-emerald-500" />, bg: 'rgba(16,185,129,0.08)', border: 'rgba(16,185,129,0.18)', title: 'Looking Good!', subtitle: 'No major behavioral risks detected in your analysis.', countColor: '#10b981' };
+        ? { icon: <AlertTriangle size={48} className="text-[#d97757]" />, bg: 'rgba(217,119,87,0.08)', border: 'rgba(217,119,87,0.18)', title: 'Areas of Concern', subtitle: `We found ${detectedFlags.length} items to address`, countColor: '#d97757' }
+        : { icon: <CheckCircle size={48} className="text-[#5c7c64]" />, bg: 'rgba(92,124,100,0.08)', border: 'rgba(92,124,100,0.18)', title: 'Looking Good!', subtitle: 'No major behavioral risks detected in your analysis.', countColor: '#5c7c64' };
 
     return (
       <div
@@ -271,7 +271,7 @@ export function RedFlagChecker({ onNavigate }: RedFlagCheckerProps) {
             {detectedFlags.length === 0 && (
               <div
                 className="rounded-2xl p-8 border text-center"
-                style={{ backgroundColor: 'rgba(16,185,129,0.07)', borderColor: 'rgba(16,185,129,0.18)' }}
+                style={{ backgroundColor: 'rgba(92,124,100,0.07)', borderColor: 'rgba(92,124,100,0.18)' }}
               >
                 <p className="text-base font-medium leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
                   Based on your responses, we didn't detect any major behavioral red flags.
@@ -300,7 +300,7 @@ export function RedFlagChecker({ onNavigate }: RedFlagCheckerProps) {
             {detectedFlags.length > 0 && (
               <button
                 onClick={() => onNavigate('dashboard')}
-                className="flex-1 inline-flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-blue-600 text-white py-4 rounded-xl font-bold shadow-md hover:opacity-90 transition-all hover:-translate-y-0.5 focus-ring"
+                className="flex-1 inline-flex items-center justify-center gap-2 bg-[#d97757] text-white py-4 rounded-xl font-bold shadow-md hover:opacity-90 transition-all hover:-translate-y-0.5 focus-ring"
               >
                 View Resources <ArrowRight size={18} />
               </button>
@@ -332,7 +332,7 @@ export function RedFlagChecker({ onNavigate }: RedFlagCheckerProps) {
             <div className="flex items-center justify-between text-xs font-bold uppercase tracking-widest mb-3 px-1"
               style={{ color: 'var(--text-muted)' }}>
               <span>Question {currentQuestion + 1} / {redFlagQuestions.length}</span>
-              <span style={{ color: '#f43f5e' }}>{Math.round(progress)}%</span>
+              <span style={{ color: '#d97757' }}>{Math.round(progress)}%</span>
             </div>
             <div
               className="w-full rounded-full h-2.5 overflow-hidden"
@@ -342,7 +342,7 @@ export function RedFlagChecker({ onNavigate }: RedFlagCheckerProps) {
                 className="h-full rounded-full transition-all duration-500"
                 style={{
                   width: `${progress}%`,
-                  background: 'linear-gradient(90deg, #f43f5e, #ef4444)',
+                  background: 'linear-gradient(90deg, #d97757, #a65d50)',
                 }}
               />
             </div>
@@ -372,17 +372,17 @@ export function RedFlagChecker({ onNavigate }: RedFlagCheckerProps) {
               onClick={() => handleAnswer(true)}
               className="flex-1 py-5 rounded-2xl font-bold text-xl border-2 transition-all hover:-translate-y-0.5 focus-ring"
               style={{
-                backgroundColor: 'rgba(244,63,94,0.06)',
-                borderColor: 'rgba(244,63,94,0.2)',
-                color: '#f43f5e',
+                backgroundColor: 'rgba(166,93,80,0.06)',
+                borderColor: 'rgba(166,93,80,0.2)',
+                color: '#a65d50',
               }}
               onMouseEnter={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#f43f5e';
+                (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#a65d50';
                 (e.currentTarget as HTMLButtonElement).style.color = '#fff';
               }}
               onMouseLeave={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'rgba(244,63,94,0.06)';
-                (e.currentTarget as HTMLButtonElement).style.color = '#f43f5e';
+                (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'rgba(166,93,80,0.06)';
+                (e.currentTarget as HTMLButtonElement).style.color = '#a65d50';
               }}
             >
               Yes
@@ -391,17 +391,17 @@ export function RedFlagChecker({ onNavigate }: RedFlagCheckerProps) {
               onClick={() => handleAnswer(false)}
               className="flex-1 py-5 rounded-2xl font-bold text-xl border-2 transition-all hover:-translate-y-0.5 focus-ring"
               style={{
-                backgroundColor: 'rgba(16,185,129,0.06)',
-                borderColor: 'rgba(16,185,129,0.2)',
-                color: '#10b981',
+                backgroundColor: 'rgba(92,124,100,0.06)',
+                borderColor: 'rgba(92,124,100,0.2)',
+                color: '#5c7c64',
               }}
               onMouseEnter={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#10b981';
+                (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#5c7c64';
                 (e.currentTarget as HTMLButtonElement).style.color = '#fff';
               }}
               onMouseLeave={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'rgba(16,185,129,0.06)';
-                (e.currentTarget as HTMLButtonElement).style.color = '#10b981';
+                (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'rgba(92,124,100,0.06)';
+                (e.currentTarget as HTMLButtonElement).style.color = '#5c7c64';
               }}
             >
               No

@@ -157,7 +157,7 @@ export function Services({ onAuthClick, onNavigate }: ServicesProps) {
 
         {/* Header */}
         <div className="text-center mb-14 animate-rise-in">
-          <p className="text-xs font-bold uppercase tracking-[0.18em] mb-3" style={{ color: 'var(--brand-indigo)' }}>
+          <p className="text-xs font-bold uppercase tracking-[0.18em] mb-3" style={{ color: '#d97757' }}>
             Coaching Plans
           </p>
           <h1 className="font-display text-4xl sm:text-5xl tracking-tight mb-4" style={{ color: 'var(--text-primary)' }}>
@@ -178,13 +178,13 @@ export function Services({ onAuthClick, onNavigate }: ServicesProps) {
               label="Before Marriage"
               active={selectedCategory === 'pre_marriage'}
               onClick={() => setSelectedCategory('pre_marriage')}
-              activeColor="from-indigo-600 to-blue-600"
+              activeColor="from-[#d97757] to-[#a65d50]"
             />
             <TabButton
               label="After Marriage"
               active={selectedCategory === 'post_marriage'}
               onClick={() => setSelectedCategory('post_marriage')}
-              activeColor="from-emerald-600 to-teal-600"
+              activeColor="from-[#5c7c64] to-[#455d4b]"
             />
           </div>
         </div>
@@ -199,12 +199,12 @@ export function Services({ onAuthClick, onNavigate }: ServicesProps) {
                 className={`premium-card flex flex-col relative overflow-hidden transition-all hover:-translate-y-1 ${
                   isFeatured ? 'ring-2' : ''
                 }`}
-                style={{ padding: '2rem', ...(isFeatured ? { '--tw-ring-color': 'var(--brand-indigo)' } as React.CSSProperties : {}) }}
+                style={{ padding: '2rem', ...(isFeatured ? { '--tw-ring-color': '#d97757' } as React.CSSProperties : {}) }}
               >
                 {/* Featured badge */}
                 {isFeatured && (
                   <div className="absolute top-0 right-6">
-                    <div className="bg-gradient-to-r from-indigo-600 to-blue-600 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-b-xl shadow-md flex items-center gap-1">
+                    <div className="bg-[#d97757] text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-b-xl shadow-md flex items-center gap-1">
                       <Sparkles size={10} /> Popular
                     </div>
                   </div>
@@ -215,7 +215,7 @@ export function Services({ onAuthClick, onNavigate }: ServicesProps) {
                   {service.isFree ? (
                     <span
                       className="badge"
-                      style={{ backgroundColor: 'var(--brand-emerald-light)', color: 'var(--brand-emerald)' }}
+                      style={{ backgroundColor: 'rgba(92,124,100,0.1)', color: '#5c7c64' }}
                     >
                       Free Forever
                     </span>
@@ -244,7 +244,7 @@ export function Services({ onAuthClick, onNavigate }: ServicesProps) {
                       <CheckCircle
                         size={16}
                         className="shrink-0 mt-0.5"
-                        style={{ color: 'var(--brand-emerald)' }}
+                        style={{ color: '#5c7c64' }}
                       />
                       <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>
                         {feature}
@@ -264,7 +264,7 @@ export function Services({ onAuthClick, onNavigate }: ServicesProps) {
                   }}
                   className={`w-full py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all hover:-translate-y-0.5 focus-ring ${
                     isFeatured
-                      ? 'bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white shadow-md'
+                      ? 'bg-[#d97757] hover:opacity-90 text-white shadow-md'
                       : 'text-white'
                   }`}
                   style={

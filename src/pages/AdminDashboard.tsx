@@ -208,7 +208,7 @@ export function AdminDashboard({ onNavigate }: AdminDashboardProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
 
         {/* Hero */}
-        <section className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-r from-slate-800 via-zinc-700 to-slate-800 px-8 py-12 shadow-2xl sm:px-12 noise-overlay">
+        <section className="relative overflow-hidden rounded-[2.5rem] bg-[#2a2826] px-8 py-12 shadow-2xl sm:px-12 noise-overlay">
           <div className="absolute top-0 right-0 h-64 w-64 bg-white/5 blur-[80px] rounded-full translate-x-1/2 -translate-y-1/2 pointer-events-none" />
           <div className="relative z-10">
             <div className="inline-flex items-center rounded-full bg-white/20 backdrop-blur-md px-3 py-1 text-xs font-bold uppercase tracking-widest text-white border border-white/30 shadow-sm">
@@ -225,10 +225,10 @@ export function AdminDashboard({ onNavigate }: AdminDashboardProps) {
 
         {/* Stats */}
         <section className="grid sm:grid-cols-4 gap-5">
-          <StatCard icon={<Users size={22} />} label="Total Users" value={String(regularUsers.length)} color="#3b82f6" />
-          <StatCard icon={<Star size={22} />} label="Mentors" value={String(mentors.length)} color="#8b5cf6" />
-          <StatCard icon={<Link2 size={22} />} label="Active Assignments" value={String(assignments.filter((a) => a.status === 'active').length)} color="#10b981" />
-          <StatCard icon={<ShieldCheck size={22} />} label="Platform Status" value="Online" color="#64748b" />
+          <StatCard icon={<Users size={22} />} label="Total Users" value={String(regularUsers.length)} color="#d97757" />
+          <StatCard icon={<Star size={22} />} label="Mentors" value={String(mentors.length)} color="#5c7c64" />
+          <StatCard icon={<Link2 size={22} />} label="Active Assignments" value={String(assignments.filter((a) => a.status === 'active').length)} color="#d97757" />
+          <StatCard icon={<ShieldCheck size={22} />} label="Platform Status" value="Online" color="#455d4b" />
         </section>
 
         {/* Tab navigation */}
@@ -242,7 +242,7 @@ export function AdminDashboard({ onNavigate }: AdminDashboardProps) {
               }`}
               style={
                 activeTab === tab
-                  ? { backgroundColor: '#475569', color: '#fff' }
+                  ? { backgroundColor: '#2a2826', color: '#fff' }
                   : { color: 'var(--text-secondary)' }
               }
             >
@@ -263,7 +263,7 @@ export function AdminDashboard({ onNavigate }: AdminDashboardProps) {
                 <button
                   onClick={() => { setActiveTab('mentors'); setShowCreateMentor(true); }}
                   className="w-full flex items-center justify-between rounded-xl px-5 py-4 text-sm font-bold text-white transition-all hover:-translate-y-0.5 shadow-sm focus-ring"
-                  style={{ backgroundColor: '#8b5cf6' }}
+                  style={{ backgroundColor: '#d97757' }}
                 >
                   <span className="flex items-center gap-2"><UserPlus size={16} /> Create New Mentor</span>
                   <ArrowLeft size={15} className="rotate-180" />
@@ -307,14 +307,14 @@ export function AdminDashboard({ onNavigate }: AdminDashboardProps) {
             {/* Create Mentor */}
             <div className="premium-card p-8" style={{ backgroundColor: 'var(--bg-secondary)' }}>
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-extrabold flex items-center gap-3" style={{ color: 'var(--text-primary)' }}>
-                  <UserPlus className="text-violet-500" size={22} />
+                <h2 className="text-xl font-extrabold flex items-center gap-3 font-display" style={{ color: 'var(--text-primary)' }}>
+                  <UserPlus className="text-[#d97757]" size={22} />
                   {showCreateMentor ? 'Create New Mentor' : 'Mentors'}
                 </h2>
                 <button
                   onClick={() => { setShowCreateMentor(!showCreateMentor); setMentorFormError(''); setMentorFormSuccess(''); }}
                   className="text-sm font-bold px-4 py-2 rounded-lg transition-colors focus-ring"
-                  style={{ color: '#8b5cf6', backgroundColor: 'rgba(139,92,246,0.1)' }}
+                  style={{ color: '#d97757', backgroundColor: 'rgba(217,119,87,0.1)' }}
                 >
                   {showCreateMentor ? 'Cancel' : '+ New Mentor'}
                 </button>
@@ -406,7 +406,7 @@ export function AdminDashboard({ onNavigate }: AdminDashboardProps) {
                     onClick={() => void handleCreateMentor()}
                     disabled={creatingMentor}
                     className="px-6 py-3 rounded-xl font-bold text-white transition-all hover:-translate-y-0.5 shadow-md disabled:opacity-50 disabled:cursor-not-allowed focus-ring"
-                    style={{ backgroundColor: '#8b5cf6' }}
+                    style={{ backgroundColor: '#d97757' }}
                   >
                     {creatingMentor ? 'Creating…' : 'Create Mentor Account'}
                   </button>
@@ -439,7 +439,7 @@ export function AdminDashboard({ onNavigate }: AdminDashboardProps) {
                           <td className="py-3 px-4 font-semibold" style={{ color: 'var(--text-primary)' }}>
                             <div className="flex items-center gap-3">
                               <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
-                                style={{ backgroundColor: 'rgba(139,92,246,0.1)', color: '#8b5cf6' }}>
+                                style={{ backgroundColor: 'rgba(217,119,87,0.1)', color: '#d97757' }}>
                                 {m.full_name[0]?.toUpperCase()}
                               </div>
                               {m.full_name}
@@ -450,8 +450,8 @@ export function AdminDashboard({ onNavigate }: AdminDashboardProps) {
                           <td className="py-3 px-4 font-bold" style={{ color: 'var(--text-primary)' }}>{getUserCountForMentor(m.id)}</td>
                           <td className="py-3 px-4">
                             <span className="badge" style={{
-                              backgroundColor: m.is_active ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)',
-                              color: m.is_active ? '#10b981' : '#ef4444',
+                              backgroundColor: m.is_active ? 'rgba(92,124,100,0.1)' : 'rgba(166,93,80,0.1)',
+                              color: m.is_active ? '#5c7c64' : '#a65d50',
                             }}>
                               {m.is_active ? 'Active' : 'Inactive'}
                             </span>
@@ -468,8 +468,8 @@ export function AdminDashboard({ onNavigate }: AdminDashboardProps) {
 
         {activeTab === 'users' && (
           <section className="premium-card p-8" style={{ backgroundColor: 'var(--bg-secondary)' }}>
-            <h2 className="text-xl font-extrabold mb-6 flex items-center gap-3" style={{ color: 'var(--text-primary)' }}>
-              <Users className="text-blue-500" size={22} />
+            <h2 className="text-xl font-extrabold mb-6 flex items-center gap-3 font-display" style={{ color: 'var(--text-primary)' }}>
+              <Users className="text-[#d97757]" size={22} />
               All Users ({regularUsers.length})
             </h2>
 
@@ -498,7 +498,7 @@ export function AdminDashboard({ onNavigate }: AdminDashboardProps) {
                           <td className="py-3 px-4 font-semibold" style={{ color: 'var(--text-primary)' }}>
                             <div className="flex items-center gap-3">
                               <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
-                                style={{ backgroundColor: 'rgba(59,130,246,0.1)', color: '#3b82f6' }}>
+                                style={{ backgroundColor: 'rgba(92,124,100,0.1)', color: '#5c7c64' }}>
                                 {u.full_name[0]?.toUpperCase() || 'U'}
                               </div>
                               {u.full_name}
@@ -507,8 +507,8 @@ export function AdminDashboard({ onNavigate }: AdminDashboardProps) {
                           <td className="py-3 px-4" style={{ color: 'var(--text-secondary)' }}>{u.email}</td>
                           <td className="py-3 px-4">
                             <span className="badge capitalize" style={{
-                              backgroundColor: u.relationship_status === 'married' ? 'rgba(16,185,129,0.1)' : 'rgba(99,102,241,0.1)',
-                              color: u.relationship_status === 'married' ? '#10b981' : '#6366f1',
+                              backgroundColor: u.relationship_status === 'married' ? 'rgba(92,124,100,0.1)' : 'rgba(217,119,87,0.1)',
+                              color: u.relationship_status === 'married' ? '#5c7c64' : '#d97757',
                             }}>
                               {u.relationship_status}
                             </span>
@@ -524,7 +524,7 @@ export function AdminDashboard({ onNavigate }: AdminDashboardProps) {
                             <button
                               onClick={() => { setAssignModal({ userId: u.id, userName: u.full_name }); setSelectedMentorId(''); }}
                               className="text-xs font-bold px-3 py-1.5 rounded-lg transition-colors focus-ring"
-                              style={{ color: '#8b5cf6', backgroundColor: 'rgba(139,92,246,0.1)' }}
+                              style={{ color: '#d97757', backgroundColor: 'rgba(217,119,87,0.1)' }}
                             >
                               {assignedMentor ? 'Reassign' : 'Assign'}
                             </button>
@@ -541,8 +541,8 @@ export function AdminDashboard({ onNavigate }: AdminDashboardProps) {
 
         {activeTab === 'assignments' && (
           <section className="premium-card p-8" style={{ backgroundColor: 'var(--bg-secondary)' }}>
-            <h2 className="text-xl font-extrabold mb-6 flex items-center gap-3" style={{ color: 'var(--text-primary)' }}>
-              <Link2 className="text-emerald-500" size={22} />
+            <h2 className="text-xl font-extrabold mb-6 flex items-center gap-3 font-display" style={{ color: 'var(--text-primary)' }}>
+              <Link2 className="text-[#5c7c64]" size={22} />
               Mentor Assignments ({assignments.filter((a) => a.status === 'active').length} active)
             </h2>
 
@@ -566,7 +566,7 @@ export function AdminDashboard({ onNavigate }: AdminDashboardProps) {
                       >
                         <div className="flex items-center gap-3 mb-3">
                           <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
-                            style={{ backgroundColor: 'rgba(59,130,246,0.1)', color: '#3b82f6' }}>
+                            style={{ backgroundColor: 'rgba(92,124,100,0.1)', color: '#5c7c64' }}>
                             {user?.full_name[0]?.toUpperCase() || 'U'}
                           </div>
                           <div className="min-w-0">
@@ -574,13 +574,13 @@ export function AdminDashboard({ onNavigate }: AdminDashboardProps) {
                             <p className="text-[10px] uppercase tracking-wider font-semibold" style={{ color: 'var(--text-muted)' }}>User</p>
                           </div>
                         </div>
-                        <div className="flex items-center gap-2 py-2 px-3 rounded-xl" style={{ backgroundColor: 'rgba(139,92,246,0.06)' }}>
-                          <Link2 size={12} style={{ color: '#8b5cf6' }} />
-                          <span className="text-xs font-semibold" style={{ color: '#8b5cf6' }}>assigned to</span>
+                        <div className="flex items-center gap-2 py-2 px-3 rounded-xl" style={{ backgroundColor: 'rgba(217,119,87,0.06)' }}>
+                          <Link2 size={12} style={{ color: '#d97757' }} />
+                          <span className="text-xs font-semibold" style={{ color: '#d97757' }}>assigned to</span>
                         </div>
                         <div className="flex items-center gap-3 mt-3">
                           <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
-                            style={{ backgroundColor: 'rgba(139,92,246,0.1)', color: '#8b5cf6' }}>
+                            style={{ backgroundColor: 'rgba(217,119,87,0.1)', color: '#d97757' }}>
                             {mentor?.full_name[0]?.toUpperCase() || 'M'}
                           </div>
                           <div className="min-w-0">
@@ -656,7 +656,7 @@ export function AdminDashboard({ onNavigate }: AdminDashboardProps) {
                   onClick={() => void handleAssignMentor()}
                   disabled={!selectedMentorId || assigning}
                   className="w-full py-3 rounded-xl font-bold text-white transition-all hover:-translate-y-0.5 shadow-md disabled:opacity-50 disabled:cursor-not-allowed focus-ring"
-                  style={{ backgroundColor: '#8b5cf6' }}
+                  style={{ backgroundColor: '#d97757' }}
                 >
                   {assigning ? 'Assigning…' : 'Confirm Assignment'}
                 </button>

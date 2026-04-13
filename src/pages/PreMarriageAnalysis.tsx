@@ -19,7 +19,7 @@ type PreMarriageAnalysisProps = {
 };
 
 // ── Shared page spinner ──────────────────────────────────────────────────────
-function PageSpinner({ color = '#6366f1', label }: { color?: string; label: string }) {
+function PageSpinner({ color = '#d97757', label }: { color?: string; label: string }) {
   return (
     <div
       className="min-h-[calc(100vh-68px)] flex items-center justify-center transition-colors duration-300"
@@ -62,7 +62,7 @@ function SignInPrompt({ icon: Icon, message, onNavigate }: {
         </p>
         <button
           onClick={() => onNavigate('home')}
-          className="w-full bg-gradient-to-r from-indigo-600 to-blue-600 text-white px-6 py-3.5 rounded-xl font-bold hover:opacity-90 transition shadow-md hover:-translate-y-0.5 focus-ring"
+          className="w-full bg-[#d97757] text-white px-6 py-3.5 rounded-xl font-bold hover:opacity-90 transition shadow-md hover:-translate-y-0.5 focus-ring"
         >
           Go Home
         </button>
@@ -73,14 +73,14 @@ function SignInPrompt({ icon: Icon, message, onNavigate }: {
 
 // ── Risk helpers ─────────────────────────────────────────────────────────────
 const getRiskColor = (pct: number) => {
-  if (pct >= 75) return '#ef4444';
-  if (pct >= 40) return '#f59e0b';
-  return '#10b981';
+  if (pct >= 75) return '#a65d50';
+  if (pct >= 40) return '#d97757';
+  return '#5c7c64';
 };
 const getRiskBgToken = (pct: number) => {
-  if (pct >= 75) return { bg: 'rgba(239,68,68,0.08)', border: 'rgba(239,68,68,0.2)' };
-  if (pct >= 40) return { bg: 'rgba(245,158,11,0.08)', border: 'rgba(245,158,11,0.2)' };
-  return { bg: 'rgba(16,185,129,0.08)', border: 'rgba(16,185,129,0.2)' };
+  if (pct >= 75) return { bg: 'rgba(166,93,80,0.08)', border: 'rgba(166,93,80,0.2)' };
+  if (pct >= 40) return { bg: 'rgba(217,119,87,0.08)', border: 'rgba(217,119,87,0.2)' };
+  return { bg: 'rgba(92,124,100,0.08)', border: 'rgba(92,124,100,0.2)' };
 };
 
 // ── Main component ───────────────────────────────────────────────────────────
@@ -140,7 +140,7 @@ export function PreMarriageAnalysis({ onNavigate }: PreMarriageAnalysisProps) {
                 <Brain size={24} />
               </div>
               <div>
-                <h1 className="text-2xl font-extrabold" style={{ color: 'var(--text-primary)' }}>
+                <h1 className="font-display text-2xl" style={{ color: 'var(--text-primary)' }}>
                   Deep Personality Analysis
                 </h1>
                 <p className="text-sm mt-0.5" style={{ color: 'var(--text-secondary)' }}>
@@ -215,7 +215,7 @@ export function PreMarriageAnalysis({ onNavigate }: PreMarriageAnalysisProps) {
                 <button
                   onClick={handleAnalyze}
                   disabled={!behaviorText.trim() || !incidentText.trim()}
-                  className="flex-1 inline-flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-blue-600 text-white py-3.5 rounded-xl font-bold shadow-md hover:opacity-90 transition-all hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 focus-ring"
+                  className="flex-1 inline-flex items-center justify-center gap-2 bg-[#d97757] text-white py-3.5 rounded-xl font-bold shadow-md hover:opacity-90 transition-all hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 focus-ring"
                 >
                   <Send size={16} /> Analyze Behavior
                 </button>
@@ -242,7 +242,7 @@ export function PreMarriageAnalysis({ onNavigate }: PreMarriageAnalysisProps) {
             className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6"
             style={{ backgroundColor: 'var(--brand-indigo-light)', color: 'var(--brand-indigo)' }}
           >
-            <Loader2 size={28} className="animate-spin" />
+            <Loader2 size={28} className="animate-spin text-[#d97757]" />
           </div>
           <h2 className="text-xl font-extrabold mb-2" style={{ color: 'var(--text-primary)' }}>
             Analyzing Behavioral Patterns…
@@ -319,9 +319,9 @@ export function PreMarriageAnalysis({ onNavigate }: PreMarriageAnalysisProps) {
                     }}
                   >
                     {trait.type === 'positive' ? (
-                      <CheckCircle size={16} className="text-emerald-500 shrink-0 mt-0.5" />
+                      <CheckCircle size={16} className="text-[#5c7c64] shrink-0 mt-0.5" />
                     ) : (
-                      <AlertTriangle size={16} className="text-amber-500 shrink-0 mt-0.5" />
+                      <AlertTriangle size={16} className="text-[#d97757] shrink-0 mt-0.5" />
                     )}
                     {trait.trait}
                   </li>
@@ -340,7 +340,7 @@ export function PreMarriageAnalysis({ onNavigate }: PreMarriageAnalysisProps) {
                 </h3>
                 <div
                   className="rounded-2xl p-5 border"
-                  style={{ backgroundColor: 'var(--brand-indigo-light)', borderColor: 'rgba(99,102,241,0.15)' }}
+                  style={{ backgroundColor: 'var(--brand-indigo-light)', borderColor: 'rgba(217,119,87,0.15)' }}
                 >
                   <p className="font-bold text-sm mb-1.5" style={{ color: 'var(--brand-indigo)' }}>
                     {result.insight}
@@ -425,8 +425,8 @@ export function PreMarriageAnalysis({ onNavigate }: PreMarriageAnalysisProps) {
                     key={idx}
                     className="text-sm font-medium rounded-xl px-4 py-3 border"
                     style={{
-                      backgroundColor: 'rgba(59,130,246,0.06)',
-                      borderColor: 'rgba(59,130,246,0.15)',
+                      backgroundColor: 'rgba(217,119,87,0.06)',
+                      borderColor: 'rgba(217,119,87,0.15)',
                       color: 'var(--text-primary)',
                     }}
                   >
@@ -459,7 +459,7 @@ export function PreMarriageAnalysis({ onNavigate }: PreMarriageAnalysisProps) {
             </button>
             <button
               onClick={() => onNavigate('dashboard')}
-              className="flex-1 inline-flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-blue-600 text-white py-3.5 rounded-xl font-bold shadow-md hover:opacity-90 transition-all hover:-translate-y-0.5 focus-ring"
+              className="flex-1 inline-flex items-center justify-center gap-2 bg-[#d97757] text-white py-3.5 rounded-xl font-bold shadow-md hover:opacity-90 transition-all hover:-translate-y-0.5 focus-ring"
             >
               Return to Dashboard <ArrowRight size={16} />
             </button>
