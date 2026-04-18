@@ -188,7 +188,7 @@ export const BEFORE_QUESTION_BANK: AssessmentQuestion[] = [
   makeQ('before', 14, 'MCQ', 'Low', 'In your view, is love enough to sustain a marriage?', ['Yes, love conquers all', 'No, compatibility is more vital', 'Maybe, but only with effort', 'Depends on the couple']),
   makeQ('before', 15, 'MCQ', 'High', 'Do you believe a person should change their core personality after marriage?', ['Yes, for the partner', 'No, stay exactly the same', 'Only minor habits should change', 'Growth is expected, not change']),
   makeQ('before', 16, 'MCQ', 'High', 'What is your stance on having children in the future?', ['Definitely want children', 'Probably, but not sure when', 'Leaning towards child-free', 'Undecided/Neutral']),
-  makeQ('before', 17, 'MCQ', 'Medium', 'How important is maintaining a busy social life outside the marriage?', ['Very important', 'Moderately important', 'Relationship is my priority', 'I am a homebody']),
+  makeQ('before', 17, 'MCQ', 'Medium', 'How important is maintaining a busy social life outside the marriage?', ['Very important', 'Moderately important', 'Relationship is my priority', 'I am a homebody']),  
   makeQ('before', 18, 'MCQ', 'High', 'How do you typically behave when under extreme pressure?', ['Stay calm and focused', 'Become visibly stressed', 'Shut down and avoid tasks', 'Become aggressive or short']),
   makeQ('before', 19, 'MCQ', 'Low', 'How well do you adapt to major life changes (e.g., relocation)?', ['Very easily', 'With some effort', 'I struggle significantly', 'I resist change entirely']),
   makeQ('before', 20, 'MCQ', 'High', 'How much honesty do you expect regarding small \'white lies\'?', ['100% honesty always', 'Small lies are okay to save face', 'Honesty only on big things', 'Privacy over honesty']),
