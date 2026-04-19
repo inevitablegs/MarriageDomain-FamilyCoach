@@ -1,6 +1,17 @@
 import React, { useState } from 'react';
-import { Check, Heart, Sparkles, ArrowLeft, Loader2, ShieldCheck, Zap } from 'lucide-react';
+import {
+  Check,
+  Heart,
+  Sparkles,
+  ArrowLeft,
+  Loader2,
+  ShieldCheck,
+  Zap,
+  Crown,
+  ArrowRight,
+} from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { initializePayment } from '../lib/payment';
 
 interface PricingProps {
   onBack: () => void;
@@ -11,16 +22,40 @@ export const Pricing: React.FC<PricingProps> = ({ onBack, onSuccess }) => {
   const { profile, updateTier } = useAuth();
   const [loading, setLoading] = useState<string | null>(null);
 
-  const handleUpgrade = async (tier: 'free' | 'basic' | 'premium') => {
-    setLoading(tier);
-    // Simulate payment delay
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    const { error } = await updateTier(tier);
-    setLoading(null);
-    
-    if (!error && onSuccess) {
-      onSuccess();
+  const handleUpgrade = async (plan: (typeof plans)[0]) => {
+    if (!profile) return;
+    setLoading(plan.tier);
+
+    try {
+      if (plan.tier === 'free') {
+        await updateTier('free');
+        setLoading(null);
+        if (onSuccess) onSuccess();
+        return;
+      }
+
+      const amount = parseInt(plan.price.replace('₹', '').replace(',', ''));
+
+      await initializePayment({
+        amount,
+        tierName: plan.name,
+        userProfile: {
+          full_name: profile.full_name,
+          email: profile.email,
+        },
+        onSuccess: async (response) => {
+          console.log('Payment success callback triggered', response);
+          const { error } = await updateTier(plan.tier);
+          setLoading(null);
+          if (!error && onSuccess) onSuccess();
+        },
+        onCancel: () => {
+          setLoading(null);
+        },
+      });
+    } catch (err) {
+      console.error('Payment initialization failed:', err);
+      setLoading(null);
     }
   };
 
@@ -30,7 +65,8 @@ export const Pricing: React.FC<PricingProps> = ({ onBack, onSuccess }) => {
     {
       name: 'Free',
       price: '₹0',
-      description: 'The foundation for your relationship journey.',
+      priceDetail: 'forever',
+      description: 'Start your journey with essential relationship insights.',
       tier: 'free' as const,
       features: [
         'Need To Know Hub (Education)',
@@ -39,173 +75,256 @@ export const Pricing: React.FC<PricingProps> = ({ onBack, onSuccess }) => {
         'Profile Setup',
       ],
       icon: Heart,
-      color: 'rose',
+      accentColor: '#a65d50',
+      accentBg: 'rgba(166,93,80,0.10)',
+      accentGlow: 'rgba(166,93,80,0.15)',
       cta: 'Current Plan',
     },
     {
       name: 'Basic',
       price: '₹499',
-      priceDetail: '/forever access (limited)',
-      description: 'Comprehensive tools for deeper self-discovery.',
+      priceDetail: 'one-time',
+      description: 'Unlock self-discovery tools for deeper personal analysis.',
       tier: 'basic' as const,
       features: [
-        'Compatibility Quiz (Individual)',
+        'Compatibility Deep-Scan Quiz',
         'Red Flag Behavioral Checker',
-        'Expectation Resolver',
+        'Expectation Resolver™',
         'Advanced Health Analytics',
-        'History Tracking',
+        'Full History & Reports',
       ],
       icon: Zap,
-      color: 'amber',
+      accentColor: '#d97757',
+      accentBg: 'rgba(217,119,87,0.10)',
+      accentGlow: 'rgba(217,119,87,0.20)',
       cta: 'Upgrade to Basic',
       popular: true,
     },
     {
       name: 'Premium',
-      price: '₹1499',
-      priceDetail: '/full relationship suite',
-      description: 'The ultimate synchronous experience for couples.',
+      price: '₹1,499',
+      priceDetail: 'full suite',
+      description: 'The complete couple experience with AI-powered coaching.',
       tier: 'premium' as const,
       features: [
         'Multi-account Couple Assessment',
-        'Conflict Resolution AI Assistant',
+        'Conflict Resolution AI Coach',
         'Relationship Stress Test',
         'Direct Mentor Chat Access',
         'Partner Insights Dashboard',
         'Priority AI Support',
       ],
-      icon: Sparkles,
-      color: 'indigo',
+      icon: Crown,
+      accentColor: '#5c7c64',
+      accentBg: 'rgba(92,124,100,0.10)',
+      accentGlow: 'rgba(92,124,100,0.20)',
       cta: 'Go Premium',
     },
   ];
 
   return (
-    <div className="min-h-screen pt-20 pb-12 px-4 landscape:py-8 overflow-y-auto">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center gap-4 mb-8">
+    <div
+      className="min-h-[calc(100vh-68px)] py-10 transition-colors duration-300"
+      style={{ backgroundColor: 'var(--bg-primary)' }}
+    >
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* ── Header ── */}
+        <div className="animate-rise-in flex items-center gap-4 mb-10">
           <button
             onClick={onBack}
-            className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-white/70 hover:text-white hover:bg-white/10 transition-all shadow-sm"
+            className="p-2.5 rounded-xl border transition-all hover:-translate-y-0.5 focus-ring"
+            style={{
+              backgroundColor: 'var(--bg-secondary)',
+              borderColor: 'var(--border-primary)',
+              color: 'var(--text-secondary)',
+            }}
           >
             <ArrowLeft size={20} />
           </button>
           <div>
-            <h1 className="text-3xl font-bold text-white">Choose Your Plan</h1>
-            <p className="text-white/50 text-sm">Invest in the future of your relationship.</p>
+            <h1
+              className="text-3xl sm:text-4xl font-extrabold tracking-tight"
+              style={{ color: 'var(--text-primary)' }}
+            >
+              Choose Your Plan
+            </h1>
+            <p className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>
+              Invest in the clarity of your relationship journey.
+            </p>
           </div>
         </div>
 
-        {/* Pricing Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {plans.map((plan) => {
+        {/* ── Hero Banner ── */}
+        <section className="stagger-1 relative overflow-hidden rounded-[2.5rem] bg-gradient-to-r from-[#2a2826] to-[#4a4642] px-8 py-10 mb-10 shadow-2xl shadow-stone-900/20 noise-overlay">
+          <div className="absolute top-0 right-0 h-64 w-64 bg-white/5 blur-[80px] rounded-full translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+          <div className="relative z-10 text-center max-w-2xl mx-auto">
+            <span className="font-display text-3xl sm:text-4xl font-semibold text-white/90 italic leading-snug">
+              "The best investment you'll ever make is in your relationship."
+            </span>
+            <p className="mt-4 text-white/50 text-sm">
+              Join thousands of couples building stronger foundations with MarriageWise.
+            </p>
+          </div>
+        </section>
+
+        {/* ── Pricing Cards ── */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          {plans.map((plan, i) => {
             const isCurrent = currentTier === plan.tier;
             const Icon = plan.icon;
-            
+
             return (
               <div
                 key={plan.name}
-                className={`relative group flex flex-col p-8 rounded-[32px] transition-all duration-500 border overflow-hidden ${
-                  plan.popular 
-                    ? 'bg-white/10 border-white/20 shadow-2xl scale-[1.02] z-10' 
-                    : 'bg-white/5 border-white/10 hover:bg-white/8'
+                className={`stagger-${i + 2} relative flex flex-col premium-card p-0 overflow-hidden transition-all duration-300 ${
+                  plan.popular ? 'ring-2' : ''
                 }`}
+                style={{
+                  ...(plan.popular
+                    ? { boxShadow: `0 8px 40px ${plan.accentGlow}`, borderColor: plan.accentColor, ['--tw-ring-color' as any]: plan.accentColor }
+                    : {}),
+                }}
               >
-                {/* Popular Badge */}
+                {/* Popular ribbon */}
                 {plan.popular && (
-                  <div className="absolute top-6 right-6">
-                    <span className="px-3 py-1 rounded-full bg-amber-500/20 text-amber-500 text-[10px] font-bold uppercase tracking-wider border border-amber-500/30">
-                      Most Popular
-                    </span>
+                  <div
+                    className="text-center py-2 text-[10px] font-bold uppercase tracking-[0.2em] text-white"
+                    style={{ backgroundColor: plan.accentColor }}
+                  >
+                    Most Popular
                   </div>
                 )}
 
-                {/* Plan Header */}
-                <div className="mb-8">
-                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-6 bg-${plan.color}-500/20 text-${plan.color}-400 ring-1 ring-${plan.color}-500/30`}>
-                    <Icon size={24} />
+                <div className="flex flex-col flex-grow p-8">
+                  {/* Icon + Name */}
+                  <div className="flex items-center gap-3 mb-6">
+                    <div
+                      className="w-11 h-11 rounded-[14px] flex items-center justify-center"
+                      style={{ backgroundColor: plan.accentBg, color: plan.accentColor }}
+                    >
+                      <Icon size={20} />
+                    </div>
+                    <div>
+                      <h3
+                        className="text-lg font-extrabold leading-tight"
+                        style={{ color: 'var(--text-primary)' }}
+                      >
+                        {plan.name}
+                      </h3>
+                      {isCurrent && (
+                        <span
+                          className="badge mt-0.5"
+                          style={{ backgroundColor: plan.accentBg, color: plan.accentColor }}
+                        >
+                          Current
+                        </span>
+                      )}
+                    </div>
                   </div>
-                  <h3 className="text-2xl font-bold text-white mb-2">{plan.name}</h3>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-4xl font-bold text-white">{plan.price}</span>
-                    {plan.priceDetail && (
-                      <span className="text-white/40 text-xs">{plan.priceDetail}</span>
-                    )}
+
+                  {/* Price */}
+                  <div className="mb-2">
+                    <span
+                      className="text-4xl font-extrabold tracking-tight"
+                      style={{ color: 'var(--text-primary)' }}
+                    >
+                      {plan.price}
+                    </span>
+                    <span
+                      className="text-xs font-semibold ml-1.5"
+                      style={{ color: 'var(--text-muted)' }}
+                    >
+                      /{plan.priceDetail}
+                    </span>
                   </div>
-                  <p className="mt-4 text-white/50 text-sm leading-relaxed">
+                  <p
+                    className="text-sm mb-8 leading-relaxed"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
                     {plan.description}
                   </p>
-                </div>
 
-                {/* Features */}
-                <div className="flex-grow space-y-4 mb-8 text-sm">
-                  {plan.features.map((feature) => (
-                    <div key={feature} className="flex items-start gap-3">
-                      <div className="mt-0.5 w-4 h-4 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
-                        <Check size={10} className="text-emerald-400" />
+                  {/* Features */}
+                  <div className="flex-grow space-y-3.5 mb-8">
+                    {plan.features.map((feature) => (
+                      <div key={feature} className="flex items-start gap-2.5">
+                        <div
+                          className="mt-0.5 w-5 h-5 rounded-lg flex items-center justify-center flex-shrink-0"
+                          style={{ backgroundColor: plan.accentBg }}
+                        >
+                          <Check size={12} style={{ color: plan.accentColor }} />
+                        </div>
+                        <span
+                          className="text-sm font-medium leading-snug"
+                          style={{ color: 'var(--text-secondary)' }}
+                        >
+                          {feature}
+                        </span>
                       </div>
-                      <span className="text-white/80 leading-snug">{feature}</span>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
 
-                {/* CTA */}
-                <button
-                  disabled={isCurrent || loading !== null}
-                  onClick={() => handleUpgrade(plan.tier)}
-                  className={`w-full py-4 rounded-2xl font-bold transition-all duration-300 flex items-center justify-center gap-2 ${
-                    isCurrent
-                      ? 'bg-white/10 text-white/40 border border-white/5 cursor-default'
-                      : loading === plan.tier
-                      ? 'bg-rose-500/50 text-white cursor-wait'
-                      : 'bg-rose-500 text-white hover:bg-rose-600 shadow-lg shadow-rose-500/25 hover:shadow-rose-500/40 active:scale-[0.98]'
-                  }`}
-                >
-                  {loading === plan.tier ? (
-                    <Loader2 size={18} className="animate-spin" />
-                  ) : isCurrent ? (
-                    'Current Plan'
-                  ) : (
-                    <>
-                      {plan.cta}
-                      {!isCurrent && <Zap size={16} fill="white" />}
-                    </>
-                  )}
-                </button>
+                  {/* CTA */}
+                  <button
+                    disabled={isCurrent || loading !== null}
+                    onClick={() => handleUpgrade(plan)}
+                    className="w-full py-3.5 rounded-xl text-sm font-bold transition-all duration-200 flex items-center justify-center gap-2 focus-ring disabled:opacity-50 disabled:cursor-not-allowed"
+                    style={
+                      isCurrent
+                        ? {
+                            backgroundColor: 'var(--bg-tertiary)',
+                            color: 'var(--text-muted)',
+                            border: '1px solid var(--border-primary)',
+                          }
+                        : {
+                            backgroundColor: plan.accentColor,
+                            color: '#fff',
+                            boxShadow: `0 4px 14px ${plan.accentGlow}`,
+                          }
+                    }
+                    onMouseEnter={(e) => {
+                      if (!isCurrent) (e.currentTarget.style.transform = 'translateY(-2px)');
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isCurrent) (e.currentTarget.style.transform = 'translateY(0)');
+                    }}
+                  >
+                    {loading === plan.tier ? (
+                      <Loader2 size={16} className="animate-spin" />
+                    ) : isCurrent ? (
+                      'Current Plan'
+                    ) : (
+                      <>
+                        {plan.cta}
+                        <ArrowRight size={14} />
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
             );
           })}
         </div>
 
-        {/* Reassurance Footer */}
-        <div className="mt-12 flex flex-wrap items-center justify-center gap-8 py-8 border-t border-white/5 opacity-50">
-          <div className="flex items-center gap-2 text-white/60">
-            <ShieldCheck size={18} />
-            <span className="text-xs">Secure Payment Gateway</span>
+        {/* ── Trust Footer ── */}
+        <div
+          className="stagger-5 flex flex-wrap items-center justify-center gap-8 py-6 border-t"
+          style={{ borderColor: 'var(--border-primary)' }}
+        >
+          <div className="flex items-center gap-2" style={{ color: 'var(--text-muted)' }}>
+            <ShieldCheck size={16} />
+            <span className="text-xs font-semibold">Razorpay Secure Payments</span>
           </div>
-          <div className="flex items-center gap-2 text-white/60">
-            <Heart size={18} />
-            <span className="text-xs">Helping 10,000+ Couples</span>
+          <div className="flex items-center gap-2" style={{ color: 'var(--text-muted)' }}>
+            <Heart size={16} />
+            <span className="text-xs font-semibold">Helping 10,000+ Couples</span>
           </div>
-          <div className="flex items-center gap-2 text-white/60">
-            <Sparkles size={18} />
-            <span className="text-xs">100% Satisfaction Guarantee</span>
+          <div className="flex items-center gap-2" style={{ color: 'var(--text-muted)' }}>
+            <Sparkles size={16} />
+            <span className="text-xs font-semibold">100% Satisfaction Guarantee</span>
           </div>
         </div>
       </div>
-
-      <style dangerouslySetInnerHTML={{ __html: `
-        .bg-rose-500\/20 { background-color: rgba(244, 63, 94, 0.2); }
-        .bg-amber-500\/20 { background-color: rgba(245, 158, 11, 0.2); }
-        .bg-indigo-500\/20 { background-color: rgba(99, 102, 241, 0.2); }
-        .text-rose-400 { color: rgb(251, 113, 133); }
-        .text-amber-400 { color: rgb(251, 191, 36); }
-        .text-indigo-400 { color: rgb(129, 140, 248); }
-        .ring-rose-500\/30 { box-shadow: inset 0 0 0 1px rgba(244, 63, 94, 0.3); }
-        .ring-amber-500\/30 { box-shadow: inset 0 0 0 1px rgba(245, 158, 11, 0.3); }
-        .ring-indigo-500\/30 { box-shadow: inset 0 0 0 1px rgba(99, 102, 241, 0.3); }
-      `}} />
     </div>
   );
 };

@@ -975,6 +975,13 @@ export function CompatibilityQuiz({ onNavigate }: QuizProps) {
   return (
     <div className="min-h-[calc(100vh-68px)] py-10 transition-colors duration-300" style={{ backgroundColor: 'var(--bg-primary)' }}>
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 animate-rise-in">
+        <button
+          onClick={() => onNavigate('dashboard')}
+          className="inline-flex items-center gap-2 text-sm font-semibold transition-all hover:-translate-x-1"
+          style={{ color: 'var(--text-secondary)' }}
+        >
+          <ArrowLeft size={16} /> Back to Dashboard
+        </button>
         <div className="premium-card p-8 border" style={{ background: 'linear-gradient(135deg, var(--brand-indigo-light), var(--bg-secondary))', borderColor: 'var(--border-primary)' }}>
           <h1 className="text-3xl font-extrabold mb-3 tracking-tight" style={{ color: 'var(--brand-indigo)' }}>Couple Assessment Workspace</h1>
           <p className="font-medium" style={{ color: 'var(--text-secondary)' }}>

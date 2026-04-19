@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
-import { AlertTriangle, CheckCircle, XCircle, ArrowRight, ShieldAlert, Loader2 } from 'lucide-react';
+import { AlertTriangle, CheckCircle, XCircle, ArrowRight, ArrowLeft, ShieldAlert, Loader2 } from 'lucide-react';
 
 type RedFlagCheckerProps = {
   onNavigate: (page: string) => void;
@@ -323,6 +323,13 @@ export function RedFlagChecker({ onNavigate }: RedFlagCheckerProps) {
       style={{ backgroundColor: 'var(--bg-primary)' }}
     >
       <div className="max-w-2xl mx-auto px-4 sm:px-6">
+        <button
+          onClick={() => onNavigate('dashboard')}
+          className="inline-flex items-center gap-2 text-sm font-semibold mb-6 transition-all hover:-translate-x-1"
+          style={{ color: 'var(--text-secondary)' }}
+        >
+          <ArrowLeft size={16} /> Back to Dashboard
+        </button>
         <div
           className="premium-card p-8 sm:p-12"
           style={{ backgroundColor: 'var(--bg-secondary)' }}

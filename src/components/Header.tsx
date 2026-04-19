@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Heart, LogOut, Sun, Moon, Menu, X, LayoutDashboard, GraduationCap, ShieldCheck } from 'lucide-react';
+import { Heart, LogOut, Sun, Moon, Menu, X, GraduationCap, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 
@@ -47,20 +47,21 @@ export function Header({ onNavigate, currentPage, onMentorAuthClick, onAdminAuth
 
             {/* Desktop Nav */}
             <nav className="hidden md:flex items-center gap-1 p-1 rounded-full border" style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--bg-tertiary)' }}>
-              <NavPill
-                label="Home"
-                active={isActive(['home', 'auth-before', 'auth-after'])}
-                onClick={() => onNavigate('home')}
-                activeClass="text-white shadow-sm"
-                activeStyle={{ backgroundColor: 'var(--text-primary)', color: 'var(--bg-primary)' }}
-              />
+              {!user && (
+                <NavPill
+                  label="Home"
+                  active={isActive(['home', 'auth-before', 'auth-after'])}
+                  onClick={() => onNavigate('home')}
+                  activeClass="text-white shadow-sm"
+                  activeStyle={{ backgroundColor: 'var(--text-primary)', color: 'var(--bg-primary)' }}
+                />
+              )}
               {user && profile?.role !== 'mentor' && profile?.role !== 'admin' && (
                 <NavPill
                   label="Dashboard"
-                  active={isActive(['dashboard', 'dashboard-before', 'dashboard-after', 'quiz', 'health-tracker', 'red-flags', 'pre-marriage-analysis', 'couple-pulse-check', 'chat'])}
-                  onClick={() => onNavigate('dashboard')}
+                  active={isActive(['dashboard', 'dashboard-before', 'dashboard-after'])}
+                  onClick={() => onNavigate('home')}
                   activeClass="bg-[#d97757] text-white"
-                  icon={<LayoutDashboard size={14} />}
                 />
               )}
               {user && profile?.role === 'mentor' && (
@@ -157,9 +158,11 @@ export function Header({ onNavigate, currentPage, onMentorAuthClick, onAdminAuth
             onClick={(e) => e.stopPropagation()}
           >
             <div className="space-y-1 mb-4">
-              <MobileNavItem label="Home" onClick={() => { onNavigate('home'); closeMobile(); }} active={isActive(['home'])} />
+              {!user && (
+                <MobileNavItem label="Home" onClick={() => { onNavigate('home'); closeMobile(); }} active={isActive(['home'])} />
+              )}
               {user && profile?.role !== 'mentor' && profile?.role !== 'admin' && (
-                <MobileNavItem label="Dashboard" onClick={() => { onNavigate('dashboard'); closeMobile(); }} active={isActive(['dashboard', 'dashboard-before', 'dashboard-after'])} />
+                <MobileNavItem label="Dashboard" onClick={() => { onNavigate('home'); closeMobile(); }} active={isActive(['dashboard', 'dashboard-before', 'dashboard-after'])} />
               )}
               {user && profile?.role === 'mentor' && (
                 <MobileNavItem label="Mentor Dashboard" onClick={() => { onNavigate('mentor-dashboard'); closeMobile(); }} active={isActive(['mentor-dashboard'])} />
