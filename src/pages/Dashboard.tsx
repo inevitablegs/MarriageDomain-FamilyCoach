@@ -16,7 +16,12 @@ import {
   Sparkles,
   TrendingUp,
   Users,
+  MessageCircle,
+  Clock,
+  Zap,
+  HeartHandshake,
 } from 'lucide-react';
+import { readAllThoughts, type StoredThought, emotionEmoji, priorityConfig } from '../lib/expectationResolverAi';
 
 type DashboardProps = {
   onNavigate: (page: string) => void;
@@ -29,7 +34,7 @@ type ServiceItem = {
   description: string;
   bullets: string[];
   cta: string;
-  targetPage: 'quiz' | 'red-flags' | 'health-tracker' | 'pre-marriage-analysis' | 'conflict-resolution' | 'couple-pulse-check' | 'need-to-know';
+  targetPage: 'quiz' | 'red-flags' | 'health-tracker' | 'pre-marriage-analysis' | 'conflict-resolution' | 'couple-pulse-check' | 'need-to-know' | 'expectation-resolver';
 };
 
 const beforeMarriageServices: ServiceItem[] = [
@@ -64,6 +69,14 @@ const beforeMarriageServices: ServiceItem[] = [
     bullets: ['Family & Society Pressure', 'Fake Personalities', 'Financial Transparency'],
     cta: 'Enter AI Hub',
     targetPage: 'need-to-know',
+  },
+  {
+    name: 'Expectation Resolver™',
+    priceLabel: 'PREMIUM',
+    description: 'AI that converts emotions into clear expectations and instant fixes.',
+    bullets: ['Emotion detection & patterns', 'Hidden expectation extraction', 'Ready-to-send solutions'],
+    cta: 'Resolve Expectations',
+    targetPage: 'expectation-resolver',
   },
 ];
 
@@ -101,6 +114,7 @@ export function Dashboard({ mode, onNavigate }: DashboardProps) {
   const [healthRecords, setHealthRecords] = useState<RelationshipHealth[]>([]);
   const [jointSessions, setJointSessions] = useState<CoupleAssessmentSession[]>([]);
   const [pulseSessions, setPulseSessions] = useState<PulseCheckSession[]>([]);
+  const [partnerExpectations, setPartnerExpectations] = useState<StoredThought[]>([]);
   const [assignedMentor, setAssignedMentor] = useState<Mentor | null>(null);
   const [mentorAssignment, setMentorAssignment] = useState<MentorAssignment | null>(null);
   const [loading, setLoading] = useState(true);
@@ -148,6 +162,12 @@ export function Dashboard({ mode, onNavigate }: DashboardProps) {
         if (healthData.data) setHealthRecords(healthData.data);
         if (jointData && jointData.data) setJointSessions(jointData.data as CoupleAssessmentSession[]);
         if (pulseData.data) setPulseSessions(pulseData.data as PulseCheckSession[]);
+
+        // Load Expectations Resolver thoughts
+        const allThoughts = readAllThoughts();
+        if (profile.partner_id) {
+          setPartnerExpectations(allThoughts.filter(t => t.user_id === profile.partner_id && !t.is_deleted));
+        }
 
         // Load mentor assignment
         const { data: assignmentData } = await supabase
@@ -210,6 +230,7 @@ export function Dashboard({ mode, onNavigate }: DashboardProps) {
       profileId={profile.id}
       assignedMentor={assignedMentor}
       mentorAssignment={mentorAssignment}
+      partnerExpectations={partnerExpectations}
     />
   ) : (
     <BeforeMarriageDashboard
@@ -219,6 +240,7 @@ export function Dashboard({ mode, onNavigate }: DashboardProps) {
       redFlags={redFlags}
       assignedMentor={assignedMentor}
       mentorAssignment={mentorAssignment}
+      partnerExpectations={partnerExpectations}
     />
   );
 }
@@ -230,6 +252,7 @@ type CommonDataProps = {
   redFlags: RedFlag[];
   assignedMentor: Mentor | null;
   mentorAssignment: MentorAssignment | null;
+  partnerExpectations: StoredThought[];
 };
 
 type CoupleDataProps = CommonDataProps & {
@@ -240,7 +263,7 @@ type CoupleDataProps = CommonDataProps & {
   profileId: string;
 };
 
-function BeforeMarriageDashboard({ onNavigate, profileName, assessments, redFlags, assignedMentor, mentorAssignment }: CommonDataProps) {
+function BeforeMarriageDashboard({ onNavigate, profileName, assessments, redFlags, assignedMentor, mentorAssignment, partnerExpectations }: CommonDataProps) {
   const latestAssessment = assessments[0];
   const highRisk = redFlags.filter((entry) => entry.severity === 'high').length;
 
@@ -332,6 +355,7 @@ function BeforeMarriageDashboard({ onNavigate, profileName, assessments, redFlag
               tip="Identify systemic structural risks and hidden mismatches beneath the surface."
               actions={[
                 { label: 'Start Relationship Stress Test', onClick: () => onNavigate('relationship-stress-test'), variant: 'primary' },
+                { label: 'Expectation Resolver™', onClick: () => onNavigate('expectation-resolver'), variant: 'primary' },
                 { label: 'Start Compatibility Assessment', onClick: () => onNavigate('quiz'), variant: 'secondary' },
                 { label: 'Run Deep Behavior Analysis', onClick: () => onNavigate('pre-marriage-analysis'), variant: 'secondary' },
               ]}
@@ -360,6 +384,7 @@ function AfterMarriageDashboard({
   profileId,
   assignedMentor,
   mentorAssignment,
+  partnerExpectations,
 }: CoupleDataProps) {
   const latestJointSession = jointSessions[0];
   const latestAssessment = assessments[0];

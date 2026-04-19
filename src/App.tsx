@@ -18,6 +18,7 @@ import { AdminDashboard } from './pages/AdminDashboard';
 import { ChatPage } from './pages/ChatPage';
 import { RelationshipStressTest } from './pages/RelationshipStressTest';
 import { NeedToKnow } from './pages/NeedToKnow';
+import { ExpectationResolver } from './pages/ExpectationResolver';
 
 // ── Page type ────────────────────────────────────────────────────────────────
 type AppPage =
@@ -40,7 +41,8 @@ type AppPage =
   | 'admin-dashboard'
   | 'chat'
   | 'relationship-stress-test'
-  | 'need-to-know';
+  | 'need-to-know'
+  | 'expectation-resolver';
 
 // ── Global spinner ────────────────────────────────────────────────────────────
 function GlobalLoader() {
@@ -95,7 +97,8 @@ function AppContent() {
       page === 'conflict-resolution' ||
       page === 'couple-pulse-check' ||
       page === 'relationship-stress-test' ||
-      page === 'need-to-know'
+      page === 'need-to-know' ||
+      page === 'expectation-resolver'
     ) {
       if (!user) {
         setCurrentPage(page === 'health-tracker' ? 'auth-after' : 'auth-before');
@@ -119,7 +122,8 @@ function AppContent() {
       currentPage === 'conflict-resolution' ||
       currentPage === 'couple-pulse-check' ||
       currentPage === 'relationship-stress-test' ||
-      currentPage === 'need-to-know';
+      currentPage === 'need-to-know' ||
+      currentPage === 'expectation-resolver';
 
     if (!user && isProtectedPage) {
       setCurrentPage('home');
@@ -257,6 +261,10 @@ function AppContent() {
 
         {currentPage === 'need-to-know' && (
           <NeedToKnow onNavigate={handleNavigate} />
+        )}
+
+        {currentPage === 'expectation-resolver' && user && (
+          <ExpectationResolver onNavigate={handleNavigate} />
         )}
 
         {currentPage === 'chat' && user && (
