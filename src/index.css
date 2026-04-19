@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -41,6 +41,20 @@
     --glow-indigo: rgba(217, 119, 87, 0.25);
     --glow-emerald: rgba(92, 124, 100, 0.25);
     --glow-rose: rgba(166, 93, 80, 0.2);
+    /* ── Royal Design System ── */
+    --royal-parchment: #fdf8f2;
+    --royal-accent: #f5ede0;
+    --royal-text: #2c1a0e;
+    --royal-maroon: #8b1a3a;
+    --royal-saffron: #e8831a;
+    --royal-gold: #c9960c;
+    --royal-card-bg: #fffdf9;
+    --royal-border: rgba(201, 150, 12, 0.2);
+    --royal-glow: rgba(232, 131, 26, 0.15);
+    /* Hero specific */
+    --royal-hero-bg: linear-gradient(135deg, #fdf8f2 0%, #f5ede0 40%, rgba(232, 131, 26, 0.08) 70%, rgba(201, 150, 12, 0.12) 100%);
+    --royal-hero-glow: rgba(232, 131, 26, 0.2);
+    --royal-hero-shadow: rgba(44, 26, 14, 0.1);
   }
 
   :root.dark {
@@ -73,6 +87,20 @@
     --glow-indigo: rgba(217, 119, 87, 0.2);
     --glow-emerald: rgba(143, 177, 153, 0.2);
     --glow-rose: rgba(251, 113, 133, 0.2);
+    /* ── Royal Dark (Midnight Silk) ── */
+    --royal-parchment: #12060c;
+    --royal-accent: #1c0a14;
+    --royal-text: #fdf8f2;
+    --royal-maroon: #b52045;
+    --royal-saffron: #f98a22;
+    --royal-gold: #e4b530;
+    --royal-card-bg: #1c0a14;
+    --royal-border: rgba(228, 181, 48, 0.25);
+    --royal-glow: rgba(249, 138, 34, 0.2);
+    /* Hero specific */
+    --royal-hero-bg: linear-gradient(135deg, #1c0a14 0%, #3d0f24 30%, #6b1437 60%, #8b1a3a 80%, #b52045 100%);
+    --royal-hero-glow: rgba(232, 131, 26, 0.35);
+    --royal-hero-shadow: rgba(0, 0, 0, 0.4);
   }
 
   html, body, #root {

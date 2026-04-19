@@ -40,8 +40,11 @@ export function Header({ onNavigate, currentPage, onMentorAuthClick, onAdminAuth
               <div className="bg-[#d97757] p-1.5 rounded-[10px] shadow-sm transition-transform group-hover:scale-110 group-hover:rotate-[-4deg]">
                 <Heart className="text-white" size={18} fill="currentColor" />
               </div>
-              <span className="text-xl font-extrabold tracking-tight" style={{ color: 'var(--text-primary)' }}>
-                Marriage<span className="text-[#d97757]">Wise</span>
+              <span
+                className="text-2xl font-semibold tracking-wide"
+                style={{ fontFamily: '"Cormorant Garamond", serif', color: 'var(--royal-text)' }}
+              >
+                Vivah<span className="italic" style={{ color: 'var(--royal-saffron)' }}>Sutra</span>
               </span>
             </button>
 

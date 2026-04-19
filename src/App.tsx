@@ -65,7 +65,7 @@ function GlobalLoader() {
         className="text-sm font-semibold tracking-wide"
         style={{ color: 'var(--text-muted)' }}
       >
-        Loading MarriageWise…
+        Loading VivahSutra…
       </p>
     </div>
   );

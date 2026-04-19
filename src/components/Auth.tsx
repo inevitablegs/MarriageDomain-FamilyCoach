@@ -31,7 +31,7 @@ export function Auth({ mode, onBack, onSuccess }: AuthProps) {
         title: 'Coach / Mentor Portal',
         subtitle: 'Sign in to your mentor account to connect with assigned users and provide guidance.',
         icon: <Users size={26} className="text-white" />,
-        testimonial: '"Empowering families through structured guidance and connection." — MarriageWise Mentors',
+        testimonial: '"Empowering families through structured guidance and connection." — VivahSutra Mentors',
       }
     : isAdmin
     ? {
@@ -41,7 +41,7 @@ export function Auth({ mode, onBack, onSuccess }: AuthProps) {
         title: 'Admin Control Center',
         subtitle: 'Manage mentors, assign coaches to users, and oversee the platform.',
         icon: <HeartHandshake size={26} className="text-white" />,
-        testimonial: '"Platform administration and mentor management." — MarriageWise Admin',
+        testimonial: '"Platform administration and mentor management." — VivahSutra Admin',
       }
     : isAfterMarriage
     ? {
@@ -60,7 +60,7 @@ export function Auth({ mode, onBack, onSuccess }: AuthProps) {
         title: 'Before Marriage Journey',
         subtitle: 'Analyze compatibility and uncover red flags before committing.',
         icon: <HeartHandshake size={26} className="text-white" />,
-        testimonial: '"MarriageWise gave us the clarity we needed." — Ananya, Pune',
+        testimonial: '"VivahSutra gave us the clarity we needed." — Ananya, Pune',
       };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -71,7 +71,7 @@ export function Auth({ mode, onBack, onSuccess }: AuthProps) {
     try {
       // Admin login — validate against env credentials
       if (isAdmin) {
-        const adminEmail = import.meta.env.VITE_ADMIN_EMAIL || 'admin@marriagewise.com';
+        const adminEmail = import.meta.env.VITE_ADMIN_EMAIL || 'admin@vivahsutra.com';
         const adminPassword = import.meta.env.VITE_ADMIN_PASSWORD || 'admin123';
         if (email.trim().toLowerCase() !== adminEmail.toLowerCase() || password !== adminPassword) {
           setError('Invalid admin credentials.');
