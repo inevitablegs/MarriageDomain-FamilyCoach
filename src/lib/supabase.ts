@@ -466,6 +466,7 @@ function createLocalSupabase() {
           return { data: { user: null, session: null }, error: new Error('User already registered') };
         }
 
+
         const user: LocalStoredUser = {
           id: id(),
           email: normalizedEmail,
@@ -541,6 +542,7 @@ export type Profile = {
   email: string;
   relationship_status: 'single' | 'engaged' | 'married';
   role: 'user' | 'mentor' | 'admin';
+  subscription_tier: 'free' | 'basic' | 'premium';
   partner_id?: string;
   created_at: string;
   updated_at: string;

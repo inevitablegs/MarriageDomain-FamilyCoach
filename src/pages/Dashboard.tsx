@@ -22,6 +22,7 @@ import {
   HeartHandshake,
 } from 'lucide-react';
 import { readAllThoughts, type StoredThought, emotionEmoji, priorityConfig } from '../lib/expectationResolverAi';
+import { SubscriptionGuard } from '../components/SubscriptionGuard';
 
 type DashboardProps = {
   onNavigate: (page: string) => void;
@@ -34,60 +35,67 @@ type ServiceItem = {
   description: string;
   bullets: string[];
   cta: string;
-  targetPage: 'quiz' | 'red-flags' | 'health-tracker' | 'pre-marriage-analysis' | 'conflict-resolution' | 'couple-pulse-check' | 'need-to-know' | 'expectation-resolver';
+  targetPage: string;
+  requiredTier: 'free' | 'basic' | 'premium';
 };
 
 const beforeMarriageServices: ServiceItem[] = [
   {
-    name: 'Basic Compatibility Quiz',
-    priceLabel: 'FREE',
-    description: 'Get a quick assessment of your relationship compatibility.',
-    bullets: ['Values alignment check', 'Lifestyle compatibility', 'Basic communication'],
-    cta: 'Start Free Quiz',
-    targetPage: 'quiz',
-  },
-  {
-    name: 'Advanced Compatibility Report',
-    priceLabel: 'PREMIUM',
-    description: 'Deep analysis with risk scoring and recommendations.',
-    bullets: ['Detailed scoring', 'Risk factor identification', 'Personalized advice'],
-    cta: 'Generate Report',
-    targetPage: 'quiz',
-  },
-  {
-    name: 'Red Flag Deep Analysis',
-    priceLabel: 'PREMIUM',
-    description: 'Identify potential warning signs before commitment.',
-    bullets: ['Behavior pattern analysis', 'Warning indicators', 'Guided interpretation'],
-    cta: 'Run Deep Analysis',
-    targetPage: 'pre-marriage-analysis',
-  },
-  {
     name: 'Need to Know Reality Check',
-    priceLabel: 'PREMIUM',
+    priceLabel: 'FREE',
     description: 'AI-guided breakdowns on the 6 hidden dangers of Indian marriages.',
     bullets: ['Family & Society Pressure', 'Fake Personalities', 'Financial Transparency'],
     cta: 'Enter AI Hub',
     targetPage: 'need-to-know',
+    requiredTier: 'free',
+  },
+  {
+    name: 'Basic Compatibility Quiz',
+    priceLabel: 'BASIC',
+    description: 'Get a quick assessment of your relationship compatibility.',
+    bullets: ['Values alignment check', 'Lifestyle compatibility', 'Basic communication'],
+    cta: 'Start Quiz',
+    targetPage: 'quiz',
+    requiredTier: 'basic',
+  },
+  {
+    name: 'Red Flag Deep Analysis',
+    priceLabel: 'BASIC',
+    description: 'Identify potential warning signs before commitment.',
+    bullets: ['Behavior pattern analysis', 'Warning indicators', 'Guided interpretation'],
+    cta: 'Run Deep Analysis',
+    targetPage: 'pre-marriage-analysis',
+    requiredTier: 'basic',
   },
   {
     name: 'Expectation Resolver™',
-    priceLabel: 'PREMIUM',
+    priceLabel: 'BASIC',
     description: 'AI that converts emotions into clear expectations and instant fixes.',
     bullets: ['Emotion detection & patterns', 'Hidden expectation extraction', 'Ready-to-send solutions'],
     cta: 'Resolve Expectations',
     targetPage: 'expectation-resolver',
+    requiredTier: 'basic',
+  },
+  {
+    name: 'Relationship Stress Test',
+    priceLabel: 'PREMIUM',
+    description: 'Deep scenario analysis to test your relationship durability.',
+    bullets: ['Breaking points detection', 'Expectation gaps', 'Action plan'],
+    cta: 'Start Stress Test',
+    targetPage: 'relationship-stress-test',
+    requiredTier: 'premium',
   },
 ];
 
 const afterMarriageServices: ServiceItem[] = [
   {
-    name: 'Relationship Health Dashboard',
+    name: 'Relationship Health Tracker',
     priceLabel: 'FREE',
     description: 'Track relationship metrics and progress over time.',
     bullets: ['Weekly check-ins', 'Trend visualization', 'Improvement signals'],
-    cta: 'Open Dashboard',
+    cta: 'Open Tracker',
     targetPage: 'health-tracker',
+    requiredTier: 'free',
   },
   {
     name: 'Conflict Resolution Program',
@@ -96,6 +104,7 @@ const afterMarriageServices: ServiceItem[] = [
     bullets: ['De-escalation patterns', 'Repair communication', 'Guided steps'],
     cta: 'Start Conflict Program',
     targetPage: 'conflict-resolution',
+    requiredTier: 'premium',
   },
   {
     name: 'Couple Pulse',
@@ -104,8 +113,10 @@ const afterMarriageServices: ServiceItem[] = [
     bullets: ['Both partners participate', 'AI-powered scoring', 'Actionable weekly plan'],
     cta: 'Start Pulse Check',
     targetPage: 'couple-pulse-check',
+    requiredTier: 'premium',
   },
 ];
+
 
 export function Dashboard({ mode, onNavigate }: DashboardProps) {
   const { profile, loading: authLoading } = useAuth();
@@ -221,6 +232,7 @@ export function Dashboard({ mode, onNavigate }: DashboardProps) {
     <AfterMarriageDashboard
       onNavigate={onNavigate}
       profileName={profile.full_name}
+      subscriptionTier={profile.subscription_tier}
       hasPartnerConnected={Boolean(profile.partner_id)}
       assessments={assessments}
       redFlags={redFlags}
@@ -236,6 +248,7 @@ export function Dashboard({ mode, onNavigate }: DashboardProps) {
     <BeforeMarriageDashboard
       onNavigate={onNavigate}
       profileName={profile.full_name}
+      subscriptionTier={profile.subscription_tier}
       assessments={assessments}
       redFlags={redFlags}
       assignedMentor={assignedMentor}
@@ -248,6 +261,7 @@ export function Dashboard({ mode, onNavigate }: DashboardProps) {
 type CommonDataProps = {
   onNavigate: (page: string) => void;
   profileName: string;
+  subscriptionTier: 'free' | 'basic' | 'premium';
   assessments: CompatibilityAssessment[];
   redFlags: RedFlag[];
   assignedMentor: Mentor | null;
@@ -263,7 +277,7 @@ type CoupleDataProps = CommonDataProps & {
   profileId: string;
 };
 
-function BeforeMarriageDashboard({ onNavigate, profileName, assessments, redFlags, assignedMentor, mentorAssignment, partnerExpectations }: CommonDataProps) {
+function BeforeMarriageDashboard({ onNavigate, profileName, subscriptionTier, assessments, redFlags, assignedMentor, mentorAssignment, partnerExpectations }: CommonDataProps) {
   const latestAssessment = assessments[0];
   const highRisk = redFlags.filter((entry) => entry.severity === 'high').length;
 
@@ -281,8 +295,17 @@ function BeforeMarriageDashboard({ onNavigate, profileName, assessments, redFlag
         <section className="animate-rise-in relative overflow-hidden rounded-[2.5rem] bg-gradient-to-r from-[#2a2826] to-[#4a4642] px-8 py-12 shadow-2xl shadow-stone-900/20 sm:px-12 noise-overlay">
           <div className="absolute top-0 right-0 h-64 w-64 bg-white/5 blur-[80px] rounded-full translate-x-1/2 -translate-y-1/2 pointer-events-none" />
           <div className="relative z-10">
-            <div className="inline-flex items-center rounded-full bg-white/10 backdrop-blur-md px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-white border border-white/20 shadow-sm">
-              Before Marriage Dashboard
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="inline-flex items-center rounded-full bg-white/10 backdrop-blur-md px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-white border border-white/20 shadow-sm">
+                Before Marriage Dashboard
+              </div>
+              <div 
+                onClick={() => onNavigate('pricing')}
+                className="cursor-pointer inline-flex items-center rounded-full bg-rose-500/20 backdrop-blur-md px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-rose-300 border border-rose-500/30 shadow-sm hover:bg-rose-500/30 transition-all"
+              >
+                <Zap size={10} className="mr-1.5" fill="currentColor" />
+                Plan: {subscriptionTier}
+              </div>
             </div>
             <h1 className="mt-6 text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
               Welcome, {profileName}
@@ -344,7 +367,14 @@ function BeforeMarriageDashboard({ onNavigate, profileName, assessments, redFlag
             </h2>
             <div className="grid sm:grid-cols-2 gap-5">
               {beforeMarriageServices.map((service) => (
-                <ServiceCard key={service.name} service={service} onNavigate={onNavigate} color="coral" />
+                <SubscriptionGuard
+                  key={service.name}
+                  requiredTier={service.requiredTier}
+                  featureName={service.name}
+                  onUpgradeClick={() => onNavigate('pricing')}
+                >
+                  <ServiceCard service={service} onNavigate={onNavigate} color="coral" />
+                </SubscriptionGuard>
               ))}
             </div>
           </section>
@@ -375,6 +405,7 @@ function BeforeMarriageDashboard({ onNavigate, profileName, assessments, redFlag
 function AfterMarriageDashboard({
   onNavigate,
   profileName,
+  subscriptionTier,
   assessments,
   redFlags,
   healthRecords,
@@ -441,8 +472,17 @@ function AfterMarriageDashboard({
         <section className="animate-rise-in relative overflow-hidden rounded-[2.5rem] bg-gradient-to-r from-[#3d4f40] to-[#5c7c64] px-8 py-12 shadow-2xl shadow-emerald-900/10 sm:px-12 noise-overlay">
           <div className="absolute top-0 right-0 h-64 w-64 bg-white/5 blur-[80px] rounded-full translate-x-1/2 -translate-y-1/2 pointer-events-none" />
           <div className="relative z-10">
-            <div className="inline-flex items-center rounded-full bg-white/10 backdrop-blur-md px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-white border border-white/20 shadow-sm">
-              <Users size={13} className="mr-1.5" /> After Marriage Dashboard
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="inline-flex items-center rounded-full bg-white/10 backdrop-blur-md px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-white border border-white/20 shadow-sm">
+                <Users size={13} className="mr-1.5" /> After Marriage Dashboard
+              </div>
+              <div 
+                onClick={() => onNavigate('pricing')}
+                className="cursor-pointer inline-flex items-center rounded-full bg-rose-500/20 backdrop-blur-md px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-rose-300 border border-rose-500/30 shadow-sm hover:bg-rose-500/30 transition-all"
+              >
+                <Zap size={10} className="mr-1.5" fill="currentColor" />
+                Plan: {subscriptionTier}
+              </div>
             </div>
             <h1 className="mt-6 text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
               Welcome, {profileName}
@@ -583,13 +623,19 @@ function AfterMarriageDashboard({
             </h2>
             <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-5">
               {afterMarriageServices.map((service) => (
-                <ServiceCard
+                <SubscriptionGuard
                   key={service.name}
-                  service={service}
-                  onNavigate={onNavigate}
-                  disabled={!hasPartnerConnected && service.targetPage !== 'quiz'}
-                  color="sage"
-                />
+                  requiredTier={service.requiredTier}
+                  featureName={service.name}
+                  onUpgradeClick={() => onNavigate('pricing')}
+                >
+                  <ServiceCard
+                    service={service}
+                    onNavigate={onNavigate}
+                    disabled={!hasPartnerConnected && service.targetPage !== 'quiz'}
+                    color="sage"
+                  />
+                </SubscriptionGuard>
               ))}
             </div>
           </section>

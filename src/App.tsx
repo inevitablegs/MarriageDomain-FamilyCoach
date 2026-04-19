@@ -19,6 +19,7 @@ import { ChatPage } from './pages/ChatPage';
 import { RelationshipStressTest } from './pages/RelationshipStressTest';
 import { NeedToKnow } from './pages/NeedToKnow';
 import { ExpectationResolver } from './pages/ExpectationResolver';
+import { Pricing } from './pages/Pricing';
 
 // ── Page type ────────────────────────────────────────────────────────────────
 type AppPage =
@@ -42,7 +43,8 @@ type AppPage =
   | 'chat'
   | 'relationship-stress-test'
   | 'need-to-know'
-  | 'expectation-resolver';
+  | 'expectation-resolver'
+  | 'pricing';
 
 // ── Global spinner ────────────────────────────────────────────────────────────
 function GlobalLoader() {
@@ -98,7 +100,8 @@ function AppContent() {
       page === 'couple-pulse-check' ||
       page === 'relationship-stress-test' ||
       page === 'need-to-know' ||
-      page === 'expectation-resolver'
+      page === 'expectation-resolver' ||
+      page === 'pricing'
     ) {
       if (!user) {
         setCurrentPage(page === 'health-tracker' ? 'auth-after' : 'auth-before');
@@ -269,6 +272,13 @@ function AppContent() {
 
         {currentPage === 'chat' && user && (
           <ChatPage onNavigate={handleNavigate} />
+        )}
+
+        {currentPage === 'pricing' && user && (
+          <Pricing 
+            onBack={() => handleNavigate('home')} 
+            onSuccess={() => handleNavigate('home')}
+          />
         )}
       </main>
     </div>

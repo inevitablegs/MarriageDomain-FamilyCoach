@@ -15,6 +15,7 @@ type AuthContextType = {
   ) => Promise<{ error: Error | null }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null; profile: Profile | null }>;
   signOut: () => Promise<void>;
+  updateTier: (tier: 'free' | 'basic' | 'premium') => Promise<{ error: Error | null }>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -92,6 +93,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           full_name: fallbackName,
           relationship_status: 'single',
           role: 'user',
+          subscription_tier: 'free',
         });
 
         if (insertError) throw insertError;
@@ -155,6 +157,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               full_name: fullName,
               relationship_status: relationshipStatus,
               role: 'user',
+              subscription_tier: 'free',
             },
             { onConflict: 'id' }
           );
@@ -246,8 +249,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setProfile(null);
   };
 
+  const updateTier = async (tier: 'free' | 'basic' | 'premium') => {
+    if (!profile) return { error: new Error('No profile loaded') };
+    
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({ subscription_tier: tier })
+        .eq('id', profile.id);
+
+      if (error) throw error;
+
+      setProfile(prev => prev ? { ...prev, subscription_tier: tier } : null);
+      return { error: null };
+    } catch (error) {
+      console.error('Error updating tier:', error);
+      return { error: error as Error };
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, session, profile, loading, signUp, signIn, signOut }}>
+    <AuthContext.Provider value={{ user, session, profile, loading, signUp, signIn, signOut, updateTier }}>
       {children}
     </AuthContext.Provider>
   );
