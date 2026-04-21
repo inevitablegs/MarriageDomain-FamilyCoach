@@ -25,9 +25,9 @@ export function Auth({ mode, onBack, onSuccess }: AuthProps) {
 
   const theme = isMentor
     ? {
-        gradient: 'from-[#5c7c64] via-[#455d4b] to-[#5c7c64]',
-        ringClass: 'focus:ring-[#5c7c64]',
-        accentColor: '#5c7c64',
+        gradient: 'from-[#2D6A4F] via-[#1B4332] to-[#0A1C14]',
+        ringClass: 'focus:ring-[#2D6A4F]',
+        accentColor: '#2D6A4F',
         title: 'Coach / Mentor Portal',
         subtitle: 'Sign in to your mentor account to connect with assigned users and provide guidance.',
         icon: <Users size={26} className="text-white" />,
@@ -35,9 +35,9 @@ export function Auth({ mode, onBack, onSuccess }: AuthProps) {
       }
     : isAdmin
     ? {
-        gradient: 'from-[#2a2826] via-[#3e3a36] to-[#2a2826]',
-        ringClass: 'focus:ring-[#2a2826]',
-        accentColor: '#2a2826',
+        gradient: 'from-[#2C1A0E] via-[#1C0A14] to-[#12060C]',
+        ringClass: 'focus:ring-[#e8831a]',
+        accentColor: '#e8831a',
         title: 'Admin Control Center',
         subtitle: 'Manage mentors, assign coaches to users, and oversee the platform.',
         icon: <HeartHandshake size={26} className="text-white" />,
@@ -45,18 +45,18 @@ export function Auth({ mode, onBack, onSuccess }: AuthProps) {
       }
     : isAfterMarriage
     ? {
-        gradient: 'from-[#5c7c64] via-[#455d4b] to-[#5c7c64]',
-        ringClass: 'focus:ring-[#5c7c64]',
-        accentColor: '#5c7c64',
+        gradient: 'from-[#2D6A4F] via-[#1B4332] to-[#0A1C14]',
+        ringClass: 'focus:ring-[#2D6A4F]',
+        accentColor: '#2D6A4F',
         title: 'After Marriage Journey',
         subtitle: 'Connect, rebuild, and track your relationship health securely.',
         icon: <Users size={26} className="text-white" />,
         testimonial: '"We finally have a shared language for our relationship." — Priya & Rohan',
       }
     : {
-        gradient: 'from-[#d97757] via-[#a65d50] to-[#d97757]',
-        ringClass: 'focus:ring-[#d97757]',
-        accentColor: '#d97757',
+        gradient: 'from-[#e8831a] via-[#8b1a3a] to-[#6b1437]',
+        ringClass: 'focus:ring-[#e8831a]',
+        accentColor: '#e8831a',
         title: 'Before Marriage Journey',
         subtitle: 'Analyze compatibility and uncover red flags before committing.',
         icon: <HeartHandshake size={26} className="text-white" />,
@@ -138,11 +138,11 @@ export function Auth({ mode, onBack, onSuccess }: AuthProps) {
       {/* Ambient blobs */}
       <div
         className="absolute top-0 right-0 h-[500px] w-[500px] rounded-full blur-[120px] opacity-20 pointer-events-none"
-        style={{ backgroundColor: isMentor ? '#5c7c64' : isAdmin ? '#2a2826' : isAfterMarriage ? '#5c7c64' : '#d97757' }}
+        style={{ backgroundColor: isMentor ? '#2D6A4F' : isAdmin ? '#2C1A0E' : isAfterMarriage ? '#2D6A4F' : '#e8831a' }}
       />
       <div
         className="absolute bottom-0 left-0 h-[500px] w-[500px] rounded-full blur-[120px] opacity-20 pointer-events-none"
-        style={{ backgroundColor: isMentor ? '#455d4b' : isAdmin ? '#1a1817' : isAfterMarriage ? '#455d4b' : '#a65d50' }}
+        style={{ backgroundColor: isMentor ? '#1B4332' : isAdmin ? '#1C0A14' : isAfterMarriage ? '#1B4332' : '#8b1a3a' }}
       />
 
       <div className="w-full max-w-5xl animate-rise-in relative z-10">
@@ -170,7 +170,7 @@ export function Auth({ mode, onBack, onSuccess }: AuthProps) {
               <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-white/20 backdrop-blur border border-white/20 mb-6 shadow-lg">
                 {theme.icon}
               </div>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-white leading-tight tracking-tight">
+              <h2 className="font-display text-4xl sm:text-5xl font-extrabold text-white leading-tight tracking-tight">
                 {theme.title}
               </h2>
               <p className="mt-4 text-white/85 text-base leading-relaxed max-w-xs">
@@ -199,7 +199,7 @@ export function Auth({ mode, onBack, onSuccess }: AuthProps) {
             {/* Heading */}
             <div className="mb-8">
               <h3
-                className="text-2xl sm:text-3xl font-extrabold tracking-tight"
+                className="font-display text-3xl sm:text-4xl font-extrabold tracking-tight"
                 style={{ color: 'var(--text-primary)' }}
               >
                 {isSignUp ? 'Create your account' : 'Welcome back'}

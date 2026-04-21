@@ -292,7 +292,10 @@ function BeforeMarriageDashboard({ onNavigate, profileName, subscriptionTier, as
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
         {/* Hero banner — stagger-0 (instant) */}
-        <section className="animate-rise-in relative overflow-hidden rounded-[2.5rem] bg-gradient-to-r from-[#2a2826] to-[#4a4642] px-8 py-12 shadow-2xl shadow-stone-900/20 sm:px-12 noise-overlay">
+        <section 
+          className="animate-rise-in relative overflow-hidden rounded-[2.5rem] px-8 py-12 shadow-2xl sm:px-12 noise-overlay"
+          style={{ background: 'linear-gradient(145deg, #1C0A14 0%, #3D0F24 60%, #6B1437 100%)', boxShadow: '0 4px 40px rgba(139,26,58,0.2)' }}
+        >
           <div className="absolute top-0 right-0 h-64 w-64 bg-white/5 blur-[80px] rounded-full translate-x-1/2 -translate-y-1/2 pointer-events-none" />
           <div className="relative z-10">
             <div className="flex flex-wrap items-center gap-3">
@@ -301,16 +304,17 @@ function BeforeMarriageDashboard({ onNavigate, profileName, subscriptionTier, as
               </div>
               <div 
                 onClick={() => onNavigate('pricing')}
-                className="cursor-pointer inline-flex items-center rounded-full bg-rose-500/20 backdrop-blur-md px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-rose-300 border border-rose-500/30 shadow-sm hover:bg-rose-500/30 transition-all"
+                className="cursor-pointer inline-flex items-center rounded-full backdrop-blur-md px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] shadow-sm transition-all"
+                style={{ backgroundColor: 'rgba(139,26,58,0.2)', color: '#fca5a5', borderColor: 'rgba(139,26,58,0.4)', borderWidth: 1 }}
               >
                 <Zap size={10} className="mr-1.5" fill="currentColor" />
                 Plan: {subscriptionTier}
               </div>
             </div>
-            <h1 className="mt-6 text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
+            <h1 className="mt-6 text-4xl sm:text-5xl font-bold tracking-tight" style={{ fontFamily: '"Cormorant Garamond", serif', color: '#FDF8F2' }}>
               Welcome, {profileName}
             </h1>
-            <p className="mt-4 text-indigo-100 text-lg max-w-xl leading-relaxed">
+            <p className="mt-4 text-base sm:text-lg max-w-xl leading-relaxed" style={{ color: 'rgba(253,248,242,0.7)' }}>
               Decide with clarity. Use the assessments below to gain data-backed insights on compatibility and potential red flags.
             </p>
           </div>
@@ -362,7 +366,7 @@ function BeforeMarriageDashboard({ onNavigate, profileName, subscriptionTier, as
             style={{ backgroundColor: 'var(--bg-secondary)' }}
           >
             <h2 className="text-2xl font-extrabold mb-6 flex items-center gap-3" style={{ color: 'var(--text-primary)' }}>
-              <Sparkles className="text-indigo-500" size={22} />
+              <Sparkles size={22} style={{ color: 'var(--brand-indigo)' }} />
               Recommended Resources
             </h2>
             <div className="grid sm:grid-cols-2 gap-5">
@@ -469,7 +473,10 @@ function AfterMarriageDashboard({
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
         {/* Hero banner — stagger-0 */}
-        <section className="animate-rise-in relative overflow-hidden rounded-[2.5rem] bg-gradient-to-r from-[#3d4f40] to-[#5c7c64] px-8 py-12 shadow-2xl shadow-emerald-900/10 sm:px-12 noise-overlay">
+        <section 
+          className="animate-rise-in relative overflow-hidden rounded-[2.5rem] px-8 py-12 shadow-2xl sm:px-12 noise-overlay"
+          style={{ background: 'linear-gradient(145deg, #0A1C14 0%, #102B1E 60%, #1A3D2B 100%)', boxShadow: '0 4px 40px rgba(45,106,79,0.15)' }}
+        >
           <div className="absolute top-0 right-0 h-64 w-64 bg-white/5 blur-[80px] rounded-full translate-x-1/2 -translate-y-1/2 pointer-events-none" />
           <div className="relative z-10">
             <div className="flex flex-wrap items-center gap-3">
@@ -478,16 +485,17 @@ function AfterMarriageDashboard({
               </div>
               <div 
                 onClick={() => onNavigate('pricing')}
-                className="cursor-pointer inline-flex items-center rounded-full bg-rose-500/20 backdrop-blur-md px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-rose-300 border border-rose-500/30 shadow-sm hover:bg-rose-500/30 transition-all"
+                className="cursor-pointer inline-flex items-center rounded-full backdrop-blur-md px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] shadow-sm transition-all"
+                style={{ backgroundColor: 'rgba(232,131,26,0.2)', color: '#fcd34d', borderColor: 'rgba(232,131,26,0.4)', borderWidth: 1 }}
               >
                 <Zap size={10} className="mr-1.5" fill="currentColor" />
                 Plan: {subscriptionTier}
               </div>
             </div>
-            <h1 className="mt-6 text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
+            <h1 className="mt-6 text-4xl sm:text-5xl font-bold tracking-tight" style={{ fontFamily: '"Cormorant Garamond", serif', color: '#FDF8F2' }}>
               Welcome, {profileName}
             </h1>
-            <p className="mt-4 text-emerald-100 text-lg max-w-xl leading-relaxed">
+            <p className="mt-4 text-base sm:text-lg max-w-xl leading-relaxed" style={{ color: 'rgba(253,248,242,0.7)' }}>
               Joint-account workflow for couples to repair communication, reduce conflict, and rebuild connection.
             </p>
           </div>
@@ -618,7 +626,7 @@ function AfterMarriageDashboard({
             style={{ backgroundColor: 'var(--bg-secondary)' }}
           >
             <h2 className="text-2xl font-extrabold mb-6 flex items-center gap-3" style={{ color: 'var(--text-primary)' }}>
-              <Handshake className="text-emerald-500" size={22} />
+              <Handshake size={22} style={{ color: 'var(--brand-emerald)' }} />
               Couple Services
             </h2>
             <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-5">
@@ -676,9 +684,9 @@ function QuickActionsPanel({ theme, tip, actions }: {
   tip: string;
   actions: ActionDef[];
 }) {
-  const accentColor = theme === 'coral' ? '#d97757' : '#5c7c64';
-  const accentLight = theme === 'coral' ? 'rgba(217,119,87,0.08)' : 'rgba(92,124,100,0.08)';
-  const accentBorder = theme === 'coral' ? 'rgba(217,119,87,0.2)' : 'rgba(92,124,100,0.2)';
+  const accentColor = theme === 'coral' ? 'var(--brand-indigo)' : 'var(--brand-emerald)';
+  const accentLight = theme === 'coral' ? 'rgba(232,131,26,0.08)' : 'rgba(45,106,79,0.08)';
+  const accentBorder = theme === 'coral' ? 'rgba(232,131,26,0.2)' : 'rgba(45,106,79,0.2)';
 
   return (
     <section
@@ -730,20 +738,20 @@ function ServiceCard({ service, onNavigate, disabled = false, color }: ServiceCa
     coral: {
       badgeBg: 'var(--brand-indigo-light)',
       badgeColor: 'var(--brand-indigo)',
-      premiumBg: 'rgba(217,119,87,0.15)',
-      premiumColor: '#d97757',
+      premiumBg: 'rgba(232,131,26,0.15)',
+      premiumColor: 'var(--brand-indigo)',
       checkColor: 'var(--brand-indigo)',
       btnBg: 'var(--brand-indigo)',
-      btnBgHover: '#bf664a',
+      btnBgHover: '#c87016',
     },
     sage: {
       badgeBg: 'var(--brand-emerald-light)',
       badgeColor: 'var(--brand-emerald)',
-      premiumBg: 'rgba(92,124,100,0.15)',
-      premiumColor: '#5c7c64',
+      premiumBg: 'rgba(45,106,79,0.15)',
+      premiumColor: 'var(--brand-emerald)',
       checkColor: 'var(--brand-emerald)',
       btnBg: 'var(--brand-emerald)',
-      btnBgHover: '#4d6854',
+      btnBgHover: '#1b4332',
     },
   };
 
@@ -810,7 +818,7 @@ type ActionButtonProps = {
 function ActionButton({ onClick, label, variant = 'primary', disabled = false, theme }: ActionButtonProps) {
   const isPrimary = variant === 'primary';
   const primaryBg = theme === 'coral' ? 'var(--brand-indigo)' : 'var(--brand-emerald)';
-  const primaryHover = theme === 'coral' ? '#bf664a' : '#4d6854';
+  const primaryHover = theme === 'coral' ? '#c87016' : '#1b4332';
 
   return (
     <button
@@ -848,12 +856,12 @@ type MetricCardProps = {
 };
 
 const metricThemeMap: Record<string, { bg: string; color: string }> = {
-  coral: { bg: 'rgba(217,119,87,0.1)', color: '#d97757' },
-  sage: { bg: 'rgba(92,124,100,0.1)', color: '#5c7c64' },
-  rose: { bg: 'rgba(166,93,80,0.1)', color: '#a65d50' },
-  blue: { bg: 'rgba(59,130,246,0.1)', color: '#3b82f6' },
-  teal: { bg: 'rgba(20,184,166,0.1)', color: '#14b8a6' },
-  red: { bg: 'rgba(239,68,68,0.1)', color: '#ef4444' },
+  coral: { bg: 'rgba(232,131,26,0.1)', color: 'var(--brand-indigo)' },
+  sage: { bg: 'rgba(45,106,79,0.1)', color: 'var(--brand-emerald)' },
+  rose: { bg: 'rgba(139,26,58,0.1)', color: 'var(--brand-rose)' },
+  blue: { bg: 'rgba(201,150,12,0.1)', color: 'var(--royal-gold)' },
+  teal: { bg: 'rgba(45,106,79,0.1)', color: 'var(--brand-emerald)' },
+  red: { bg: 'rgba(139,26,58,0.1)', color: 'var(--brand-rose)' },
 };
 
 function MetricCard({ icon, label, value, helper, theme, numericValue }: MetricCardProps) {
@@ -910,7 +918,7 @@ function MentorChatWidget({
         className="text-xl font-extrabold mb-4 flex items-center gap-3"
         style={{ color: 'var(--text-primary)' }}
       >
-        <MessageCircleHeart className="text-violet-500" size={22} />
+        <MessageCircleHeart size={22} style={{ color: 'var(--brand-emerald)' }} />
         Chat with Your Mentor
       </h2>
 
@@ -919,7 +927,7 @@ function MentorChatWidget({
           <div className="flex items-center gap-4">
             <div
               className="w-12 h-12 rounded-full flex items-center justify-center text-sm font-bold shrink-0"
-              style={{ backgroundColor: 'rgba(139,92,246,0.1)', color: '#8b5cf6' }}
+              style={{ backgroundColor: 'var(--brand-emerald-light)', color: 'var(--brand-emerald)' }}
             >
               {assignedMentor.full_name[0]?.toUpperCase() || 'M'}
             </div>
@@ -935,7 +943,7 @@ function MentorChatWidget({
           <button
             onClick={() => onNavigate('chat')}
             className="inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-bold text-white transition-all hover:-translate-y-0.5 shadow-sm focus-ring shrink-0"
-            style={{ backgroundColor: '#8b5cf6' }}
+            style={{ backgroundColor: 'var(--brand-emerald)' }}
           >
             <MessageCircleHeart size={15} /> Open Chat
           </button>

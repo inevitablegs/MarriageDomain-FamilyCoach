@@ -6,32 +6,32 @@
 
 @layer base {
   :root {
-    /* ── Core surfaces ── */
-    --bg-primary: #fdfcfb;
-    --bg-secondary: #ffffff;
-    --bg-tertiary: #f7f3f0;
+    /* ── Core surfaces mapped to Royal Theme ── */
+    --bg-primary: var(--royal-parchment);
+    --bg-secondary: var(--royal-card-bg);
+    --bg-tertiary: var(--royal-accent);
 
-    /* ── Text ── */
-    --text-primary: #2a2826;
-    --text-secondary: #57524e;
-    --text-muted: #8c857f;
+    /* ── Text mapped to Royal Theme ── */
+    --text-primary: var(--royal-text);
+    --text-secondary: rgba(44, 26, 14, 0.75);
+    --text-muted: rgba(44, 26, 14, 0.5);
 
     /* ── Borders ── */
-    --border-primary: rgba(42, 40, 38, 0.08);
-    --border-focus: #d97757;
+    --border-primary: var(--royal-border);
+    --border-focus: var(--royal-saffron);
 
     /* ── Cards ── */
-    --card-bg: #ffffff;
-    --card-shadow: 0 1px 3px rgba(42, 40, 38, .04), 0 4px 12px rgba(42, 40, 38, .03);
-    --card-shadow-hover: 0 2px 8px rgba(42, 40, 38, .06), 0 8px 24px rgba(42, 40, 38, .05);
+    --card-bg: var(--royal-card-bg);
+    --card-shadow: 0 2px 12px rgba(44, 26, 14, 0.04);
+    --card-shadow-hover: 0 4px 20px rgba(44, 26, 14, 0.06);
 
-    /* ── Brand (Adapted to Premium Warm) ── */
-    --brand-indigo: #d97757; /* Using Coral as the main action color */
-    --brand-indigo-light: #fbeee9;
-    --brand-emerald: #5c7c64; /* Sophisticated Sage for positive metrics */
-    --brand-emerald-light: #f1f4f1;
-    --brand-rose: #a65d50;
-    --brand-rose-light: #f9f0ef;
+    /* ── Brand (Mapped to Royal Palette) ── */
+    --brand-indigo: var(--royal-saffron); 
+    --brand-indigo-light: rgba(232, 131, 26, 0.1);
+    --brand-emerald: #2D6A4F; 
+    --brand-emerald-light: rgba(45, 106, 79, 0.1);
+    --brand-rose: var(--royal-maroon);
+    --brand-rose-light: rgba(139, 26, 58, 0.08);
 
     /* ── Glass ── */
     --glass-bg: rgba(253, 252, 251, 0.72);
@@ -58,28 +58,28 @@
   }
 
   :root.dark {
-    /* Premium Dark needs a balanced warm dark tone */
-    --bg-primary: #1a1918;
-    --bg-secondary: #22201f;
-    --bg-tertiary: #2a2826;
+    /* ── Core surfaces mapped to Royal Dark Theme ── */
+    --bg-primary: var(--royal-parchment);
+    --bg-secondary: var(--royal-card-bg);
+    --bg-tertiary: var(--royal-accent);
 
-    --text-primary: #fdfcfb;
-    --text-secondary: #c9c3be;
-    --text-muted: #756f6a;
+    --text-primary: var(--royal-text);
+    --text-secondary: rgba(253, 248, 242, 0.7);
+    --text-muted: rgba(253, 248, 242, 0.4);
 
-    --border-primary: rgba(253, 252, 251, 0.07);
-    --border-focus: #d97757;
+    --border-primary: var(--royal-border);
+    --border-focus: var(--royal-saffron);
 
-    --card-bg: #22201f;
-    --card-shadow: 0 1px 3px rgba(0,0,0,.4), 0 4px 12px rgba(0,0,0,.3);
-    --card-shadow-hover: 0 2px 8px rgba(0,0,0,.5), 0 8px 24px rgba(0,0,0,.4);
+    --card-bg: var(--royal-card-bg);
+    --card-shadow: 0 2px 16px rgba(0,0,0,0.4);
+    --card-shadow-hover: 0 8px 30px rgba(0,0,0,0.5);
 
-    --brand-indigo: #d97757;
-    --brand-indigo-light: #2d1d18;
-    --brand-emerald: #8fb199;
-    --brand-emerald-light: #1c2a21;
-    --brand-rose: #fb7185;
-    --brand-rose-light: #4c0519;
+    --brand-indigo: var(--royal-saffron);
+    --brand-indigo-light: rgba(232, 131, 26, 0.15);
+    --brand-emerald: #52B788;
+    --brand-emerald-light: rgba(45, 106, 79, 0.2);
+    --brand-rose: var(--royal-maroon);
+    --brand-rose-light: rgba(139, 26, 58, 0.15);
 
     --glass-bg: rgba(26, 25, 24, 0.75);
     --glass-border: rgba(253, 252, 251, 0.08);
@@ -169,7 +169,13 @@
 
   /* ── Serif display ── */
   .font-display {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Cormorant Garamond', 'Playfair Display', serif;
+  }
+  
+  /* Apply font-display globally to all major headings to match user request */
+  h1, h2, h3 {
+    font-family: 'Cormorant Garamond', 'Playfair Display', serif;
+    letter-spacing: -0.01em;
   }
 
   /* ── Gradient text ── */
